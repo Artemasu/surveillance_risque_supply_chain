@@ -1,0 +1,11 @@
+site,pays,lat,lon,role,fluvial,indicateurs,debit_median,lat_debit,lon_debit
+Spruce Pine,États-Unis,35.915,-82.065,Mines de quartz haute pureté,True,"pluie_3j, rafales, neige, crue",7.49,35.915,-82.165
+Austin,États-Unis,30.267,-97.743,Usines de semi-conducteurs,True,"gel, chaleur, pluie_3j, crue",24.35,30.217,-97.643
+Savannah,États-Unis,32.08,-81.09,Port à conteneurs,False,"rafales, pluie_3j",,,
+Kaub (Rhin),Allemagne,50.085,7.765,Goulet de la navigation sur le Rhin,True,"basses_eaux, crue",1474.71,49.985,7.815
+Rotterdam,Pays-Bas,51.95,4.14,Premier port européen,False,"rafales, neige",,,
+Hambourg,Allemagne,53.546,9.966,Port et usine de semi-conducteurs,True,"rafales, neige, crue, basses_eaux",494.45,53.546,9.866
+Ayutthaya,Thaïlande,14.355,100.568,"Zones industrielles (électronique, auto)",True,"pluie_90j, crue",890.25,14.255,100.518
+Kaohsiung,Taïwan,22.61,120.3,Port et fonderies,False,"rafales, pluie_3j",,,
+Shanghai,Chine,30.62,122.06,Port de Yangshan,False,"rafales, pluie_3j",,,
+Dongguan,Chine,23.02,113.75,Usines d'électronique,False,"pluie_3j, rafales",,,

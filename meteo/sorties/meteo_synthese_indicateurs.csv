@@ -1,0 +1,9 @@
+indicateur,risque,cas_testes,detecte_en_observation,detecte_en_prevision,meilleure_avance_j,sites_suivis,episodes_par_an_et_site
+pluie_3j,"Crue éclair, routes et voies ferrées coupées",1,0,1,4.0,6,1.7
+pluie_90j,"Inondation lente, zones industrielles noyées",1,0,0,,1,1.0
+rafales,"Arrêt des ports et des grues, dégâts",1,0,0,,7,2.9
+neige,Routes et rail bloqués,0,0,0,,3,3.2
+chaleur,"Canicule : coupures électriques, rendement",0,0,0,,1,1.7
+gel,"Gel : coupures électriques, installations gelées",1,1,0,2.0,1,1.1
+crue,Crue de rivière,1,1,0,27.0,5,0.4
+basses_eaux,Navigation fluviale limitée,1,0,0,,2,0.4

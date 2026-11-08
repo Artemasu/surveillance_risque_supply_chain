@@ -1,0 +1,8 @@
+cas,site,indicateur,source,seuil,valeur_extreme,unite,alerte_avant_perturbation,debut_episode,jours_avance,deja_au_debut_de_fenetre
+Ouragan Helene,Spruce Pine,pluie_3j,observation (ERA5),73.9,193.2,mm,False,2024-09-26,0.0,False
+Ouragan Helene,Spruce Pine,rafales,observation (ERA5),95.7,76.7,km/h,False,2024-09-27,-1.0,False
+Tempête hivernale Uri,Austin,gel,observation (ERA5),-3.8,-15.3,°C,True,2021-02-14,2.0,False
+Basses eaux du Rhin,Kaub (Rhin),basses_eaux,observation (ERA5),547.7,734.4,m³/s,False,,,False
+Inondations Thaïlande,Ayutthaya,pluie_90j,observation (ERA5),853.2,805.7,mm,False,,,False
+Inondations Thaïlande,Ayutthaya,crue,observation (ERA5),6052.4,8381.8,m³/s,True,2011-09-11,27.0,False
+Ouragan Helene,Spruce Pine,pluie_3j,prévision (Previous Runs),75.8,380.1,mm,True,,4.0,False
