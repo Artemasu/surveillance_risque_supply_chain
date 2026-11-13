@@ -6,3 +6,4 @@ tensorflow==2.21
 gensim>=4.4
 ipykernel
 jupyterlab
+rasterio
