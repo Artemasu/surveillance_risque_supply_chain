@@ -1,0 +1,18 @@
+signal,nom,mesure,horizon,sens,quantile,seuil
+brent,Pétrole Brent,variation %,20,haut,0.99,25.58
+gaz_europe,"Gaz naturel, Europe",variation %,1,haut,0.95,8.87
+gazole_EU,"Gazole à la pompe, moyenne UE",variation %,4,haut,0.95,4.72
+gscpi,Pression supply chain (GSCPI),niveau,1,haut,0.95,0.73
+eur_usd,Euro en dollars,variation %,20,bas,0.99,-6.77
+eur_cny,Euro en yuans,variation %,20,bas,0.99,-6.65
+cuivre,Cuivre,variation %,20,haut,0.99,15.05
+aluminium,Aluminium,variation %,20,haut,0.99,9.22
+zinc,Zinc,variation %,1,haut,0.95,10.12
+nickel,Nickel,variation %,1,haut,0.95,12.04
+prix_production_EU,"Prix de production industriels, UE",variation %,3,haut,0.95,1.46
+bourse_wolfspeed,Bourse : Wolfspeed,variation %,20,bas,0.99,-49.44
+bourse_wingtech,Bourse : Wingtech (maison mère de Nexperia),variation %,20,bas,0.99,-34.11
+bourse_infineon,Bourse : Infineon,variation %,20,bas,0.99,-23.14
+bourse_stmicro,Bourse : STMicroelectronics,variation %,20,bas,0.99,-27.49
+bourse_valeo,Bourse : Valeo,variation %,20,bas,0.99,-28.11
+bourse_forvia,Bourse : Forvia,variation %,20,bas,0.99,-31.15

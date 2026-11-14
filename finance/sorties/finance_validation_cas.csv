@@ -1,0 +1,8 @@
+cas,signal,type,seuil,valeur_extreme,impact,alerte_avant_impact,debut_episode,jours_avance,note
+Nyrstar Budel (zinc),gaz_europe,seuil calibré,8.870580007867467,52.95,2022-09-01,True,2022-06-30,63.0,
+Fournisseurs de Tesla Grünheide,gscpi,seuil calibré,0.7333238389076451,0.17,2024-01-29,False,,,
+Wolfspeed (carbure de silicium),bourse_wolfspeed,baisse publiée (historique boursier indisponible),,-50.0,2025-06-30,True,2025-03-28,94.0,"action −50 % après l'échec du refinancement (bondoro.com, résumé du dossier de faillite)"
+Nexperia (puces),bourse_wingtech,seuil calibré,-34.10745486179429,-16.85,2025-10-27,False,,,
+Fournisseurs de Tesla Grünheide,drewry_wci,"valeurs publiées, sans seuil calibré",,93.2,2024-01-29,True,2024-01-04,25.0,fret +93 % en 5 semaines
+Nexperia (puces),sanction_maison_mere,sanction sur la maison mère,,,2025-10-27,True,2024-12-02,329.0,Wingtech sur US : Entity List (EL) - Bureau of Industry and Security
+Nexperia (puces),federal_register,règle publiée,,,2025-10-27,True,2024-12-05,326.0,Additions and Modifications to the Entity List; Removals From the Validated End-

@@ -1,0 +1,12 @@
+signal,nom,famille,date_valeur,valeur_brute,indicateur,mesure,seuil,en_alerte,rang,impact,source_id
+brent,Pétrole Brent,énergie,2026-11-13,95.84,-12.76,variation_%,25.58,False,0.08,Carburant puis transport plus chers,yfinance:brent:2026-11-13
+gaz_europe,"Gaz naturel, Europe",énergie,2026-10-31,28.5,12.12,variation_%,8.87,True,0.971,Fournisseurs énergivores plus chers,banque:gaz_europe:2026-10-31
+gazole_EU,"Gazole à la pompe, moyenne UE",énergie,2026-11-09,2.0971,-1.81,variation_%,4.72,False,0.205,Transport routier plus cher,weekly:gazole_EU:2026-11-09
+gscpi,Pression supply chain (GSCPI),fret,2026-10-31,1.2619,1.26,niveau,0.73,True,0.971,Délais et coûts de fret en hausse,ny:gscpi:2026-10-31
+eur_usd,Euro en dollars,change,2026-11-13,1.1052,-1.79,variation_%,-6.77,False,0.798,Importations en dollars plus chères,bce:eur_usd:2026-11-13
+eur_cny,Euro en yuans,change,2026-11-13,7.3738,-2.0,variation_%,-6.65,False,0.83,Importations de Chine plus chères,bce:eur_cny:2026-11-13
+cuivre,Cuivre,métaux,2026-11-13,6.0795,-6.91,variation_%,15.05,False,0.102,Composants électriques plus chers,yfinance:cuivre:2026-11-13
+aluminium,Aluminium,métaux,2026-11-13,3133.25,0.64,variation_%,9.22,False,0.625,Pièces et emballages plus chers,yfinance:aluminium:2026-11-13
+zinc,Zinc,métaux,2026-10-31,3818.0,-5.05,variation_%,10.12,False,0.137,Acier galvanisé et alliages plus chers,banque:zinc:2026-10-31
+nickel,Nickel,métaux,2026-10-31,15436.0,-5.44,variation_%,12.04,False,0.149,Batteries et inox plus chers,banque:nickel:2026-10-31
+prix_production_EU,"Prix de production industriels, UE",prix fournisseurs,2026-09-30,125.7,2.7,variation_%,1.46,True,1.0,Les fournisseurs industriels augmentent leurs prix,eurostat:prix_production_EU:2026-09-30

@@ -1,0 +1,9 @@
+fournisseur,pays,bourse_20j_%,maisons_meres,sanctions,procedures_collectives,en_alerte,alertes,donnees_manquantes
+Wolfspeed,US,6.9,-,0,0,False,,
+Wingtech (maison mère de Nexperia),CN,-17.8,-,1,0,True,sanction sur lui-même,
+Nexperia,NL,,"Wingtech Technology Co., Ltd.",1,0,True,sanction sur maison mère ultime,
+Infineon,DE,-4.8,-,0,0,False,,
+STMicroelectronics,FR,1.9,-,0,0,False,,
+Valeo,FR,-19.4,-,0,0,False,,
+Forvia,FR,-6.6,-,0,0,False,,
+Nyrstar,BE,,-,0,0,False,,
