@@ -1,0 +1,2743 @@
+{
+ "meta": {
+  "id": "crisis_asia_semiconductors",
+  "title": "Crise en cascade : typhon à Taïwan, grève à Rotterdam, flambée du fret",
+  "fictional": true,
+  "notice": "Scénario FICTIF écrit pour la démonstration. Ni les articles, ni les mesures, ni les entreprises ne sont réels.",
+  "start_date": "2026-09-14",
+  "days": 7,
+  "storyline": {
+   "1": "Signal faible : un typhon se renforce, la prévision annonce des rafales à Kaohsiung dans 2 jours.",
+   "2": "Le port de Kaohsiung annonce sa fermeture ; la prévision s'aggrave.",
+   "3": "Le typhon touche terre : port fermé, usine de puces de Tainan inondée.",
+   "4": "Congestion à Kaohsiung ; préavis de grève à Rotterdam ; le fret commence à monter.",
+   "5": "Grève à Rotterdam : les deux bouts de la route des puces sont bloqués ; le fret s'envole.",
+   "6": "Premier client touché : l'usine de calculateurs de Stuttgart réduit sa production.",
+   "7": "L'usine d'assemblage de Valenciennes s'arrête une semaine."
+  }
+ },
+ "media": [
+  {
+   "source_id": "replay:crisis_asia:001",
+   "published_at": "2026-09-14T06:30:00Z",
+   "language": "English",
+   "title": "Typhoon Meilin strengthens over the Philippine Sea, forecasters warn southern Taiwan",
+   "text": "Forecasters upgraded Typhoon Meilin to a severe storm on Monday. The typhoon is expected to approach Taiwan by Wednesday. Shipping lines say they are reviewing their schedules."
+  },
+  {
+   "source_id": "replay:crisis_asia:002",
+   "published_at": "2026-09-15T08:00:00Z",
+   "language": "English",
+   "title": "Port of Kaohsiung to suspend vessel operations ahead of Typhoon Meilin",
+   "text": "Kaohsiung, 15 September. The Port of Kaohsiung announced a port closure from Tuesday evening as Typhoon Meilin approaches. Container ship departures are cancelled and carriers warn of port congestion once operations resume."
+  },
+  {
+   "source_id": "replay:crisis_asia:003",
+   "published_at": "2026-09-15T11:20:00Z",
+   "language": "French",
+   "title": "Typhon Meilin : fermeture du port de Kaohsiung, les navires déroutés",
+   "text": "Le port de Kaohsiung ferme ses terminaux à partir de mardi soir à l'approche du typhon Meilin. Plusieurs porte-conteneurs sont déroutés et les armateurs annoncent des retards."
+  },
+  {
+   "source_id": "replay:crisis_asia:004",
+   "published_at": "2026-09-16T05:45:00Z",
+   "language": "English",
+   "title": "Typhoon Meilin makes landfall near Kaohsiung, flooding industrial zones",
+   "text": "Typhoon Meilin made landfall on Wednesday near Kaohsiung with violent gusts and torrential rain. Severe floods submerged industrial parks across southern Taiwan and factories suspended operations."
+  },
+  {
+   "source_id": "replay:crisis_asia:005",
+   "published_at": "2026-09-16T09:10:00Z",
+   "language": "English",
+   "title": "Formoz Power Semi halts production at Tainan fab after typhoon flooding",
+   "text": "Tainan, 16 September. Chipmaker Formoz Power Semi halted production at its Tainan fab after flood water from Typhoon Meilin reached the site. The company could not say when output would resume."
+  },
+  {
+   "source_id": "replay:crisis_asia:006",
+   "published_at": "2026-09-16T12:30:00Z",
+   "language": "English",
+   "title": "Typhoon flooding: Formoz Power Semi halts production at its Tainan chip fab",
+   "text": "Formoz Power Semi has stopped its production lines in Tainan because of typhoon flooding, the company said."
+  },
+  {
+   "source_id": "replay:crisis_asia:007",
+   "published_at": "2026-09-17T07:15:00Z",
+   "language": "English",
+   "title": "Kaohsiung port congestion builds as terminals reopen slowly after typhoon",
+   "text": "Kaohsiung, 17 September. Port congestion is building at the Port of Kaohsiung, where damaged cranes keep several berths closed. Dozens of container ship calls are delayed and cargo is piling up on the quays."
+  },
+  {
+   "source_id": "replay:crisis_asia:008",
+   "published_at": "2026-09-17T10:00:00Z",
+   "language": "English",
+   "title": "Novalys unveils refreshed E-Trail electric SUV at motor show",
+   "text": "The carmaker presented a new version of its electric SUV with a longer range and a redesigned interior."
+  },
+  {
+   "source_id": "replay:crisis_asia:009",
+   "published_at": "2026-09-17T15:40:00Z",
+   "language": "English",
+   "title": "Rotterdam dockworkers union calls 72-hour strike from Friday over automation plan",
+   "text": "Rotterdam, 17 September. Dockworkers at the Port of Rotterdam voted for a 72-hour strike starting on Friday after talks over terminal automation failed. Unions expect container handling to stop."
+  },
+  {
+   "source_id": "replay:crisis_asia:010",
+   "published_at": "2026-09-18T06:50:00Z",
+   "language": "English",
+   "title": "Strike halts container handling at Port of Rotterdam terminals",
+   "text": "Rotterdam, 18 September. Dockworkers began a 72-hour strike on Friday at the Port of Rotterdam. Port workers walked off the job at the main container terminals and cargo handling has stopped."
+  },
+  {
+   "source_id": "replay:crisis_asia:011",
+   "published_at": "2026-09-18T09:30:00Z",
+   "language": "French",
+   "title": "Grève au port de Rotterdam : les terminaux à l'arrêt",
+   "text": "Les dockers du port de Rotterdam ont entamé vendredi une grève de 72 heures. La manutention des conteneurs est à l'arrêt et les chargeurs redoutent des retards de livraison."
+  },
+  {
+   "source_id": "replay:crisis_asia:012",
+   "published_at": "2026-09-19T08:20:00Z",
+   "language": "English",
+   "title": "Rhein Power Modules warns of power-chip shortage, cuts output at Stuttgart plant",
+   "text": "Stuttgart, 19 September. Rhein Power Modules said a chip shortage forces it to cut output at its Stuttgart plant. Deliveries from Formoz Power Semi have stopped since the typhoon and stocks are running low."
+  },
+  {
+   "source_id": "replay:crisis_asia:013",
+   "published_at": "2026-09-20T07:00:00Z",
+   "language": "English",
+   "title": "Chip shortage: Novalys Valenciennes halts production of the E-City line for a week",
+   "text": "Valenciennes, 20 September. The Novalys Valenciennes plant halts production of its E-City line for one week because of a shortage of power modules. The carmaker blames missing components from its supplier."
+  },
+  {
+   "source_id": "replay:crisis_asia:014",
+   "published_at": "2026-09-20T09:45:00Z",
+   "language": "French",
+   "title": "Pénurie de puces : l'usine Novalys Valenciennes à l'arrêt pendant une semaine",
+   "text": "Faute de calculateurs, l'usine Novalys Valenciennes annonce un arrêt de production d'une semaine sur la ligne E-City. La pénurie de composants touche toute la filière."
+  }
+ ],
+ "weather": [
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 44,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 43,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 55,
+   "gust_max_kmh": 85,
+   "precip_mm": 55,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 41,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 42,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 26,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_wafer_tw",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_tw:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 28,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 33,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 26,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 31,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 32,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 30,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_wafer_de",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_wafer_de:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 29,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 40,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 33,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 28,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_cathode_kr",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 25,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cathode_kr:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 44,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 33,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 36,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 33,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 45,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_magnet_cn",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 32,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_magnet_cn:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 38,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 35,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 105,
+   "gust_max_kmh": 150,
+   "precip_mm": 290,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 45,
+   "gust_max_kmh": 70,
+   "precip_mm": 90,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 28,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 27,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 39,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 44,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 29,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_chip_nl",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_chip_nl:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 37,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 31,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 26,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 42,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 36,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 30,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_cell_cn",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 34,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_cn:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 26,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 35,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 42,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 27,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 26,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_cell_pl",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 27,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_cell_pl:2026-09-20:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 30,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-14:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 44,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-15:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 38,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-16:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-17:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 38,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-18:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 38,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-19:releve"
+  },
+  {
+   "node_id": "sup_motor_jp",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 40,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_motor_jp:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 38,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 50,
+   "gust_max_kmh": 70,
+   "precip_mm": 45,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 130,
+   "gust_max_kmh": 185,
+   "precip_mm": 320,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 60,
+   "gust_max_kmh": 95,
+   "precip_mm": 110,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 30,
+   "gust_max_kmh": 45,
+   "precip_mm": 20,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 43,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 44,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 34,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 32,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 60,
+   "gust_max_kmh": 95,
+   "precip_mm": 70,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_keelung:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 38,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 39,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_keelung",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 44,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_keelung:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 36,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 36,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 30,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 27,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 32,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 25,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 36,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 40,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 39,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 45,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 32,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 35,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 31,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_busan",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 33,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_busan:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 32,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 31,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 36,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 40,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_singapore",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 26,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_singapore:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 26,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 32,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 31,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 37,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 31,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_rotterdam",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 40,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_rotterdam:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 43,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 34,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 28,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 41,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 45,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 43,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_hamburg",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 34,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_hamburg:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 30,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-14:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 39,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-15:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-16:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 44,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-17:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 36,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-18:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 38,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-19:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 33,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-09-20:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-14:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-15:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 40,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-16:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 42,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-17:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-18:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 39,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-19:releve"
+  },
+  {
+   "node_id": "hub_air_fra",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 31,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_fra:2026-09-20:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 32,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-14:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 25,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-15:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 43,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-16:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 28,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-17:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 43,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-18:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 26,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-19:releve"
+  },
+  {
+   "node_id": "plant_ecu_de",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 31,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ecu_de:2026-09-20:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 27,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-14:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 44,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-15:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 38,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-16:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-17:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 36,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-18:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 36,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-19:releve"
+  },
+  {
+   "node_id": "plant_pack_fr",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 43,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_pack_fr:2026-09-20:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 39,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-14:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 26,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-15:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 32,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-16:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 27,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-17:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 33,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-18:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 30,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-19:releve"
+  },
+  {
+   "node_id": "plant_assembly_fr",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 44,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_fr:2026-09-20:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-14",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-14:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-15",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-15:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-16",
+   "issued": "2026-09-16",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 26,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-16:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-17",
+   "issued": "2026-09-17",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 32,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-17:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-18",
+   "issued": "2026-09-18",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 39,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-18:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-19",
+   "issued": "2026-09-19",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-19:releve"
+  },
+  {
+   "node_id": "plant_assembly_de",
+   "date": "2026-09-20",
+   "issued": "2026-09-20",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 25,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_assembly_de:2026-09-20:releve"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-16",
+   "issued": "2026-09-14",
+   "wind_max_kmh": 85,
+   "gust_max_kmh": 120,
+   "precip_mm": 150,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-16:prevision-J1"
+  },
+  {
+   "node_id": "port_kaohsiung",
+   "date": "2026-09-16",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 120,
+   "gust_max_kmh": 175,
+   "precip_mm": 280,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_kaohsiung:2026-09-16:prevision-J2"
+  },
+  {
+   "node_id": "sup_chip_tw",
+   "date": "2026-09-16",
+   "issued": "2026-09-15",
+   "wind_max_kmh": 90,
+   "gust_max_kmh": 130,
+   "precip_mm": 220,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_chip_tw:2026-09-16:prevision-J2"
+  }
+ ],
+ "finance": {
+  "FRET_ASIE_EUROPE": [
+   {
+    "date": "2026-07-31",
+    "close": 99.998
+   },
+   {
+    "date": "2026-08-01",
+    "close": 99.99
+   },
+   {
+    "date": "2026-08-02",
+    "close": 100.302
+   },
+   {
+    "date": "2026-08-03",
+    "close": 100.217
+   },
+   {
+    "date": "2026-08-04",
+    "close": 100.099
+   },
+   {
+    "date": "2026-08-05",
+    "close": 100.379
+   },
+   {
+    "date": "2026-08-06",
+    "close": 100.524
+   },
+   {
+    "date": "2026-08-07",
+    "close": 100.39
+   },
+   {
+    "date": "2026-08-08",
+    "close": 100.127
+   },
+   {
+    "date": "2026-08-09",
+    "close": 100.135
+   },
+   {
+    "date": "2026-08-10",
+    "close": 100.161
+   },
+   {
+    "date": "2026-08-11",
+    "close": 99.81
+   },
+   {
+    "date": "2026-08-12",
+    "close": 99.657
+   },
+   {
+    "date": "2026-08-13",
+    "close": 99.383
+   },
+   {
+    "date": "2026-08-14",
+    "close": 99.427
+   },
+   {
+    "date": "2026-08-15",
+    "close": 99.293
+   },
+   {
+    "date": "2026-08-16",
+    "close": 99.475
+   },
+   {
+    "date": "2026-08-17",
+    "close": 99.506
+   },
+   {
+    "date": "2026-08-18",
+    "close": 99.562
+   },
+   {
+    "date": "2026-08-19",
+    "close": 99.722
+   },
+   {
+    "date": "2026-08-20",
+    "close": 99.547
+   },
+   {
+    "date": "2026-08-21",
+    "close": 99.179
+   },
+   {
+    "date": "2026-08-22",
+    "close": 99.267
+   },
+   {
+    "date": "2026-08-23",
+    "close": 99.11
+   },
+   {
+    "date": "2026-08-24",
+    "close": 99.401
+   },
+   {
+    "date": "2026-08-25",
+    "close": 99.419
+   },
+   {
+    "date": "2026-08-26",
+    "close": 99.694
+   },
+   {
+    "date": "2026-08-27",
+    "close": 99.412
+   },
+   {
+    "date": "2026-08-28",
+    "close": 99.436
+   },
+   {
+    "date": "2026-08-29",
+    "close": 99.821
+   },
+   {
+    "date": "2026-08-30",
+    "close": 99.98
+   },
+   {
+    "date": "2026-08-31",
+    "close": 100.274
+   },
+   {
+    "date": "2026-09-01",
+    "close": 100.551
+   },
+   {
+    "date": "2026-09-02",
+    "close": 100.533
+   },
+   {
+    "date": "2026-09-03",
+    "close": 100.148
+   },
+   {
+    "date": "2026-09-04",
+    "close": 100.38
+   },
+   {
+    "date": "2026-09-05",
+    "close": 100.74
+   },
+   {
+    "date": "2026-09-06",
+    "close": 100.355
+   },
+   {
+    "date": "2026-09-07",
+    "close": 100.624
+   },
+   {
+    "date": "2026-09-08",
+    "close": 100.674
+   },
+   {
+    "date": "2026-09-09",
+    "close": 100.722
+   },
+   {
+    "date": "2026-09-10",
+    "close": 100.892
+   },
+   {
+    "date": "2026-09-11",
+    "close": 100.735
+   },
+   {
+    "date": "2026-09-12",
+    "close": 100.684
+   },
+   {
+    "date": "2026-09-13",
+    "close": 100.858
+   },
+   {
+    "date": "2026-09-14",
+    "close": 101.598
+   },
+   {
+    "date": "2026-09-15",
+    "close": 103.827
+   },
+   {
+    "date": "2026-09-16",
+    "close": 108.766
+   },
+   {
+    "date": "2026-09-17",
+    "close": 116.611
+   },
+   {
+    "date": "2026-09-18",
+    "close": 127.3
+   },
+   {
+    "date": "2026-09-19",
+    "close": 137.812
+   },
+   {
+    "date": "2026-09-20",
+    "close": 145.016
+   }
+  ],
+  "PUCES_PUISSANCE": [
+   {
+    "date": "2026-07-31",
+    "close": 99.856
+   },
+   {
+    "date": "2026-08-01",
+    "close": 99.964
+   },
+   {
+    "date": "2026-08-02",
+    "close": 100.053
+   },
+   {
+    "date": "2026-08-03",
+    "close": 99.875
+   },
+   {
+    "date": "2026-08-04",
+    "close": 99.802
+   },
+   {
+    "date": "2026-08-05",
+    "close": 99.65
+   },
+   {
+    "date": "2026-08-06",
+    "close": 99.837
+   },
+   {
+    "date": "2026-08-07",
+    "close": 99.5
+   },
+   {
+    "date": "2026-08-08",
+    "close": 99.209
+   },
+   {
+    "date": "2026-08-09",
+    "close": 99.131
+   },
+   {
+    "date": "2026-08-10",
+    "close": 99.136
+   },
+   {
+    "date": "2026-08-11",
+    "close": 99.102
+   },
+   {
+    "date": "2026-08-12",
+    "close": 99.316
+   },
+   {
+    "date": "2026-08-13",
+    "close": 99.118
+   },
+   {
+    "date": "2026-08-14",
+    "close": 98.813
+   },
+   {
+    "date": "2026-08-15",
+    "close": 98.433
+   },
+   {
+    "date": "2026-08-16",
+    "close": 98.608
+   },
+   {
+    "date": "2026-08-17",
+    "close": 98.788
+   },
+   {
+    "date": "2026-08-18",
+    "close": 98.597
+   },
+   {
+    "date": "2026-08-19",
+    "close": 98.673
+   },
+   {
+    "date": "2026-08-20",
+    "close": 98.309
+   },
+   {
+    "date": "2026-08-21",
+    "close": 98.255
+   },
+   {
+    "date": "2026-08-22",
+    "close": 98.434
+   },
+   {
+    "date": "2026-08-23",
+    "close": 98.228
+   },
+   {
+    "date": "2026-08-24",
+    "close": 98.196
+   },
+   {
+    "date": "2026-08-25",
+    "close": 98.571
+   },
+   {
+    "date": "2026-08-26",
+    "close": 98.72
+   },
+   {
+    "date": "2026-08-27",
+    "close": 98.489
+   },
+   {
+    "date": "2026-08-28",
+    "close": 98.403
+   },
+   {
+    "date": "2026-08-29",
+    "close": 98.78
+   },
+   {
+    "date": "2026-08-30",
+    "close": 98.954
+   },
+   {
+    "date": "2026-08-31",
+    "close": 98.659
+   },
+   {
+    "date": "2026-09-01",
+    "close": 98.299
+   },
+   {
+    "date": "2026-09-02",
+    "close": 98.163
+   },
+   {
+    "date": "2026-09-03",
+    "close": 98.044
+   },
+   {
+    "date": "2026-09-04",
+    "close": 97.787
+   },
+   {
+    "date": "2026-09-05",
+    "close": 97.424
+   },
+   {
+    "date": "2026-09-06",
+    "close": 97.78
+   },
+   {
+    "date": "2026-09-07",
+    "close": 97.7
+   },
+   {
+    "date": "2026-09-08",
+    "close": 97.886
+   },
+   {
+    "date": "2026-09-09",
+    "close": 97.754
+   },
+   {
+    "date": "2026-09-10",
+    "close": 97.68
+   },
+   {
+    "date": "2026-09-11",
+    "close": 97.796
+   },
+   {
+    "date": "2026-09-12",
+    "close": 97.563
+   },
+   {
+    "date": "2026-09-13",
+    "close": 97.936
+   },
+   {
+    "date": "2026-09-14",
+    "close": 98.138
+   },
+   {
+    "date": "2026-09-15",
+    "close": 98.308
+   },
+   {
+    "date": "2026-09-16",
+    "close": 99.464
+   },
+   {
+    "date": "2026-09-17",
+    "close": 102.242
+   },
+   {
+    "date": "2026-09-18",
+    "close": 108.271
+   },
+   {
+    "date": "2026-09-19",
+    "close": 114.611
+   },
+   {
+    "date": "2026-09-20",
+    "close": 119.434
+   }
+  ],
+  "LITHIUM": [
+   {
+    "date": "2026-07-31",
+    "close": 100.075
+   },
+   {
+    "date": "2026-08-01",
+    "close": 99.854
+   },
+   {
+    "date": "2026-08-02",
+    "close": 100.138
+   },
+   {
+    "date": "2026-08-03",
+    "close": 99.754
+   },
+   {
+    "date": "2026-08-04",
+    "close": 100.006
+   },
+   {
+    "date": "2026-08-05",
+    "close": 100.103
+   },
+   {
+    "date": "2026-08-06",
+    "close": 100.082
+   },
+   {
+    "date": "2026-08-07",
+    "close": 99.886
+   },
+   {
+    "date": "2026-08-08",
+    "close": 100.097
+   },
+   {
+    "date": "2026-08-09",
+    "close": 99.911
+   },
+   {
+    "date": "2026-08-10",
+    "close": 99.608
+   },
+   {
+    "date": "2026-08-11",
+    "close": 99.36
+   },
+   {
+    "date": "2026-08-12",
+    "close": 99.038
+   },
+   {
+    "date": "2026-08-13",
+    "close": 98.899
+   },
+   {
+    "date": "2026-08-14",
+    "close": 99.214
+   },
+   {
+    "date": "2026-08-15",
+    "close": 99.454
+   },
+   {
+    "date": "2026-08-16",
+    "close": 99.275
+   },
+   {
+    "date": "2026-08-17",
+    "close": 99.117
+   },
+   {
+    "date": "2026-08-18",
+    "close": 99.008
+   },
+   {
+    "date": "2026-08-19",
+    "close": 99.22
+   },
+   {
+    "date": "2026-08-20",
+    "close": 98.867
+   },
+   {
+    "date": "2026-08-21",
+    "close": 98.563
+   },
+   {
+    "date": "2026-08-22",
+    "close": 98.401
+   },
+   {
+    "date": "2026-08-23",
+    "close": 98.692
+   },
+   {
+    "date": "2026-08-24",
+    "close": 98.473
+   },
+   {
+    "date": "2026-08-25",
+    "close": 98.802
+   },
+   {
+    "date": "2026-08-26",
+    "close": 98.916
+   },
+   {
+    "date": "2026-08-27",
+    "close": 99.187
+   },
+   {
+    "date": "2026-08-28",
+    "close": 99.258
+   },
+   {
+    "date": "2026-08-29",
+    "close": 99.01
+   },
+   {
+    "date": "2026-08-30",
+    "close": 99.029
+   },
+   {
+    "date": "2026-08-31",
+    "close": 98.908
+   },
+   {
+    "date": "2026-09-01",
+    "close": 98.998
+   },
+   {
+    "date": "2026-09-02",
+    "close": 99.063
+   },
+   {
+    "date": "2026-09-03",
+    "close": 99.041
+   },
+   {
+    "date": "2026-09-04",
+    "close": 98.739
+   },
+   {
+    "date": "2026-09-05",
+    "close": 98.666
+   },
+   {
+    "date": "2026-09-06",
+    "close": 98.5
+   },
+   {
+    "date": "2026-09-07",
+    "close": 98.486
+   },
+   {
+    "date": "2026-09-08",
+    "close": 98.226
+   },
+   {
+    "date": "2026-09-09",
+    "close": 98.016
+   },
+   {
+    "date": "2026-09-10",
+    "close": 97.997
+   },
+   {
+    "date": "2026-09-11",
+    "close": 98.179
+   },
+   {
+    "date": "2026-09-12",
+    "close": 97.794
+   },
+   {
+    "date": "2026-09-13",
+    "close": 97.484
+   },
+   {
+    "date": "2026-09-14",
+    "close": 97.768
+   },
+   {
+    "date": "2026-09-15",
+    "close": 97.622
+   },
+   {
+    "date": "2026-09-16",
+    "close": 97.563
+   },
+   {
+    "date": "2026-09-17",
+    "close": 97.429
+   },
+   {
+    "date": "2026-09-18",
+    "close": 97.615
+   },
+   {
+    "date": "2026-09-19",
+    "close": 97.527
+   },
+   {
+    "date": "2026-09-20",
+    "close": 97.8
+   }
+  ],
+  "CUIVRE": [
+   {
+    "date": "2026-07-31",
+    "close": 99.703
+   },
+   {
+    "date": "2026-08-01",
+    "close": 99.514
+   },
+   {
+    "date": "2026-08-02",
+    "close": 99.182
+   },
+   {
+    "date": "2026-08-03",
+    "close": 99.561
+   },
+   {
+    "date": "2026-08-04",
+    "close": 99.554
+   },
+   {
+    "date": "2026-08-05",
+    "close": 99.57
+   },
+   {
+    "date": "2026-08-06",
+    "close": 99.569
+   },
+   {
+    "date": "2026-08-07",
+    "close": 99.4
+   },
+   {
+    "date": "2026-08-08",
+    "close": 99.034
+   },
+   {
+    "date": "2026-08-09",
+    "close": 99.042
+   },
+   {
+    "date": "2026-08-10",
+    "close": 98.817
+   },
+   {
+    "date": "2026-08-11",
+    "close": 98.857
+   },
+   {
+    "date": "2026-08-12",
+    "close": 98.821
+   },
+   {
+    "date": "2026-08-13",
+    "close": 98.796
+   },
+   {
+    "date": "2026-08-14",
+    "close": 98.838
+   },
+   {
+    "date": "2026-08-15",
+    "close": 98.696
+   },
+   {
+    "date": "2026-08-16",
+    "close": 98.905
+   },
+   {
+    "date": "2026-08-17",
+    "close": 99.179
+   },
+   {
+    "date": "2026-08-18",
+    "close": 99.071
+   },
+   {
+    "date": "2026-08-19",
+    "close": 98.874
+   },
+   {
+    "date": "2026-08-20",
+    "close": 98.675
+   },
+   {
+    "date": "2026-08-21",
+    "close": 98.818
+   },
+   {
+    "date": "2026-08-22",
+    "close": 99.004
+   },
+   {
+    "date": "2026-08-23",
+    "close": 99.22
+   },
+   {
+    "date": "2026-08-24",
+    "close": 98.935
+   },
+   {
+    "date": "2026-08-25",
+    "close": 99.069
+   },
+   {
+    "date": "2026-08-26",
+    "close": 98.902
+   },
+   {
+    "date": "2026-08-27",
+    "close": 98.573
+   },
+   {
+    "date": "2026-08-28",
+    "close": 98.548
+   },
+   {
+    "date": "2026-08-29",
+    "close": 98.342
+   },
+   {
+    "date": "2026-08-30",
+    "close": 98.539
+   },
+   {
+    "date": "2026-08-31",
+    "close": 98.647
+   },
+   {
+    "date": "2026-09-01",
+    "close": 98.822
+   },
+   {
+    "date": "2026-09-02",
+    "close": 98.713
+   },
+   {
+    "date": "2026-09-03",
+    "close": 98.865
+   },
+   {
+    "date": "2026-09-04",
+    "close": 98.905
+   },
+   {
+    "date": "2026-09-05",
+    "close": 98.707
+   },
+   {
+    "date": "2026-09-06",
+    "close": 98.81
+   },
+   {
+    "date": "2026-09-07",
+    "close": 98.505
+   },
+   {
+    "date": "2026-09-08",
+    "close": 98.639
+   },
+   {
+    "date": "2026-09-09",
+    "close": 98.406
+   },
+   {
+    "date": "2026-09-10",
+    "close": 98.733
+   },
+   {
+    "date": "2026-09-11",
+    "close": 98.931
+   },
+   {
+    "date": "2026-09-12",
+    "close": 98.542
+   },
+   {
+    "date": "2026-09-13",
+    "close": 98.867
+   },
+   {
+    "date": "2026-09-14",
+    "close": 98.658
+   },
+   {
+    "date": "2026-09-15",
+    "close": 98.85
+   },
+   {
+    "date": "2026-09-16",
+    "close": 98.902
+   },
+   {
+    "date": "2026-09-17",
+    "close": 99.077
+   },
+   {
+    "date": "2026-09-18",
+    "close": 98.813
+   },
+   {
+    "date": "2026-09-19",
+    "close": 98.652
+   },
+   {
+    "date": "2026-09-20",
+    "close": 98.463
+   }
+  ],
+  "TERRES_RARES": [
+   {
+    "date": "2026-07-31",
+    "close": 99.935
+   },
+   {
+    "date": "2026-08-01",
+    "close": 99.577
+   },
+   {
+    "date": "2026-08-02",
+    "close": 99.72
+   },
+   {
+    "date": "2026-08-03",
+    "close": 99.979
+   },
+   {
+    "date": "2026-08-04",
+    "close": 100.075
+   },
+   {
+    "date": "2026-08-05",
+    "close": 100.185
+   },
+   {
+    "date": "2026-08-06",
+    "close": 99.933
+   },
+   {
+    "date": "2026-08-07",
+    "close": 99.907
+   },
+   {
+    "date": "2026-08-08",
+    "close": 99.702
+   },
+   {
+    "date": "2026-08-09",
+    "close": 99.946
+   },
+   {
+    "date": "2026-08-10",
+    "close": 100.248
+   },
+   {
+    "date": "2026-08-11",
+    "close": 100.056
+   },
+   {
+    "date": "2026-08-12",
+    "close": 99.828
+   },
+   {
+    "date": "2026-08-13",
+    "close": 99.918
+   },
+   {
+    "date": "2026-08-14",
+    "close": 99.662
+   },
+   {
+    "date": "2026-08-15",
+    "close": 99.328
+   },
+   {
+    "date": "2026-08-16",
+    "close": 99.318
+   },
+   {
+    "date": "2026-08-17",
+    "close": 99.17
+   },
+   {
+    "date": "2026-08-18",
+    "close": 99.368
+   },
+   {
+    "date": "2026-08-19",
+    "close": 99.35
+   },
+   {
+    "date": "2026-08-20",
+    "close": 98.972
+   },
+   {
+    "date": "2026-08-21",
+    "close": 98.592
+   },
+   {
+    "date": "2026-08-22",
+    "close": 98.323
+   },
+   {
+    "date": "2026-08-23",
+    "close": 97.952
+   },
+   {
+    "date": "2026-08-24",
+    "close": 97.583
+   },
+   {
+    "date": "2026-08-25",
+    "close": 97.704
+   },
+   {
+    "date": "2026-08-26",
+    "close": 97.737
+   },
+   {
+    "date": "2026-08-27",
+    "close": 97.826
+   },
+   {
+    "date": "2026-08-28",
+    "close": 97.831
+   },
+   {
+    "date": "2026-08-29",
+    "close": 97.83
+   },
+   {
+    "date": "2026-08-30",
+    "close": 97.767
+   },
+   {
+    "date": "2026-08-31",
+    "close": 97.946
+   },
+   {
+    "date": "2026-09-01",
+    "close": 97.966
+   },
+   {
+    "date": "2026-09-02",
+    "close": 98.117
+   },
+   {
+    "date": "2026-09-03",
+    "close": 97.826
+   },
+   {
+    "date": "2026-09-04",
+    "close": 97.67
+   },
+   {
+    "date": "2026-09-05",
+    "close": 97.603
+   },
+   {
+    "date": "2026-09-06",
+    "close": 97.898
+   },
+   {
+    "date": "2026-09-07",
+    "close": 98.21
+   },
+   {
+    "date": "2026-09-08",
+    "close": 98.229
+   },
+   {
+    "date": "2026-09-09",
+    "close": 98.022
+   },
+   {
+    "date": "2026-09-10",
+    "close": 97.969
+   },
+   {
+    "date": "2026-09-11",
+    "close": 97.73
+   },
+   {
+    "date": "2026-09-12",
+    "close": 97.989
+   },
+   {
+    "date": "2026-09-13",
+    "close": 97.853
+   },
+   {
+    "date": "2026-09-14",
+    "close": 97.871
+   },
+   {
+    "date": "2026-09-15",
+    "close": 97.639
+   },
+   {
+    "date": "2026-09-16",
+    "close": 97.504
+   },
+   {
+    "date": "2026-09-17",
+    "close": 97.549
+   },
+   {
+    "date": "2026-09-18",
+    "close": 97.466
+   },
+   {
+    "date": "2026-09-19",
+    "close": 97.444
+   },
+   {
+    "date": "2026-09-20",
+    "close": 97.678
+   }
+  ]
+ }
+}

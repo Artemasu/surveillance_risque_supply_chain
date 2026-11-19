@@ -1,0 +1,130 @@
+# Topologie de la chaîne d'approvisionnement (électronique de puissance et véhicule électrique).
+#
+# BASE FOURNISSEURS SIMULÉE : les entreprises (Formoz, TaiSil, Novalys...) sont inventées pour le projet.
+# Les ports et les villes sont réels. Aucun code LEI : il n'en existe pas pour des entreprises fictives.
+#
+# Sens des liens : source -> target = « source fournit target ».
+#   input       : catégorie d'intrant. Plusieurs sources pour une même catégorie = redondance.
+#   dependency  : part de la catégorie couverte par la source (la somme par catégorie et par cible vaut 1).
+#   backup      : lien de secours, inactif (dependency 0). Il ne propage pas de risque ; il sert à la mitigation.
+#   capacity    : part maximale que la source peut couvrir si on la sollicite (secours ou réserve).
+# keywords     : mots-clés sectoriels. Un article qui les contient sans citer de site est rattaché au nœud
+#                avec une confiance réduite (mode live).
+# criticality  : importance métier du nœud (0 à 1). stock_days : jours de couverture en stock chez le nœud.
+# tier         : 0 produit fini, 1 usine, 2 fournisseur de rang 2 et logistique, 3 rang 3, 4 matière première.
+
+meta:
+  name: "Chaîne électronique de puissance / véhicule électrique"
+  simulated_suppliers: true
+
+nodes:
+  # ---------------- matières premières
+  - {id: rm_silicon,     name: "Silicium polycristallin", type: matiere_premiere, tier: 4, criticality: 0.6, country: China,  place: Kunming,   lat: 25.04,  lon: 102.71, stock_days: 0, aliases: ["polysilicon", "polysilicium"], keywords: ["polysilicon"]}
+  - {id: rm_lithium,     name: "Lithium",                 type: matiere_premiere, tier: 4, criticality: 0.7, country: Chile,  place: "Salar de Atacama", lat: -23.50, lon: -68.25, stock_days: 0, aliases: ["lithium carbonate", "carbonate de lithium"], keywords: ["lithium"]}
+  - {id: rm_cobalt,      name: "Cobalt",                  type: matiere_premiere, tier: 4, criticality: 0.6, country: "DR Congo", place: Kolwezi, lat: -10.71, lon: 25.47,  stock_days: 0, aliases: [], keywords: ["cobalt"]}
+  - {id: rm_rare_earths, name: "Terres rares",            type: matiere_premiere, tier: 4, criticality: 0.7, country: China,  place: Baotou,    lat: 40.66,  lon: 109.84, stock_days: 0, aliases: ["rare earths", "rare earth"], keywords: ["terres rares"]}
+  - {id: rm_copper,      name: "Cuivre",                  type: matiere_premiere, tier: 4, criticality: 0.4, country: Chile,  place: Antofagasta, lat: -23.65, lon: -70.40, stock_days: 0, aliases: ["copper"], keywords: ["cuivre"]}
+  # ---------------- fournisseurs de rang 3
+  - {id: sup_wafer_tw,   name: "TaiSil Wafer",       type: fournisseur, tier: 3, criticality: 0.7, country: Taiwan,      place: Hsinchu, lat: 24.80, lon: 120.97, stock_days: 15, company: true, weather_watch: true, aliases: ["TaiSil", "TaiSil Wafer Corp"], keywords: ["wafer", "plaquettes de silicium"]}
+  - {id: sup_wafer_de,   name: "Elbe Silicon",       type: fournisseur, tier: 3, criticality: 0.5, country: Germany,     place: Dresden, lat: 51.05, lon: 13.74,  stock_days: 20, company: true, weather_watch: true, aliases: ["Elbe Silicon GmbH"], keywords: ["wafer", "plaquettes de silicium"]}
+  - {id: sup_cathode_kr, name: "Hanbit Cathode",     type: fournisseur, tier: 3, criticality: 0.7, country: "South Korea", place: Pohang, lat: 36.02, lon: 129.34, stock_days: 20, company: true, weather_watch: true, aliases: ["Hanbit", "Hanbit Cathode Materials"], keywords: ["cathode"]}
+  - {id: sup_magnet_cn,  name: "Baotou Magnetics",   type: fournisseur, tier: 3, criticality: 0.6, country: China,       place: Baotou,  lat: 40.66, lon: 109.84, stock_days: 30, company: true, weather_watch: true, aliases: ["Baotou Magnetics Co"], keywords: ["rare earth magnet", "permanent magnet", "aimants permanents"]}
+  # ---------------- fournisseurs de rang 2
+  - {id: sup_chip_tw,    name: "Formoz Power Semi",   type: fournisseur, tier: 2, criticality: 0.9, country: Taiwan,      place: Tainan,   lat: 22.99, lon: 120.21, stock_days: 10, company: true, weather_watch: true, aliases: ["Formoz", "Formoz Power Semiconductor"], keywords: ["semiconductor", "semi-conducteur", "chipmaker", "chip shortage", "pénurie de puces"]}
+  - {id: sup_chip_nl,    name: "Waal Semiconductors", type: fournisseur, tier: 2, criticality: 0.6, country: Netherlands, place: Nijmegen, lat: 51.84, lon: 5.85,   stock_days: 15, company: true, weather_watch: true, aliases: ["Waal Semi", "Waal Semiconductors BV"], keywords: ["semiconductor", "semi-conducteur", "chipmaker", "chip shortage", "pénurie de puces"]}
+  - {id: sup_cell_cn,    name: "Shenhai Cells",       type: fournisseur, tier: 2, criticality: 0.8, country: China,       place: Ningde,   lat: 26.66, lon: 119.55, stock_days: 15, company: true, weather_watch: true, aliases: ["Shenhai", "Shenhai Battery Cells"], keywords: ["battery cell", "battery maker", "cellules de batterie"]}
+  - {id: sup_cell_pl,    name: "Odra Battery",        type: fournisseur, tier: 2, criticality: 0.6, country: Poland,      place: Wroclaw,  lat: 51.11, lon: 17.04,  stock_days: 15, company: true, weather_watch: true, aliases: ["Odra", "Odra Battery Sp"], keywords: ["battery cell", "battery maker", "cellules de batterie"]}
+  - {id: sup_motor_jp,   name: "Kansai Drive",        type: fournisseur, tier: 2, criticality: 0.7, country: Japan,       place: Osaka,    lat: 34.69, lon: 135.50, stock_days: 20, company: true, weather_watch: true, aliases: ["Kansai Drive Systems"], keywords: ["electric motor", "moteurs électriques"]}
+  # ---------------- ports et hubs logistiques
+  - {id: port_kaohsiung, name: "Port of Kaohsiung", type: port, tier: 2, criticality: 0.9, country: Taiwan,      place: Kaohsiung, lat: 22.61, lon: 120.28, weather_watch: true, aliases: ["Kaohsiung port", "port de Kaohsiung", "Kaohsiung"]}
+  - {id: port_keelung,   name: "Port of Keelung",   type: port, tier: 2, criticality: 0.4, country: Taiwan,      place: Keelung,   lat: 25.15, lon: 121.75, weather_watch: true, aliases: ["Keelung port", "port de Keelung", "Keelung"]}
+  - {id: port_shanghai,  name: "Port of Shanghai",  type: port, tier: 2, criticality: 0.8, country: China,       place: Shanghai,  lat: 31.23, lon: 121.49, weather_watch: true, aliases: ["Shanghai port", "port de Shanghai", "Shanghai"]}
+  - {id: port_busan,     name: "Port of Busan",     type: port, tier: 3, criticality: 0.6, country: "South Korea", place: Busan,   lat: 35.10, lon: 129.04, weather_watch: true, aliases: ["Busan port", "port de Busan", "Busan"]}
+  - {id: port_singapore, name: "Port of Singapore", type: port, tier: 2, criticality: 0.7, country: Singapore,   place: Singapore, lat: 1.26,  lon: 103.82, weather_watch: true, aliases: ["Singapore port", "port de Singapour", "Singapore", "Singapour"]}
+  - {id: port_rotterdam, name: "Port of Rotterdam", type: port, tier: 2, criticality: 0.9, country: Netherlands, place: Rotterdam, lat: 51.95, lon: 4.14,   weather_watch: true, aliases: ["Rotterdam port", "port de Rotterdam", "Hafen Rotterdam", "Rotterdam"]}
+  - {id: port_hamburg,   name: "Port of Hamburg",   type: port, tier: 2, criticality: 0.7, country: Germany,     place: Hamburg,   lat: 53.53, lon: 9.97,   weather_watch: true, aliases: ["port de Hambourg", "Hamburger Hafen", "Hamburg", "Hambourg"]}
+  - {id: port_le_havre,  name: "Port of Le Havre",  type: port, tier: 2, criticality: 0.6, country: France,      place: "Le Havre", lat: 49.48, lon: 0.13,  weather_watch: true, aliases: ["port du Havre", "Le Havre"]}
+  - {id: hub_air_fra,    name: "Fret aérien Francfort", type: hub, tier: 2, criticality: 0.3, country: Germany,  place: Frankfurt, lat: 50.04, lon: 8.56,   weather_watch: true, aliases: ["Frankfurt air cargo", "fret aérien de Francfort"]}
+
+  # ---------------- usines
+  - {id: plant_ecu_de,      name: "Rhein Power Modules (Stuttgart)", type: usine, tier: 1, criticality: 0.9, country: Germany, place: Stuttgart,    lat: 48.78, lon: 9.18,  stock_days: 20, company: true, weather_watch: true, aliases: ["Rhein Power Modules", "Rhein Power"]}
+  - {id: plant_pack_fr,     name: "Novalys Battery (Douai)",         type: usine, tier: 1, criticality: 0.8, country: France,  place: Douai,        lat: 50.37, lon: 3.08,  stock_days: 15, company: true, weather_watch: true, aliases: ["Novalys Battery"]}
+  - {id: plant_assembly_fr, name: "Novalys Valenciennes",            type: usine, tier: 1, criticality: 0.9, country: France,  place: Valenciennes, lat: 50.36, lon: 3.52,  stock_days: 10, company: true, weather_watch: true, aliases: ["usine de Valenciennes", "Valenciennes plant"]}
+  - {id: plant_assembly_de, name: "Novalys Leipzig",                 type: usine, tier: 1, criticality: 0.8, country: Germany, place: Leipzig,      lat: 51.34, lon: 12.37, stock_days: 10, company: true, weather_watch: true, aliases: ["usine de Leipzig", "Leipzig plant"]}
+
+  # ---------------- produits finis
+  - {id: prod_ev_compact, name: "Citadine électrique E-City",  type: produit_fini, tier: 0, criticality: 1.0, aliases: ["E-City"]}
+  - {id: prod_ev_suv,     name: "SUV électrique E-Trail",      type: produit_fini, tier: 0, criticality: 0.9, aliases: ["E-Trail"]}
+  - {id: prod_inverter,   name: "Onduleur industriel RX",      type: produit_fini, tier: 0, criticality: 0.6, aliases: ["onduleur RX", "RX inverter"]}
+
+edges:
+  # silicium -> wafers -> puces
+  - {source: rm_silicon,   target: sup_wafer_tw, input: silicium, dependency: 1.0, lead_time_days: 20}
+  - {source: rm_silicon,   target: sup_wafer_de, input: silicium, dependency: 1.0, lead_time_days: 30}
+  - {source: sup_wafer_tw, target: sup_chip_tw,  input: wafers,   dependency: 0.8, lead_time_days: 3}
+  - {source: sup_wafer_de, target: sup_chip_tw,  input: wafers,   dependency: 0.2, lead_time_days: 35, capacity: 0.4}
+  - {source: sup_wafer_de, target: sup_chip_nl,  input: wafers,   dependency: 0.7, lead_time_days: 2}
+  - {source: sup_wafer_tw, target: sup_chip_nl,  input: wafers,   dependency: 0.3, lead_time_days: 35, capacity: 0.5}
+
+  # batteries
+  - {source: rm_lithium,     target: sup_cathode_kr, input: lithium,  dependency: 1.0, lead_time_days: 40}
+  - {source: rm_cobalt,      target: sup_cathode_kr, input: cobalt,   dependency: 1.0, lead_time_days: 45}
+  - {source: sup_cathode_kr, target: port_busan,     input: cathodes_export, dependency: 1.0, lead_time_days: 1}
+  - {source: port_busan,     target: sup_cell_cn,    input: cathodes, dependency: 1.0, lead_time_days: 4}
+  - {source: sup_cathode_kr, target: sup_cell_pl,    input: cathodes, dependency: 1.0, lead_time_days: 40}
+  - {source: sup_cell_cn,    target: port_shanghai,  input: cellules_export, dependency: 1.0, lead_time_days: 2}
+  - {source: port_shanghai,  target: port_le_havre,  input: fret_cellules,   dependency: 1.0, lead_time_days: 32}
+  - {source: port_le_havre,  target: plant_pack_fr,  input: cellules, dependency: 0.6, lead_time_days: 2}
+  - {source: sup_cell_pl,    target: plant_pack_fr,  input: cellules, dependency: 0.4, lead_time_days: 2, capacity: 0.6}
+
+  # moteurs
+  - {source: rm_rare_earths, target: sup_magnet_cn,  input: terres_rares, dependency: 1.0, lead_time_days: 10}
+  - {source: sup_magnet_cn,  target: sup_motor_jp,   input: aimants,      dependency: 1.0, lead_time_days: 12}
+  - {source: rm_copper,      target: sup_motor_jp,   input: cuivre,       dependency: 1.0, lead_time_days: 40}
+  - {source: sup_motor_jp,   target: port_singapore, input: moteurs_export, dependency: 1.0, lead_time_days: 8}
+  - {source: port_singapore, target: port_hamburg,   input: fret_moteurs, dependency: 1.0, lead_time_days: 26}
+  - {source: port_hamburg,   target: plant_assembly_de, input: moteurs,   dependency: 1.0, lead_time_days: 1}
+  - {source: port_hamburg,   target: plant_assembly_fr, input: moteurs,   dependency: 1.0, lead_time_days: 2}
+
+  # puces de puissance : Taïwan -> Kaohsiung -> Rotterdam -> Stuttgart, avec une seconde source néerlandaise
+  - {source: sup_chip_tw,    target: port_kaohsiung, input: puces_export, dependency: 1.0, lead_time_days: 1}
+  - {source: port_kaohsiung, target: port_rotterdam, input: fret_puces,   dependency: 1.0, lead_time_days: 30}
+  - {source: port_rotterdam, target: plant_ecu_de,   input: puces_puissance, dependency: 0.7, lead_time_days: 2}
+  - {source: sup_chip_nl,    target: plant_ecu_de,   input: puces_puissance, dependency: 0.3, lead_time_days: 1, capacity: 0.5}
+
+  # secours (inactifs)
+  - {source: sup_chip_tw,    target: port_keelung,   input: puces_export, dependency: 0, backup: true, capacity: 0.5, lead_time_days: 2}
+  - {source: port_keelung,   target: port_rotterdam, input: fret_puces,   dependency: 0, backup: true, capacity: 0.5, lead_time_days: 32}
+  - {source: port_kaohsiung, target: port_hamburg,   input: fret_puces_secours, dependency: 0, backup: true, capacity: 0.6, lead_time_days: 32}
+  - {source: port_hamburg,   target: plant_ecu_de,   input: puces_puissance, dependency: 0, backup: true, capacity: 0.6, lead_time_days: 3}
+  - {source: sup_chip_tw,    target: hub_air_fra,    input: puces_export_air, dependency: 0, backup: true, capacity: 0.25, lead_time_days: 3}
+  - {source: hub_air_fra,    target: plant_ecu_de,   input: puces_puissance, dependency: 0, backup: true, capacity: 0.25, lead_time_days: 1}
+  - {source: port_hamburg,   target: plant_pack_fr,  input: cellules, dependency: 0, backup: true, capacity: 0.4, lead_time_days: 4}
+
+  # usines -> usines -> produits finis
+  - {source: plant_ecu_de,      target: plant_assembly_fr, input: calculateurs, dependency: 1.0, lead_time_days: 2}
+  - {source: plant_ecu_de,      target: plant_assembly_de, input: calculateurs, dependency: 1.0, lead_time_days: 1}
+  - {source: plant_pack_fr,     target: plant_assembly_fr, input: packs_batterie, dependency: 1.0, lead_time_days: 1}
+  - {source: plant_pack_fr,     target: plant_assembly_de, input: packs_batterie, dependency: 1.0, lead_time_days: 3}
+  - {source: plant_assembly_fr, target: prod_ev_compact,   input: assemblage, dependency: 1.0}
+  - {source: plant_assembly_de, target: prod_ev_suv,       input: assemblage, dependency: 1.0}
+  - {source: plant_ecu_de,      target: prod_inverter,     input: assemblage, dependency: 1.0}
+
+# Lieux supplémentaires pour l'agent médias (pays et régions sans nœud). precision : 1 = pays.
+gazetteer:
+  - {name: Taiwan,      aliases: ["Taïwan"],                 lat: 23.70, lon: 120.96, kind: pays}
+  - {name: China,       aliases: ["Chine"],                  lat: 35.86, lon: 104.20, kind: pays}
+  - {name: Netherlands, aliases: ["Pays-Bas", "Niederlande"], lat: 52.13, lon: 5.29,  kind: pays}
+  - {name: Germany,     aliases: ["Allemagne", "Deutschland"], lat: 51.17, lon: 10.45, kind: pays}
+  - {name: France,      aliases: [],                         lat: 46.23, lon: 2.21,   kind: pays}
+  - {name: Japan,       aliases: ["Japon"],                  lat: 36.20, lon: 138.25, kind: pays}
+  - {name: "South Korea", aliases: ["Corée du Sud"],         lat: 35.91, lon: 127.77, kind: pays}
+
+# Instruments suivis par l'agent finance. `yf` : symbole Yahoo Finance utilisé en live (indicateur approché).
+# `nodes` : nœuds dont le risque direct est touché quand l'instrument décroche.
+market_watch:
+  - {id: FRET_ASIE_EUROPE, name: "Fret conteneur Asie-Europe", yf: "BDRY", nodes: [port_kaohsiung, port_shanghai, port_singapore]}
+  - {id: PUCES_PUISSANCE,  name: "Prix spot puces de puissance", yf: "SOXX", nodes: [sup_chip_tw]}
+  - {id: LITHIUM,          name: "Lithium",      yf: "LIT",  nodes: [rm_lithium]}
+  - {id: CUIVRE,           name: "Cuivre",       yf: "HG=F", nodes: [rm_copper]}
+  - {id: TERRES_RARES,     name: "Terres rares", yf: "REMX", nodes: [rm_rare_earths]}

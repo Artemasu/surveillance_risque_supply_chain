@@ -1,0 +1,7 @@
+J1 : Signal faible : un typhon se renforce, la prévision annonce des rafales à Kaohsiung dans 2 jours.
+J2 : Le port de Kaohsiung annonce sa fermeture ; la prévision s'aggrave.
+J3 : Le typhon touche terre : port fermé, usine de puces de Tainan inondée.
+J4 : Congestion à Kaohsiung ; préavis de grève à Rotterdam ; le fret commence à monter.
+J5 : Grève à Rotterdam : les deux bouts de la route des puces sont bloqués ; le fret s'envole.
+J6 : Premier client touché : l'usine de calculateurs de Stuttgart réduit sa production.
+J7 : L'usine d'assemblage de Valenciennes s'arrête une semaine.

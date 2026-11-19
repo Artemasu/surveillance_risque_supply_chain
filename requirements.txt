@@ -1,0 +1,24 @@
+# Socle
+pydantic>=2.6
+networkx>=3.2
+PyYAML>=6.0
+requests>=2.31
+scikit-learn>=1.4
+# API
+fastapi>=0.110
+uvicorn[standard]>=0.29
+httpx>=0.27            # client de test FastAPI
+# Interface
+streamlit>=1.40
+plotly>=5.20
+pyvis>=0.3.2
+pandas>=2.1
+matplotlib>=3.8      # figures de soutenance (scripts/export_soutenance.py)
+# Collecte live et NLP (facultatifs : chacun a un repli, signalé dans l'état des sources)
+gdeltdoc>=1.5
+feedparser>=6.0
+yfinance>=0.2.40
+spacy>=3.7
+rapidfuzz>=3.6
+# Tests
+pytest>=8.0

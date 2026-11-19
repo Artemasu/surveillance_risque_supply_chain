@@ -1,0 +1,289 @@
+# Topologie générée par scripts/generate_sector_config.py (secteur : pharma, entreprise : Helvia Pharma).
+#
+# POINT DE DÉPART À CORRIGER : les fournisseurs sont inventés. Remplacez-les par les vôtres.
+# Sens des liens : source -> target = « source fournit target ».
+#   input      : catégorie d'intrant. Plusieurs sources pour une même catégorie = redondance.
+#   dependency : part de la catégorie couverte par la source (la somme par catégorie et par cible vaut 1).
+#   keywords   : mots-clés sectoriels d'un nœud ; un article qui les contient sans citer de site y est rattaché
+#                avec une confiance réduite (mode live).
+#   backup     : lien de secours inactif (dependency 0) ; capacity : part maximale activable.
+# Vérification : python scripts/generate_sector_config.py --check <ce fichier>
+
+meta: {name: 'Pharmacie : principes actifs (API) d''Inde et de Chine, remplissage et conditionnement en Europe (Helvia Pharma)', sector: pharma, company: Helvia Pharma, simulated_suppliers: true}
+nodes:
+- id: rm_ksm
+  name: Intermédiaires chimiques (KSM)
+  type: matiere_premiere
+  tier: 4
+  criticality: 0.7
+  country: China
+  place: Taizhou
+  lat: 28.66
+  lon: 121.42
+  weather_watch: false
+  aliases: [key starting materials, antibiotic intermediates]
+- id: rm_solvents
+  name: Solvants
+  type: matiere_premiere
+  tier: 4
+  criticality: 0.4
+  country: Germany
+  place: Ludwigshafen
+  lat: 49.48
+  lon: 8.44
+  weather_watch: false
+  aliases: []
+- id: rm_borosilicate
+  name: Verre borosilicaté
+  type: matiere_premiere
+  tier: 4
+  criticality: 0.5
+  country: Germany
+  place: Mainz
+  lat: 50.0
+  lon: 8.27
+  weather_watch: false
+  aliases: [borosilicate glass]
+- id: sup_api_in
+  name: Deccan Actives
+  type: fournisseur
+  tier: 2
+  criticality: 0.9
+  country: India
+  place: Hyderabad
+  lat: 17.39
+  lon: 78.49
+  weather_watch: true
+  stock_days: 20
+  company: true
+  aliases: [Deccan Actives Ltd]
+  keywords: [active pharmaceutical ingredient, antibiotic, antibiotique, principe actif, drug shortage, pénurie de médicaments]
+- id: sup_api_cn
+  name: Jiangnan BioChem
+  type: fournisseur
+  tier: 2
+  criticality: 0.6
+  country: China
+  place: Shaoxing
+  lat: 30.0
+  lon: 120.58
+  weather_watch: true
+  stock_days: 20
+  company: true
+  aliases: [Jiangnan BioChem Co]
+  keywords: [active pharmaceutical ingredient, antibiotic, antibiotique, principe actif, drug shortage, pénurie de médicaments]
+- id: sup_api_it
+  name: Lombarda Chimica
+  type: fournisseur
+  tier: 2
+  criticality: 0.7
+  country: Italy
+  place: Bergamo
+  lat: 45.7
+  lon: 9.67
+  weather_watch: true
+  stock_days: 25
+  company: true
+  aliases: [Lombarda Chimica SpA]
+  keywords: [active pharmaceutical ingredient, principe actif, antidiabétique]
+- id: sup_vials_de
+  name: Rheinglas Pharma
+  type: fournisseur
+  tier: 2
+  criticality: 0.7
+  country: Germany
+  place: Mainz
+  lat: 50.0
+  lon: 8.27
+  weather_watch: true
+  stock_days: 30
+  company: true
+  aliases: [Rheinglas]
+  keywords: [glass vials, flacons en verre]
+- id: sup_excip_fr
+  name: Excipia
+  type: fournisseur
+  tier: 2
+  criticality: 0.4
+  country: France
+  place: Lyon
+  lat: 45.76
+  lon: 4.84
+  weather_watch: true
+  stock_days: 30
+  company: true
+  aliases: [Excipia SAS]
+- id: sup_pack_pl
+  name: Wisla Pack
+  type: fournisseur
+  tier: 2
+  criticality: 0.4
+  country: Poland
+  place: Lodz
+  lat: 51.76
+  lon: 19.46
+  weather_watch: true
+  stock_days: 30
+  company: true
+  aliases: [Wisla Pack Sp]
+- id: port_nhava_sheva
+  name: Port of Nhava Sheva
+  type: port
+  tier: 2
+  criticality: 0.8
+  country: India
+  place: Nhava Sheva
+  lat: 18.95
+  lon: 72.95
+  weather_watch: true
+  aliases: [Nhava Sheva port, JNPT, Jawaharlal Nehru Port, port de Nhava Sheva]
+- id: port_shanghai
+  name: Port of Shanghai
+  type: port
+  tier: 2
+  criticality: 0.6
+  country: China
+  place: Shanghai
+  lat: 31.23
+  lon: 121.49
+  weather_watch: true
+  aliases: [Shanghai port, port de Shanghai, Shanghai]
+- id: port_antwerp
+  name: Port of Antwerp
+  type: port
+  tier: 2
+  criticality: 0.9
+  country: Belgium
+  place: Antwerp
+  lat: 51.27
+  lon: 4.34
+  weather_watch: true
+  aliases: [Antwerp port, port d'Anvers, Antwerp-Bruges, Antwerp, Anvers]
+- id: port_le_havre
+  name: Port of Le Havre
+  type: port
+  tier: 2
+  criticality: 0.6
+  country: France
+  place: Le Havre
+  lat: 49.48
+  lon: 0.13
+  weather_watch: true
+  aliases: [port du Havre, Le Havre]
+- id: hub_air_cdg
+  name: Fret aérien Paris-CDG
+  type: hub
+  tier: 2
+  criticality: 0.3
+  country: France
+  place: Roissy
+  lat: 49.01
+  lon: 2.55
+  weather_watch: true
+  aliases: [Paris-CDG cargo, fret aérien de Roissy]
+- id: plant_ff_fr
+  name: Helvia Tours (injectables)
+  type: usine
+  tier: 1
+  criticality: 0.9
+  country: France
+  place: Tours
+  lat: 47.39
+  lon: 0.69
+  weather_watch: true
+  stock_days: 30
+  company: true
+  aliases: [Helvia Tours, usine de Tours, Tours plant]
+- id: plant_oral_ie
+  name: Helvia Cork (formes orales)
+  type: usine
+  tier: 1
+  criticality: 0.8
+  country: Ireland
+  place: Cork
+  lat: 51.9
+  lon: -8.47
+  weather_watch: true
+  stock_days: 30
+  company: true
+  aliases: [Helvia Cork, usine de Cork, Cork plant]
+- id: prod_antibio_inj
+  name: Antibiotique injectable Cefalia
+  type: produit_fini
+  tier: 0
+  criticality: 1.0
+  aliases: [Cefalia]
+- id: prod_antibio_oral
+  name: Antibiotique oral Amoxiral
+  type: produit_fini
+  tier: 0
+  criticality: 0.8
+  aliases: [Amoxiral]
+- id: prod_antidiab
+  name: Antidiabétique oral Glumera
+  type: produit_fini
+  tier: 0
+  criticality: 0.8
+  aliases: [Glumera]
+edges:
+- {source: rm_ksm, target: sup_api_in, input: intermediaires, dependency: 1.0, lead_time_days: 35}
+- {source: rm_ksm, target: sup_api_cn, input: intermediaires, dependency: 1.0, lead_time_days: 5}
+- {source: rm_solvents, target: sup_api_it, input: solvants, dependency: 1.0, lead_time_days: 5}
+- {source: rm_borosilicate, target: sup_vials_de, input: verre, dependency: 1.0, lead_time_days: 2}
+- {source: sup_api_in, target: port_nhava_sheva, input: api_export, dependency: 1.0, lead_time_days: 3}
+- {source: port_nhava_sheva, target: port_antwerp, input: fret_api_inde, dependency: 1.0, lead_time_days: 24}
+- {source: sup_api_cn, target: port_shanghai, input: api_export, dependency: 1.0, lead_time_days: 2}
+- {source: port_shanghai, target: port_le_havre, input: fret_api_chine, dependency: 1.0, lead_time_days: 32}
+- {source: port_antwerp, target: plant_ff_fr, input: api_antibiotique, dependency: 0.7, lead_time_days: 2}
+- {source: port_le_havre, target: plant_ff_fr, input: api_antibiotique, dependency: 0.3, lead_time_days: 1, capacity: 0.6}
+- {source: sup_vials_de, target: plant_ff_fr, input: flacons, dependency: 1.0, lead_time_days: 3}
+- {source: sup_pack_pl, target: plant_ff_fr, input: emballages, dependency: 1.0, lead_time_days: 4}
+- {source: port_antwerp, target: plant_oral_ie, input: api_antibiotique, dependency: 1.0, lead_time_days: 4}
+- {source: sup_api_it, target: plant_oral_ie, input: api_antidiabetique, dependency: 1.0, lead_time_days: 5}
+- {source: sup_excip_fr, target: plant_oral_ie, input: excipients, dependency: 1.0, lead_time_days: 4}
+- {source: sup_pack_pl, target: plant_oral_ie, input: emballages, dependency: 1.0, lead_time_days: 5}
+- {source: sup_api_in, target: hub_air_cdg, input: api_export_air, dependency: 0, lead_time_days: 2, backup: true, capacity: 0.3}
+- {source: hub_air_cdg, target: plant_ff_fr, input: api_antibiotique, dependency: 0, lead_time_days: 1, backup: true, capacity: 0.3}
+- {source: hub_air_cdg, target: plant_oral_ie, input: api_antibiotique, dependency: 0, lead_time_days: 2, backup: true, capacity: 0.2}
+- {source: plant_ff_fr, target: prod_antibio_inj, input: production, dependency: 1.0, lead_time_days: 0}
+- {source: plant_oral_ie, target: prod_antibio_oral, input: production, dependency: 1.0, lead_time_days: 0}
+- {source: plant_oral_ie, target: prod_antidiab, input: production, dependency: 1.0, lead_time_days: 0}
+gazetteer:
+- name: India
+  aliases: [Inde]
+  lat: 20.59
+  lon: 78.96
+  kind: pays
+- name: China
+  aliases: [Chine]
+  lat: 35.86
+  lon: 104.2
+  kind: pays
+- name: Belgium
+  aliases: [Belgique]
+  lat: 50.5
+  lon: 4.47
+  kind: pays
+- name: France
+  aliases: []
+  lat: 46.23
+  lon: 2.21
+  kind: pays
+- name: Ireland
+  aliases: [Irlande]
+  lat: 53.41
+  lon: -8.24
+  kind: pays
+market_watch:
+- id: API_ANTIBIOTIQUES
+  name: Prix des principes actifs antibiotiques
+  yf: XPH
+  nodes: [sup_api_in, sup_api_cn]
+- id: FRET_INDE_EUROPE
+  name: Fret conteneur Inde-Europe
+  yf: BDRY
+  nodes: [port_nhava_sheva]
+- id: GAZ_EUROPE
+  name: Gaz naturel européen (énergie des verriers)
+  yf: TTF=F
+  nodes: [sup_vials_de]

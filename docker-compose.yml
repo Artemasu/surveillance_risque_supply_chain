@@ -1,0 +1,37 @@
+# docker compose up --build
+#   API       : http://localhost:8000/docs
+#   Interface : http://localhost:8501
+#
+# LLM local (facultatif) : lancer Ollama sur la machine hôte (`ollama pull qwen2.5:7b`), puis USE_LLM=true.
+# Sans Ollama, tout fonctionne avec la baseline NLP et le copilot déterministe.
+services:
+  api:
+    build: .
+    command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      USE_LLM: ${USE_LLM:-false}
+      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+      LLM_BASE_URL: ${LLM_BASE_URL:-http://host.docker.internal:11434}
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:7b}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ui:
+    build: .
+    command: streamlit run app/Tour_de_controle.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy

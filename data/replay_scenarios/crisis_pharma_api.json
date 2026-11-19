@@ -1,0 +1,1506 @@
+{
+ "meta": {
+  "id": "crisis_pharma_api",
+  "title": "Pharmacie : contrôle des exportations, inondations à Hyderabad, cyberattaque à Anvers",
+  "fictional": true,
+  "notice": "Scénario FICTIF écrit pour la démonstration. Ni les articles, ni les mesures, ni les entreprises ne sont réels.",
+  "start_date": "2026-07-06",
+  "days": 6,
+  "storyline": {
+   "1": "Premier signal : la Chine soumet à licence l'exportation d'intermédiaires ; forte pluie prévue à Hyderabad.",
+   "2": "La presse annonce un risque d'inondation à Hyderabad ; la prévision s'aggrave.",
+   "3": "Inondations : le fournisseur indien de principe actif arrête sa production.",
+   "4": "Cyberattaque au port d'Anvers : la route d'arrivée du principe actif indien est bloquée à son tour.",
+   "5": "Le prix des principes actifs et le fret Inde-Europe décrochent.",
+   "6": "L'usine de Tours réduit sa production d'antibiotique injectable."
+  },
+  "topology": "topologies/pharma_helvia.yaml"
+ },
+ "media": [
+  {
+   "source_id": "replay:crisis_pharma:001",
+   "published_at": "2026-07-06T07:10:00Z",
+   "language": "English",
+   "title": "China tightens export controls on antibiotic intermediates, Jiangnan BioChem needs licences",
+   "text": "Beijing, 6 July. China's Ministry of Commerce announced new export controls on key antibiotic intermediates. Exporters such as Jiangnan BioChem will need a licence for each shipment, an export restriction that could delay deliveries to European drug makers."
+  },
+  {
+   "source_id": "replay:crisis_pharma:002",
+   "published_at": "2026-07-07T06:40:00Z",
+   "language": "English",
+   "title": "Monsoon: severe floods feared in Hyderabad industrial areas within two days",
+   "text": "Hyderabad, 7 July. Forecasters expect torrential monsoon rain over Hyderabad from Wednesday. Authorities warn of a flood risk in the industrial areas where several pharmaceutical plants operate."
+  },
+  {
+   "source_id": "replay:crisis_pharma:003",
+   "published_at": "2026-07-08T08:30:00Z",
+   "language": "English",
+   "title": "Deccan Actives halts production at Hyderabad plant after severe floods",
+   "text": "Hyderabad, 8 July. Severe floods submerged the Hyderabad pharma cluster on Wednesday. Deccan Actives halted production of antibiotic ingredients at its plant and could not say when output would resume."
+  },
+  {
+   "source_id": "replay:crisis_pharma:004",
+   "published_at": "2026-07-08T11:15:00Z",
+   "language": "English",
+   "title": "Severe floods: Deccan Actives halts production at its Hyderabad plant",
+   "text": "Deccan Actives has stopped its production lines in Hyderabad because of the floods, the company said."
+  },
+  {
+   "source_id": "replay:crisis_pharma:005",
+   "published_at": "2026-07-09T05:50:00Z",
+   "language": "English",
+   "title": "Ransomware attack forces Port of Antwerp terminal operator to shut down IT systems",
+   "text": "Antwerp, 9 July. A ransomware attack hit a container terminal operator at the Port of Antwerp overnight. The cyberattack forced it to shut down its IT systems and cargo release is suspended."
+  },
+  {
+   "source_id": "replay:crisis_pharma:006",
+   "published_at": "2026-07-09T09:20:00Z",
+   "language": "French",
+   "title": "Cyberattaque au port d'Anvers : un rançongiciel paralyse des terminaux à conteneurs",
+   "text": "Une cyberattaque par rançongiciel touche depuis la nuit un opérateur de terminaux du port d'Anvers. Les systèmes informatiques sont coupés et la sortie des conteneurs est suspendue."
+  },
+  {
+   "source_id": "replay:crisis_pharma:007",
+   "published_at": "2026-07-10T10:00:00Z",
+   "language": "English",
+   "title": "Helvia Pharma appoints new chief financial officer",
+   "text": "The drug maker named a new chief financial officer, who will take up the post in September."
+  },
+  {
+   "source_id": "replay:crisis_pharma:008",
+   "published_at": "2026-07-11T07:30:00Z",
+   "language": "English",
+   "title": "Helvia Tours plant warns of antibiotic ingredient shortage, cuts output of injectables",
+   "text": "Tours, 11 July. The Helvia Tours plant cuts output of its injectable antibiotic because of a shortage of active ingredient. Deliveries from Deccan Actives have stopped since the floods and stocks are running low."
+  },
+  {
+   "source_id": "replay:crisis_pharma:009",
+   "published_at": "2026-07-11T10:10:00Z",
+   "language": "French",
+   "title": "Pénurie de principe actif : l'usine Helvia Tours réduit sa production d'antibiotiques",
+   "text": "Faute de principe actif, l'usine Helvia Tours annonce une baisse de production de son antibiotique injectable. La pénurie de composants pourrait durer plusieurs semaines."
+  }
+ ],
+ "weather": [
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_in:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 14,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_in:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 50,
+   "gust_max_kmh": 80,
+   "precip_mm": 290,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_api_in:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 30,
+   "gust_max_kmh": 50,
+   "precip_mm": 110,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_api_in:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_in:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 30,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_in:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 41,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 40,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 34,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 31,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_api_cn",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 34,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_cn:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 35,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 43,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 33,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 28,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_api_it",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 27,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_api_it:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 37,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 28,
+   "gust_max_kmh": 45,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 35,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 42,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_vials_de",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 40,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_vials_de:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 26,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 29,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 44,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 35,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 30,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_excip_fr",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 25,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_excip_fr:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 39,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-06:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 38,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-07:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 44,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-08:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 33,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-09:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 43,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-10:releve"
+  },
+  {
+   "node_id": "sup_pack_pl",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 27,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:sup_pack_pl:2026-07-11:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 33,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-06:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 34,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-07:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 40,
+   "gust_max_kmh": 65,
+   "precip_mm": 75,
+   "weather_code": 65,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-08:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 37,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-09:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 38,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-10:releve"
+  },
+  {
+   "node_id": "port_nhava_sheva",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_nhava_sheva:2026-07-11:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 30,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-06:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 12,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-07:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 11,
+   "gust_max_kmh": 30,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-08:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 45,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-09:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 34,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-10:releve"
+  },
+  {
+   "node_id": "port_shanghai",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 34,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_shanghai:2026-07-11:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 27,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-06:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-07:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 39,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-08:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 23,
+   "gust_max_kmh": 32,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-09:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-10:releve"
+  },
+  {
+   "node_id": "port_antwerp",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 29,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_antwerp:2026-07-11:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 26,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-06:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 21,
+   "gust_max_kmh": 27,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-07:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-08:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 29,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-09:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 29,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-10:releve"
+  },
+  {
+   "node_id": "port_le_havre",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:port_le_havre:2026-07-11:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 42,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-06:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 40,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-07:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 25,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-08:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 41,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-09:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 17,
+   "gust_max_kmh": 28,
+   "precip_mm": 8,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-10:releve"
+  },
+  {
+   "node_id": "hub_air_cdg",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 26,
+   "gust_max_kmh": 25,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:hub_air_cdg:2026-07-11:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 20,
+   "gust_max_kmh": 40,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-06:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 13,
+   "gust_max_kmh": 38,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-07:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 18,
+   "gust_max_kmh": 40,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-08:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 19,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-09:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 35,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-10:releve"
+  },
+  {
+   "node_id": "plant_ff_fr",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 24,
+   "gust_max_kmh": 38,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_ff_fr:2026-07-11:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-06",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 34,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-06:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-07",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 28,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-07:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-08",
+   "issued": "2026-07-08",
+   "wind_max_kmh": 10,
+   "gust_max_kmh": 33,
+   "precip_mm": 5,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-08:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-09",
+   "issued": "2026-07-09",
+   "wind_max_kmh": 15,
+   "gust_max_kmh": 36,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-09:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-10",
+   "issued": "2026-07-10",
+   "wind_max_kmh": 22,
+   "gust_max_kmh": 31,
+   "precip_mm": 0,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-10:releve"
+  },
+  {
+   "node_id": "plant_oral_ie",
+   "date": "2026-07-11",
+   "issued": "2026-07-11",
+   "wind_max_kmh": 16,
+   "gust_max_kmh": 37,
+   "precip_mm": 2,
+   "weather_code": 3,
+   "source_id": "replay:meteo:plant_oral_ie:2026-07-11:releve"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-08",
+   "issued": "2026-07-06",
+   "wind_max_kmh": 35,
+   "gust_max_kmh": 55,
+   "precip_mm": 160,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_api_in:2026-07-08:prevision-J1"
+  },
+  {
+   "node_id": "sup_api_in",
+   "date": "2026-07-08",
+   "issued": "2026-07-07",
+   "wind_max_kmh": 45,
+   "gust_max_kmh": 70,
+   "precip_mm": 240,
+   "weather_code": 65,
+   "source_id": "replay:meteo:sup_api_in:2026-07-08:prevision-J2"
+  }
+ ],
+ "finance": {
+  "API_ANTIBIOTIQUES": [
+   {
+    "date": "2026-05-22",
+    "close": 99.743
+   },
+   {
+    "date": "2026-05-23",
+    "close": 99.73
+   },
+   {
+    "date": "2026-05-24",
+    "close": 99.676
+   },
+   {
+    "date": "2026-05-25",
+    "close": 99.908
+   },
+   {
+    "date": "2026-05-26",
+    "close": 99.552
+   },
+   {
+    "date": "2026-05-27",
+    "close": 99.549
+   },
+   {
+    "date": "2026-05-28",
+    "close": 99.157
+   },
+   {
+    "date": "2026-05-29",
+    "close": 99.236
+   },
+   {
+    "date": "2026-05-30",
+    "close": 98.947
+   },
+   {
+    "date": "2026-05-31",
+    "close": 98.885
+   },
+   {
+    "date": "2026-06-01",
+    "close": 98.825
+   },
+   {
+    "date": "2026-06-02",
+    "close": 98.756
+   },
+   {
+    "date": "2026-06-03",
+    "close": 98.897
+   },
+   {
+    "date": "2026-06-04",
+    "close": 99.042
+   },
+   {
+    "date": "2026-06-05",
+    "close": 99.033
+   },
+   {
+    "date": "2026-06-06",
+    "close": 99.096
+   },
+   {
+    "date": "2026-06-07",
+    "close": 99.331
+   },
+   {
+    "date": "2026-06-08",
+    "close": 99.037
+   },
+   {
+    "date": "2026-06-09",
+    "close": 99.169
+   },
+   {
+    "date": "2026-06-10",
+    "close": 99.09
+   },
+   {
+    "date": "2026-06-11",
+    "close": 98.73
+   },
+   {
+    "date": "2026-06-12",
+    "close": 98.585
+   },
+   {
+    "date": "2026-06-13",
+    "close": 98.913
+   },
+   {
+    "date": "2026-06-14",
+    "close": 99.254
+   },
+   {
+    "date": "2026-06-15",
+    "close": 99.617
+   },
+   {
+    "date": "2026-06-16",
+    "close": 99.444
+   },
+   {
+    "date": "2026-06-17",
+    "close": 99.549
+   },
+   {
+    "date": "2026-06-18",
+    "close": 99.404
+   },
+   {
+    "date": "2026-06-19",
+    "close": 99.22
+   },
+   {
+    "date": "2026-06-20",
+    "close": 99.594
+   },
+   {
+    "date": "2026-06-21",
+    "close": 99.261
+   },
+   {
+    "date": "2026-06-22",
+    "close": 98.932
+   },
+   {
+    "date": "2026-06-23",
+    "close": 98.564
+   },
+   {
+    "date": "2026-06-24",
+    "close": 98.412
+   },
+   {
+    "date": "2026-06-25",
+    "close": 98.409
+   },
+   {
+    "date": "2026-06-26",
+    "close": 98.431
+   },
+   {
+    "date": "2026-06-27",
+    "close": 98.311
+   },
+   {
+    "date": "2026-06-28",
+    "close": 98.348
+   },
+   {
+    "date": "2026-06-29",
+    "close": 98.683
+   },
+   {
+    "date": "2026-06-30",
+    "close": 98.631
+   },
+   {
+    "date": "2026-07-01",
+    "close": 98.639
+   },
+   {
+    "date": "2026-07-02",
+    "close": 98.911
+   },
+   {
+    "date": "2026-07-03",
+    "close": 99.277
+   },
+   {
+    "date": "2026-07-04",
+    "close": 99.483
+   },
+   {
+    "date": "2026-07-05",
+    "close": 99.509
+   },
+   {
+    "date": "2026-07-06",
+    "close": 99.397
+   },
+   {
+    "date": "2026-07-07",
+    "close": 99.91
+   },
+   {
+    "date": "2026-07-08",
+    "close": 103.151
+   },
+   {
+    "date": "2026-07-09",
+    "close": 108.03
+   },
+   {
+    "date": "2026-07-10",
+    "close": 114.492
+   },
+   {
+    "date": "2026-07-11",
+    "close": 119.028
+   }
+  ],
+  "FRET_INDE_EUROPE": [
+   {
+    "date": "2026-05-22",
+    "close": 100.2
+   },
+   {
+    "date": "2026-05-23",
+    "close": 100.576
+   },
+   {
+    "date": "2026-05-24",
+    "close": 100.294
+   },
+   {
+    "date": "2026-05-25",
+    "close": 99.948
+   },
+   {
+    "date": "2026-05-26",
+    "close": 100.051
+   },
+   {
+    "date": "2026-05-27",
+    "close": 100.265
+   },
+   {
+    "date": "2026-05-28",
+    "close": 100.255
+   },
+   {
+    "date": "2026-05-29",
+    "close": 99.896
+   },
+   {
+    "date": "2026-05-30",
+    "close": 100.04
+   },
+   {
+    "date": "2026-05-31",
+    "close": 99.794
+   },
+   {
+    "date": "2026-06-01",
+    "close": 99.81
+   },
+   {
+    "date": "2026-06-02",
+    "close": 99.967
+   },
+   {
+    "date": "2026-06-03",
+    "close": 99.764
+   },
+   {
+    "date": "2026-06-04",
+    "close": 99.55
+   },
+   {
+    "date": "2026-06-05",
+    "close": 99.231
+   },
+   {
+    "date": "2026-06-06",
+    "close": 98.862
+   },
+   {
+    "date": "2026-06-07",
+    "close": 98.54
+   },
+   {
+    "date": "2026-06-08",
+    "close": 98.577
+   },
+   {
+    "date": "2026-06-09",
+    "close": 98.721
+   },
+   {
+    "date": "2026-06-10",
+    "close": 98.377
+   },
+   {
+    "date": "2026-06-11",
+    "close": 98.287
+   },
+   {
+    "date": "2026-06-12",
+    "close": 98.288
+   },
+   {
+    "date": "2026-06-13",
+    "close": 97.921
+   },
+   {
+    "date": "2026-06-14",
+    "close": 97.711
+   },
+   {
+    "date": "2026-06-15",
+    "close": 97.328
+   },
+   {
+    "date": "2026-06-16",
+    "close": 97.097
+   },
+   {
+    "date": "2026-06-17",
+    "close": 96.94
+   },
+   {
+    "date": "2026-06-18",
+    "close": 97.072
+   },
+   {
+    "date": "2026-06-19",
+    "close": 97.123
+   },
+   {
+    "date": "2026-06-20",
+    "close": 96.991
+   },
+   {
+    "date": "2026-06-21",
+    "close": 97.31
+   },
+   {
+    "date": "2026-06-22",
+    "close": 97.664
+   },
+   {
+    "date": "2026-06-23",
+    "close": 97.304
+   },
+   {
+    "date": "2026-06-24",
+    "close": 97.569
+   },
+   {
+    "date": "2026-06-25",
+    "close": 97.355
+   },
+   {
+    "date": "2026-06-26",
+    "close": 97.476
+   },
+   {
+    "date": "2026-06-27",
+    "close": 97.143
+   },
+   {
+    "date": "2026-06-28",
+    "close": 97.514
+   },
+   {
+    "date": "2026-06-29",
+    "close": 97.495
+   },
+   {
+    "date": "2026-06-30",
+    "close": 97.692
+   },
+   {
+    "date": "2026-07-01",
+    "close": 97.434
+   },
+   {
+    "date": "2026-07-02",
+    "close": 97.286
+   },
+   {
+    "date": "2026-07-03",
+    "close": 97.372
+   },
+   {
+    "date": "2026-07-04",
+    "close": 97.156
+   },
+   {
+    "date": "2026-07-05",
+    "close": 97.21
+   },
+   {
+    "date": "2026-07-06",
+    "close": 97.11
+   },
+   {
+    "date": "2026-07-07",
+    "close": 97.211
+   },
+   {
+    "date": "2026-07-08",
+    "close": 97.975
+   },
+   {
+    "date": "2026-07-09",
+    "close": 101.818
+   },
+   {
+    "date": "2026-07-10",
+    "close": 107.971
+   },
+   {
+    "date": "2026-07-11",
+    "close": 113.593
+   }
+  ],
+  "GAZ_EUROPE": [
+   {
+    "date": "2026-05-22",
+    "close": 100.381
+   },
+   {
+    "date": "2026-05-23",
+    "close": 100.692
+   },
+   {
+    "date": "2026-05-24",
+    "close": 100.617
+   },
+   {
+    "date": "2026-05-25",
+    "close": 100.359
+   },
+   {
+    "date": "2026-05-26",
+    "close": 100.714
+   },
+   {
+    "date": "2026-05-27",
+    "close": 100.768
+   },
+   {
+    "date": "2026-05-28",
+    "close": 100.951
+   },
+   {
+    "date": "2026-05-29",
+    "close": 101.14
+   },
+   {
+    "date": "2026-05-30",
+    "close": 101.12
+   },
+   {
+    "date": "2026-05-31",
+    "close": 101.114
+   },
+   {
+    "date": "2026-06-01",
+    "close": 101.334
+   },
+   {
+    "date": "2026-06-02",
+    "close": 101.443
+   },
+   {
+    "date": "2026-06-03",
+    "close": 101.81
+   },
+   {
+    "date": "2026-06-04",
+    "close": 101.745
+   },
+   {
+    "date": "2026-06-05",
+    "close": 101.522
+   },
+   {
+    "date": "2026-06-06",
+    "close": 101.508
+   },
+   {
+    "date": "2026-06-07",
+    "close": 101.214
+   },
+   {
+    "date": "2026-06-08",
+    "close": 100.852
+   },
+   {
+    "date": "2026-06-09",
+    "close": 100.798
+   },
+   {
+    "date": "2026-06-10",
+    "close": 100.788
+   },
+   {
+    "date": "2026-06-11",
+    "close": 100.69
+   },
+   {
+    "date": "2026-06-12",
+    "close": 100.826
+   },
+   {
+    "date": "2026-06-13",
+    "close": 101.147
+   },
+   {
+    "date": "2026-06-14",
+    "close": 100.939
+   },
+   {
+    "date": "2026-06-15",
+    "close": 100.849
+   },
+   {
+    "date": "2026-06-16",
+    "close": 101.024
+   },
+   {
+    "date": "2026-06-17",
+    "close": 100.855
+   },
+   {
+    "date": "2026-06-18",
+    "close": 100.469
+   },
+   {
+    "date": "2026-06-19",
+    "close": 100.107
+   },
+   {
+    "date": "2026-06-20",
+    "close": 100.082
+   },
+   {
+    "date": "2026-06-21",
+    "close": 100.101
+   },
+   {
+    "date": "2026-06-22",
+    "close": 100.136
+   },
+   {
+    "date": "2026-06-23",
+    "close": 100.148
+   },
+   {
+    "date": "2026-06-24",
+    "close": 99.827
+   },
+   {
+    "date": "2026-06-25",
+    "close": 100.077
+   },
+   {
+    "date": "2026-06-26",
+    "close": 99.796
+   },
+   {
+    "date": "2026-06-27",
+    "close": 99.692
+   },
+   {
+    "date": "2026-06-28",
+    "close": 99.641
+   },
+   {
+    "date": "2026-06-29",
+    "close": 99.762
+   },
+   {
+    "date": "2026-06-30",
+    "close": 99.799
+   },
+   {
+    "date": "2026-07-01",
+    "close": 99.889
+   },
+   {
+    "date": "2026-07-02",
+    "close": 100.242
+   },
+   {
+    "date": "2026-07-03",
+    "close": 100.475
+   },
+   {
+    "date": "2026-07-04",
+    "close": 100.171
+   },
+   {
+    "date": "2026-07-05",
+    "close": 100.002
+   },
+   {
+    "date": "2026-07-06",
+    "close": 99.757
+   },
+   {
+    "date": "2026-07-07",
+    "close": 99.656
+   },
+   {
+    "date": "2026-07-08",
+    "close": 99.522
+   },
+   {
+    "date": "2026-07-09",
+    "close": 99.236
+   },
+   {
+    "date": "2026-07-10",
+    "close": 99.115
+   },
+   {
+    "date": "2026-07-11",
+    "close": 98.818
+   }
+  ]
+ }
+}

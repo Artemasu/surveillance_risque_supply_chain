@@ -1,0 +1,14 @@
+# Thème sombre par défaut. Le thème clair se choisit dans le menu ⋮ > Settings de Streamlit.
+[theme]
+base = "dark"
+primaryColor = "#3987e5"
+backgroundColor = "#0d0d0d"
+secondaryBackgroundColor = "#1a1a19"
+textColor = "#f0efec"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true

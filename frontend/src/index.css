@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background: #f8fafc;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply font-sans bg-canvas text-ink;
+  }
+  ::selection {
+    background: #dbeafe;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-sm;
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-mute;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-white text-ink-soft hover:bg-slate-50 hover:text-ink;
+  }
+  .select {
+    @apply w-full appearance-none rounded-xl border border-line bg-white py-2 pl-3 pr-8 text-sm font-medium text-ink shadow-sm focus:border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-100;
+  }
+}
+
+/* Compagnon Slime : pixel art net, et respiration très lente pendant le sommeil (aucun déplacement). */
+.slime-sprite {
+  image-rendering: pixelated;
+}
+.slime-breathe {
+  transform-origin: bottom center;
+  animation: slime-breathe 4.5s ease-in-out infinite;
+}
+@keyframes slime-breathe {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.97);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slime-breathe {
+    animation: none;
+  }
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 99px;
+}
+
+input[type="range"].range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(to right, var(--fill, #93c5fd) var(--pct, 50%), #e2e8f0 var(--pct, 50%));
+}
+input[type="range"].range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 99px;
+  background: #fff;
+  border: 2px solid var(--thumb, #3b82f6);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15);
+  cursor: pointer;
+}
+input[type="range"].range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 99px;
+  background: #fff;
+  border: 2px solid var(--thumb, #3b82f6);
+  cursor: pointer;
+}
