@@ -6,6 +6,7 @@ import type {
 } from "./types";
 
 export type Mode = "replay" | "live";
+export type View = "dashboard" | "chain";
 
 export interface ChatMessage extends ChatTurn {
   mode?: string;
@@ -53,6 +54,9 @@ interface Store {
 
   whatIfNode: string | null;
   setWhatIfNode: (id: string | null) => void;
+
+  view: View;
+  setView: (v: View) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -90,6 +94,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const [drawer, setDrawer] = useState<DrawerTarget>(null);
   const [whatIfNode, setWhatIfNode] = useState<string | null>(null);
+  const [view, setView] = useState<View>("dashboard");
 
   const setScenarioId = useCallback(
     (id: string) => {
@@ -205,7 +210,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     openNode: (nodeId) => setDrawer({ kind: "node", nodeId }),
     openEvent: (envelope) => setDrawer({ kind: "event", envelope }),
     closeDrawer: () => setDrawer(null),
-    whatIfNode, setWhatIfNode,
+    whatIfNode, setWhatIfNode, view, setView,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

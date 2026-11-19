@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { LayoutDashboard, Loader2, Network, Play, PlugZap } from "lucide-react";
-import { useState } from "react";
 import { API_URL } from "./api";
 import ChainView from "./components/ChainView";
 import Companion from "./components/Companion";
@@ -9,8 +8,6 @@ import EvidenceDrawer from "./components/EvidenceDrawer";
 import Header from "./components/Header";
 import { AgentBadge, Segmented } from "./components/ui";
 import { useStore } from "./store";
-
-type View = "dashboard" | "chain";
 
 function Welcome() {
   const { launch, loading, apiDown, mode, scenarios, scenarioId } = useStore();
@@ -55,8 +52,7 @@ function Welcome() {
 }
 
 export default function App() {
-  const { run, state, error } = useStore();
-  const [view, setView] = useState<View>("dashboard");
+  const { run, state, error, view, setView } = useStore();
 
   return (
     <div className="min-h-screen pb-24">

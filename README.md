@@ -249,8 +249,8 @@ React 18 + TypeScript + Vite + Tailwind CSS + Framer Motion + Lucide. Thème cla
 | Zone | Contenu | Endpoints |
 |---|---|---|
 | Barre de pilotage | Replay (scénario, curseur de jour, résumé narratif) ou Live (topologie), LLM local, « Lancer l'analyse », état des 3 sources | `GET /health`, `GET /scenarios`, `GET /topologies`, `POST /pipeline/run` |
-| Tour de contrôle | Phrase de synthèse, 3 indicateurs, courbe de l'indice, chronologie des signaux, alertes prioritaires | `GET /graph/state`, `GET /alerts`, `GET /events` |
-| Chaîne & simulation | Graphe d'ontologie (formes par type), carte mondiale, tableau (stocks, direct / propagé, chemin), panneau What-If | `GET /graph/state`, `POST /graph/simulate` |
+| Tour de contrôle | Phrase de synthèse, bandeau de conseil (recommandation + « Simuler ce nœud »), 3 indicateurs, courbe de l'indice, chronologie des signaux, alertes prioritaires | `GET /graph/state`, `GET /alerts`, `GET /events` |
+| Chaîne & simulation | Graphe en colonnes (2D) ou vue orbitale centrée sur l'entreprise (3D, `react-force-graph-3d`), carte MapLibre en plan (2D) ou globe (3D), tableau (stocks, direct / propagé, chemin), panneau What-If | `GET /graph/state`, `GET /events`, `POST /graph/simulate` |
 | Preuves & traçabilité | Tiroir latéral : explication en clair, chemin, signaux, preuves multi-sources (exact / élargi ×0,40), JSON brut | `GET /alerts`, `GET /events` |
 | Slime | Compagnon pixel art à droite de l'écran (réagit au scroll), bulle de statut, chat Copilot avec questions rapides | `POST /chat` |
 
@@ -259,12 +259,26 @@ frontend/src/
   api.ts  types.ts  store.tsx  theme.ts      client HTTP, types des schémas Pydantic, état global, palette
   components/Header.tsx                      barre de pilotage
   components/Dashboard.tsx RiskChart.tsx SignalTimeline.tsx
-  components/ChainView.tsx OntologyGraph.tsx WorldMap.tsx ChainTable.tsx WhatIfPanel.tsx
+  components/AdviceStrip.tsx                 bandeau de conseil
+  components/ChainView.tsx OntologyGraph.tsx OrbitalGraph.tsx MapView.tsx ChainTable.tsx WhatIfPanel.tsx
+  graphUtils.ts                              aval d'un nœud, produits menacés, alternatives
   components/EvidenceDrawer.tsx              tiroir de preuves
   components/Companion.tsx Slime.tsx         compagnon Slime et chat Copilot
 public/copilot/slime_*.png                   sprites du Slime (générés, voir ci-dessous)
 sprites_src/                                 planches sources etats_slime et slime_situations
 ```
+
+**Bandeau de conseil.** Sous la bannière d'état, une ligne de recommandation : celle de l'API si une version future
+en fournit une (`recommendation` dans le résultat du pipeline), sinon des règles déterministes sur l'indice global
+(< 20 : veille passive et test What-If du nœud le plus exposé ; 20 à 50 : source dominante et alternatives du maillon
+exposé ; > 50 : action prioritaire et produits finis à protéger en aval). « Simuler ce nœud » ouvre l'onglet
+Chaîne & simulation avec ce nœud présélectionné.
+
+**Carte et vue 3D.** La carte utilise MapLibre GL et le style gratuit Carto Positron (connexion requise ; hors ligne,
+fond uni avec nœuds et liens). La vue orbitale 3D place l'entreprise au centre, puis les produits finis, usines, ports
+et hubs, fournisseurs et matières sur des orbites successives ; les signaux actifs gravitent autour des maillons
+touchés. Dans les deux vues, comme dans le graphe 2D, un clic sélectionne le nœud dans le What-If et illumine sa
+propagation en aval. MapLibre et three.js sont chargés à la demande, à l'ouverture de ces vues.
 
 **Compagnon Slime.** Seul personnage de l'interface, ancré en bas à droite (immobile, aucun suivi du scroll), il
 ouvre le chat Copilot et sert d'avatar aux réponses. Les 15 sprites (3 couleurs de risque × 5 poses) sont découpés

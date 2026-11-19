@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useStore } from "../store";
 import { AGENTS, AGENT_STYLE, LEVEL_STYLE, TYPE_LABEL, fmt1, indexLevel, pct } from "../theme";
 import type { AgentName, RiskLevel } from "../types";
+import AdviceStrip from "./AdviceStrip";
 import RiskChart from "./RiskChart";
 import SignalTimeline from "./SignalTimeline";
 import { AgentBadge, Card, Empty, LevelBadge, SoftBar } from "./ui";
@@ -56,6 +57,7 @@ function Synthesis() {
           </p>
         </div>
       </motion.div>
+      <AdviceStrip />
       {(failed.length > 0 || partial.length > 0) && (
         <div className="flex items-start gap-2.5 rounded-xl border border-sky-100 bg-sky-50/70 px-4 py-2.5 text-sm text-sky-900">
           <Info size={16} className="mt-0.5 shrink-0" />

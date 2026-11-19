@@ -1,6 +1,7 @@
 // Graphe d'ontologie en couches (matière → fournisseur → port/hub → usine → produit), formes par type de nœud.
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { downstream, propagationEdges } from "../graphUtils";
 import { LEVEL_STYLE, TYPE_LABEL, pct } from "../theme";
 import type { GraphEdge, NodeState, NodeType } from "../types";
 
@@ -78,7 +79,10 @@ export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen
     if (n) for (let i = 0; i < n.path.length - 1; i++) s.add(`${n.path[i]}>${n.path[i + 1]}`);
     return s;
   }, [focus, byId]);
-  const pathNodes = new Set(focus ? byId.get(focus)?.path ?? [] : []);
+  // Nœud sélectionné pour le What-If : sa propagation aval (jusqu'aux produits finis) s'illumine.
+  const downEdges = useMemo(() => (hover ? new Set<string>() : propagationEdges(edges, selected)), [edges, selected, hover]);
+  const downNodes = useMemo(() => (hover || !selected ? new Set<string>() : downstream(edges, selected)), [edges, selected, hover]);
+  const pathNodes = new Set([...(focus ? byId.get(focus)?.path ?? [] : []), ...downNodes]);
   const hovered = hover ? byId.get(hover) : undefined;
   const hp = hover ? layout.pos.get(hover) : undefined;
 
@@ -94,11 +98,12 @@ export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen
           const a = layout.pos.get(e.source);
           const b = layout.pos.get(e.target);
           if (!a || !b) return null;
-          const onPath = pathEdges.has(`${e.source}>${e.target}`);
+          const down = downEdges.has(`${e.source}>${e.target}`);
+          const onPath = down || pathEdges.has(`${e.source}>${e.target}`);
           const dx = (b.x - a.x) / 2;
           const d = `M${a.x},${a.y} C${a.x + dx},${a.y} ${b.x - dx},${b.y} ${b.x},${b.y}`;
           const src = byId.get(e.source);
-          const color = onPath && src ? LEVEL_STYLE[src.level === "ok" ? "info" : src.level].color : e.backup ? "#CBD5E1" : "#CBD5E1";
+          const color = down ? "#EA580C" : onPath && src ? LEVEL_STYLE[src.level === "ok" ? "info" : src.level].color : "#CBD5E1";
           return (
             <path
               key={`${e.source}-${e.target}`}

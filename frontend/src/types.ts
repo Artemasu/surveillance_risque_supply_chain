@@ -37,6 +37,8 @@ export interface PipelineRunResult {
   degraded: boolean;
   message: string;
   timeline: TimelinePoint[];
+  /** Recommandation fournie par le backend / LLM, si une version future de l'API l'expose. */
+  recommendation?: string | null;
 }
 
 export interface PipelineRunRequest {

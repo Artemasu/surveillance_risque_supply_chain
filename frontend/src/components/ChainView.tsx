@@ -1,21 +1,35 @@
-// Vue « Chaîne & simulation » : graphe / carte / tableau + panneau What-If intégré.
+// Vue « Chaîne & simulation » : graphe (colonnes 2D ou orbites 3D) / carte (plan 2D ou globe 3D) / tableau,
+// + panneau What-If intégré. Les vues 3D et la carte sont chargées à la demande (three.js, MapLibre).
 import { AnimatePresence, motion } from "framer-motion";
-import { FlaskConical, Globe2, Network, Table2 } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { Box, FlaskConical, Globe2, Loader2, Network, Rows3, Table2 } from "lucide-react";
+import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useStore } from "../store";
 import { LEVEL_ORDER, LEVEL_STYLE } from "../theme";
 import type { SimulationResult } from "../types";
 import ChainTable from "./ChainTable";
 import OntologyGraph, { ShapeLegend } from "./OntologyGraph";
 import WhatIfPanel from "./WhatIfPanel";
-import WorldMap from "./WorldMap";
 import { Empty, Segmented } from "./ui";
+
+const MapView = lazy(() => import("./MapView"));
+const OrbitalGraph = lazy(() => import("./OrbitalGraph"));
 
 type Tab = "graph" | "map" | "table";
 
+function Loading({ label }: { label: string }) {
+  return (
+    <div className="grid h-[520px] place-items-center rounded-xl bg-slate-50 text-sm text-ink-mute ring-1 ring-line">
+      <span className="inline-flex items-center gap-2">
+        <Loader2 size={15} className="animate-spin" /> {label}
+      </span>
+    </div>
+  );
+}
+
 export default function ChainView() {
-  const { state, whatIfNode, setWhatIfNode, openNode } = useStore();
+  const { state, events, run, whatIfNode, setWhatIfNode, openNode } = useStore();
   const [tab, setTab] = useState<Tab>("graph");
+  const [graphMode, setGraphMode] = useState<"2d" | "3d">("2d");
   const [sim, setSim] = useState<SimulationResult | null>(null);
   const onResult = useCallback((r: SimulationResult | null) => setSim(r), []);
 
@@ -49,11 +63,21 @@ export default function ChainView() {
                 {LEVEL_STYLE[l].label}
               </span>
             ))}
+            {tab === "graph" && (
+              <Segmented
+                value={graphMode}
+                onChange={setGraphMode}
+                options={[
+                  { value: "2d", label: "2D", icon: Rows3 },
+                  { value: "3d", label: "3D", icon: Box },
+                ]}
+              />
+            )}
           </div>
         </div>
         <AnimatePresence mode="wait">
-          <motion.div key={tab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
-            {tab === "graph" && (
+          <motion.div key={`${tab}-${graphMode}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
+            {tab === "graph" && graphMode === "2d" && (
               <>
                 <OntologyGraph nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={setWhatIfNode} onOpen={openNode} impacted={impacted} />
                 <div className="mt-3">
@@ -61,12 +85,29 @@ export default function ChainView() {
                 </div>
               </>
             )}
-            {tab === "map" && <WorldMap nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={setWhatIfNode} onOpen={openNode} />}
+            {tab === "graph" && graphMode === "3d" && (
+              <Suspense fallback={<Loading label="Chargement de la vue orbitale 3D…" />}>
+                <OrbitalGraph
+                  nodes={nodes}
+                  edges={state.edges}
+                  signals={events?.signals ?? []}
+                  companyName={run?.topology_name || "Entreprise"}
+                  selected={whatIfNode}
+                  onSelect={setWhatIfNode}
+                  onOpen={openNode}
+                />
+              </Suspense>
+            )}
+            {tab === "map" && (
+              <Suspense fallback={<Loading label="Chargement de la carte…" />}>
+                <MapView nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={setWhatIfNode} onOpen={openNode} />
+              </Suspense>
+            )}
             {tab === "table" && <ChainTable nodes={nodes} onOpen={openNode} />}
           </motion.div>
         </AnimatePresence>
         <p className="mt-3 text-[11px] text-ink-mute">
-          Survolez un nœud pour voir son chemin de propagation. Clic : le simuler dans le panneau What-If · double-clic : ouvrir ses preuves.
+          Survolez un nœud pour voir son chemin de propagation. Clic : le simuler dans le panneau What-If (la propagation aval s'illumine) · double-clic : ouvrir ses preuves.
         </p>
       </section>
       <aside className="card h-fit p-5 xl:sticky xl:top-28">
