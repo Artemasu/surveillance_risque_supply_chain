@@ -1,6 +1,7 @@
 // Graphe d'ontologie en couches (matière → fournisseur → port/hub → usine → produit), formes par type de nœud.
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
+import { useClickGuard } from "../clickGuard";
 import { downstream, propagationEdges } from "../graphUtils";
 import { LEVEL_STYLE, TYPE_LABEL, pct } from "../theme";
 import type { GraphEdge, NodeState, NodeType } from "../types";
@@ -40,10 +41,12 @@ export interface GraphProps {
   selected: string | null;
   onSelect: (id: string) => void;
   onOpen: (id: string) => void;
+  onDeselect: () => void;            // clic sec sur le fond vide
   impacted?: Map<string, number>;   // delta simulé par nœud, pour l'anneau d'impact
 }
 
-export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen, impacted }: GraphProps) {
+export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen, onDeselect, impacted }: GraphProps) {
+  const guard = useClickGuard();
   const [hover, setHover] = useState<string | null>(null);
 
   const layout = useMemo(() => {
@@ -88,7 +91,15 @@ export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen
 
   return (
     <div className="relative">
-      <svg viewBox={`0 0 ${W} ${layout.height}`} className="h-auto w-full select-none">
+      <svg
+        viewBox={`0 0 ${W} ${layout.height}`}
+        className="h-auto w-full select-none"
+        onPointerDown={guard.down}
+        onClick={(e) => {
+          // Clic sec dans le vide (ni sur un nœud, ni après un glisser) : désélection.
+          if (!(e.target as Element).closest("[data-node]") && guard.isClick(e)) onDeselect();
+        }}
+      >
         {COL_TITLES.map((t, i) => (
           <text key={t} x={70 + (i * (W - 140)) / 4} y={20} textAnchor="middle" className="fill-slate-400 text-[11px] font-semibold uppercase tracking-wider">
             {t}
@@ -130,7 +141,11 @@ export default function OntologyGraph({ nodes, edges, selected, onSelect, onOpen
               transform={`translate(${p.x},${p.y})`}
               onMouseEnter={() => setHover(n.id)}
               onMouseLeave={() => setHover(null)}
-              onClick={() => onSelect(n.id)}
+              data-node={n.id}
+              onClick={(e) => {
+                // e.detail >= 2 : second clic d'un double-clic, réservé à l'ouverture des preuves.
+                if (e.detail < 2 && guard.isClick(e)) onSelect(n.id);
+              }}
               onDoubleClick={() => onOpen(n.id)}
               className="cursor-pointer"
               opacity={dim ? 0.45 : 1}

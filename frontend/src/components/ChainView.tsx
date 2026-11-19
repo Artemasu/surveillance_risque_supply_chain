@@ -2,7 +2,7 @@
 // + panneau What-If intégré. Les vues 3D et la carte sont chargées à la demande (three.js, MapLibre).
 import { AnimatePresence, motion } from "framer-motion";
 import { Box, FlaskConical, Globe2, Loader2, Network, Rows3, Table2 } from "lucide-react";
-import { Suspense, lazy, useCallback, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "../store";
 import { LEVEL_ORDER, LEVEL_STYLE } from "../theme";
 import type { SimulationResult } from "../types";
@@ -27,7 +27,18 @@ function Loading({ label }: { label: string }) {
 }
 
 export default function ChainView() {
-  const { state, events, run, whatIfNode, setWhatIfNode, openNode } = useStore();
+  const { state, events, run, whatIfNode, setWhatIfNode, openNode, drawer } = useStore();
+  // Re-cliquer sur le nœud déjà sélectionné le désélectionne (bascule) ; clic sec dans le vide ou Échap aussi.
+  const toggle = useCallback((id: string) => setWhatIfNode(whatIfNode === id ? null : id), [whatIfNode, setWhatIfNode]);
+  const deselect = useCallback(() => setWhatIfNode(null), [setWhatIfNode]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || drawer) return;     // tiroir ouvert : Échap le ferme d'abord, sans toucher au What-If
+      deselect();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [deselect, drawer]);
   const [tab, setTab] = useState<Tab>("graph");
   const [graphMode, setGraphMode] = useState<"2d" | "3d">("2d");
   const [sim, setSim] = useState<SimulationResult | null>(null);
@@ -79,7 +90,7 @@ export default function ChainView() {
           <motion.div key={`${tab}-${graphMode}`} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
             {tab === "graph" && graphMode === "2d" && (
               <>
-                <OntologyGraph nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={setWhatIfNode} onOpen={openNode} impacted={impacted} />
+                <OntologyGraph nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={toggle} onDeselect={deselect} onOpen={openNode} impacted={impacted} />
                 <div className="mt-3">
                   <ShapeLegend />
                 </div>
@@ -93,21 +104,22 @@ export default function ChainView() {
                   signals={events?.signals ?? []}
                   companyName={run?.topology_name || "Entreprise"}
                   selected={whatIfNode}
-                  onSelect={setWhatIfNode}
+                  onSelect={toggle}
+                  onDeselect={deselect}
                   onOpen={openNode}
                 />
               </Suspense>
             )}
             {tab === "map" && (
               <Suspense fallback={<Loading label="Chargement de la carte…" />}>
-                <MapView nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={setWhatIfNode} onOpen={openNode} />
+                <MapView nodes={nodes} edges={state.edges} selected={whatIfNode} onSelect={toggle} onDeselect={deselect} onOpen={openNode} />
               </Suspense>
             )}
             {tab === "table" && <ChainTable nodes={nodes} onOpen={openNode} />}
           </motion.div>
         </AnimatePresence>
         <p className="mt-3 text-[11px] text-ink-mute">
-          Survolez un nœud pour voir son chemin de propagation. Clic : le simuler dans le panneau What-If (la propagation aval s'illumine) · double-clic : ouvrir ses preuves.
+          Survolez un nœud pour voir son chemin de propagation. Clic : le simuler dans le panneau What-If (la propagation aval s'illumine) · re-clic, clic dans le vide ou Échap : désélectionner · double-clic : ouvrir ses preuves.
         </p>
       </section>
       <aside className="card h-fit p-5 xl:sticky xl:top-28">

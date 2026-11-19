@@ -5,6 +5,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { FeatureCollection, Point } from "geojson";
 import { Globe2, Map as MapIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createClickGuard } from "../clickGuard";
 import { propagationEdges } from "../graphUtils";
 import { LEVEL_STYLE, TYPE_LABEL, pct } from "../theme";
 import type { GraphEdge, NodeState } from "../types";
@@ -82,16 +83,17 @@ function geojson(nodes: NodeState[], edges: GraphEdge[], selected: string | null
   return { points, lines, geo };
 }
 
-export default function MapView({ nodes, edges, selected, onSelect, onOpen }: {
-  nodes: NodeState[]; edges: GraphEdge[]; selected: string | null; onSelect: (id: string) => void; onOpen: (id: string) => void;
+export default function MapView({ nodes, edges, selected, onSelect, onOpen, onDeselect }: {
+  nodes: NodeState[]; edges: GraphEdge[]; selected: string | null;
+  onSelect: (id: string) => void; onOpen: (id: string) => void; onDeselect: () => void;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const [ready, setReady] = useState(false);
   const [offline, setOffline] = useState(false);
   const [proj, setProj] = useState<Proj>("2d");
-  const handlers = useRef({ onSelect, onOpen });
-  handlers.current = { onSelect, onOpen };
+  const handlers = useRef({ onSelect, onOpen, onDeselect });
+  handlers.current = { onSelect, onOpen, onDeselect };
   const data = useMemo(() => geojson(nodes, edges, selected), [nodes, edges, selected]);
 
   // Création unique de la carte.
@@ -103,6 +105,15 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen }: {
     });
     map.current = m;
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
+    // Clic sec vs glisser : position mémorisée à l'appui sur le conteneur (souris, stylet, doigt).
+    const guard = createClickGuard();
+    const container = m.getCanvasContainer();
+    container.addEventListener("pointerdown", guard.down, { capture: true });
+    // Clic sec dans le vide (aucun nœud sous le pointeur, pas de déplacement ni de rotation) : désélection.
+    m.on("click", (e) => {
+      if (!guard.isClick(e.originalEvent) || !m.getLayer("nodes")) return;
+      if (m.queryRenderedFeatures(e.point, { layers: ["nodes"] }).length === 0) handlers.current.onDeselect();
+    });
     let fellBack = false;
     m.on("error", (ev) => {
       // Style distant injoignable (hors ligne, pare-feu) : repli sur un fond uni.
@@ -168,6 +179,7 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen }: {
         popup.remove();
       });
       m.on("click", "nodes", (e) => {
+        if (e.originalEvent.detail >= 2 || !guard.isClick(e.originalEvent)) return;   // 2e clic d'un double-clic, ou glisser
         const id = e.features?.[0]?.properties?.id;
         if (id) handlers.current.onSelect(String(id));
       });
@@ -180,6 +192,7 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen }: {
     };
     m.on("style.load", install);
     return () => {
+      container.removeEventListener("pointerdown", guard.down, { capture: true });
       popup.remove();
       m.remove();
       map.current = null;
