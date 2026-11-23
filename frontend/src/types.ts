@@ -55,6 +55,8 @@ export interface Health {
   edges: number;
   llm_enabled: boolean;
   llm_model: string;
+  llm_model_active?: string;
+  llm_auto?: boolean;
   last_run?: PipelineRunResult | null;
 }
 

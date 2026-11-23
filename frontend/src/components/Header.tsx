@@ -56,20 +56,27 @@ export default function Header() {
     ? new Date(new Date(`${scenario.start_date}T12:00:00`).getTime() + (st.day - 1) * 86400000).toISOString().slice(0, 10)
     : null;
   const pctDay = daysTotal > 1 ? ((st.day - 1) / (daysTotal - 1)) * 100 : 100;
+  // Modèle réellement actif, lu sur /health (jamais figé dans le code) : « auto / qwen2.5:3b » sans OLLAMA_MODEL.
+  const active = st.health?.llm_model_active || st.health?.llm_model;
+  const llmLabel = active ? `${st.health?.llm_auto ? "auto / " : ""}${active}` : "Ollama";
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2.5 pr-2">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-emerald-50 to-sky-50 ring-1 ring-line">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="#166534" strokeWidth="1.8" strokeLinecap="round">
-              <circle cx="12" cy="12" r="8.5" />
-              <path d="M12 6.5v5.5l3.5 2.2" />
-            </svg>
+        <div className="flex items-center gap-2.5 pr-2" title="A.E.G.I.S. — Automated Early-warning & Graph Intelligence for Supply-chain">
+          {/* Logo : le slime calme du Copilot, en pixel art net (classe slime-sprite = image-rendering: pixelated). */}
+          <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-white ring-1 ring-line">
+            <img
+              src={`${import.meta.env.BASE_URL}copilot/slime_calm_idle.png`}
+              alt="A.E.G.I.S."
+              draggable={false}
+              className="slime-sprite block select-none"
+              style={{ width: 33 }}
+            />
           </div>
-          <div className="leading-tight">
-            <div className="text-[15px] font-extrabold tracking-tight">Alerte Précoce</div>
-            <div className="text-[11px] font-medium text-ink-mute">Supply Chain · Tour de contrôle</div>
+          <div className="min-w-0 leading-tight">
+            <div className="text-[15px] font-extrabold tracking-[0.06em]">A.E.G.I.S.</div>
+            <div className="hidden max-w-[22rem] truncate text-[11px] font-medium text-ink-mute sm:block">Automated Early-warning & Graph Intelligence for Supply-chain</div>
           </div>
         </div>
 
@@ -108,7 +115,7 @@ export default function Header() {
           <button
             onClick={() => st.setUseLlm(!st.useLlm)}
             className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition ${st.useLlm ? "border-violet-200 bg-violet-50 text-violet-700" : "border-line bg-white text-ink-mute hover:text-ink-soft"}`}
-            title={`Extraction des événements médias par LLM local (${st.health?.llm_model ?? "Ollama"}). Sans serveur Ollama, bascule automatique sur la baseline.`}
+            title={`Extraction des événements médias par LLM local (${llmLabel}). Les 6 groupes d'articles les plus pertinents passent par le LLM (15 s max chacun, 30 s au total) ; le reste et toute panne basculent sur la baseline NLP.`}
             aria-pressed={st.useLlm}
           >
             <Cpu size={14} />

@@ -1,4 +1,6 @@
-# Alerte Précoce Supply Chain
+# 🛡️ A.E.G.I.S.
+
+*Automated Early-warning & Graph Intelligence for Supply-chain*
 
 Projet INGE3 n°6 : anticiper les crises de chaîne d'approvisionnement à partir de l'actualité, de la météo, des
 marchés et d'un graphe de dépendances fournisseurs.
@@ -54,13 +56,21 @@ Avec Docker : `docker compose up --build`, puis http://localhost:8501 (interface
 ### LLM local (facultatif)
 
 ```bash
-ollama pull qwen2.5:7b
+ollama pull qwen2.5:3b                # sur CPU ; qwen2.5:7b si vous avez un GPU
 set USE_LLM=true                  # Linux / macOS : export USE_LLM=true
 ```
 
+**Choix du modèle.** `python scripts/benchmark_ollama.py` mesure chaque `qwen2.5` installé sur votre machine
+(démarrage à froid, latence par article, tokens/s, validité et complétude du JSON, même prompt que l'agent Médias) et
+écrit sa recommandation dans `data/cache/llm_benchmark.json`. Sans `OLLAMA_MODEL`, ce modèle est utilisé (« auto ») ;
+s'il n'est pas installé, le premier disponible parmi `qwen2.5:3b`, `qwen2.5:1.5b`, `qwen2.5:7b` est pris (`/api/tags`).
+`OLLAMA_MODEL=qwen2.5:7b` impose un modèle. Sur CPU, seuls les 6 groupes d'articles les plus pertinents passent par le
+LLM, 15 s maximum chacun et 30 s au total (`LLM_MAX_ARTICLES`, `LLM_ARTICLE_TIMEOUT_S`, `LLM_BUDGET_S`) : le reste,
+et tout dépassement, est traité par la baseline NLP.
+
 `USE_LLM=true` active le LLM pour le copilot (appel d'outils). Pour l'extraction des événements médias, cocher
 « Extraction par LLM local » dans la barre latérale. Sans serveur Ollama, tout bascule sur la baseline : rien ne plante.
-Autres variables : `LLM_BACKEND` (`ollama` ou `openai`), `LLM_BASE_URL`, `LLM_MODEL`, `LLM_TIMEOUT_S`, `LLM_API_KEY`.
+Autres variables : `LLM_BACKEND` (`ollama` ou `openai`), `LLM_BASE_URL`, `LLM_MODEL` (ancien nom d'`OLLAMA_MODEL`), `LLM_TIMEOUT_S`, `LLM_API_KEY`.
 
 ## Architecture
 

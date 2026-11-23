@@ -163,6 +163,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       );
       setRun(res);
       await refreshViews();
+      api.health().then(setHealth).catch(() => undefined);   // modèle LLM actif à jour dans l'info-bulle
       setTopologies(await api.topologies());
       // Nouvelle chaîne ou nouveau mode : le Copilot repart d'une conversation vide.
       if (lastRunKey.current !== key) clearChat();

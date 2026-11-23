@@ -10,6 +10,7 @@ frontend/sprites_src/) :
   slime_situation_jaune    idem                                                                    -> slime_warning_*
   slime_situation_rouge    idem                                                                    -> slime_critical_*
 Sortie : frontend/public/copilot/slime_{calm,warning,critical}_{idle,announce,thinking,happy,sleepy}.png
+         frontend/public/favicon-{32,64}.png (logo A.E.G.I.S. : slime calme, `--favicon-only` pour les seuls favicons)
 
 Étapes, pour chaque planche :
   1. fond blanc détecté par flood-fill depuis les bords (connexité 4) : seul le blanc relié au bord devient
@@ -175,6 +176,19 @@ def extract(sheet: Path, names: list[str], hd: bool = False) -> list[Path]:
     return out
 
 
+def export_favicons(sizes: tuple[int, ...] = (32, 64)) -> None:
+    """Favicons A.E.G.I.S. : le slime calme au repos, centré sur un carré transparent puis rééchantillonné au plus
+    proche voisin à la taille exacte (un navigateur lisse toujours un favicon redimensionné, le CSS n'y peut rien)."""
+    sprite = Image.open(OUT / "slime_calm_idle.png").convert("RGBA")
+    side = max(sprite.size)
+    square = Image.new("RGBA", (side, side), (0, 0, 0, 0))
+    square.paste(sprite, ((side - sprite.width) // 2, side - sprite.height - (side - sprite.height) // 2))
+    for size in sizes:
+        path = OUT.parent / f"favicon-{size}.png"
+        square.resize((size, size), Image.NEAREST).save(path, optimize=True)
+        print(f"{path.relative_to(ROOT).as_posix()} : {size}x{size}")
+
+
 def find_sheet(stem: str) -> Path:
     for d in SEARCH_DIRS:
         for ext in EXTENSIONS:
@@ -187,7 +201,11 @@ def find_sheet(stem: str) -> Path:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--hd", action="store_true", help="garder la pleine résolution des planches (pas de rééchantillonnage)")
+    ap.add_argument("--favicon-only", action="store_true", help="régénérer seulement les favicons depuis slime_calm_idle.png")
     args = ap.parse_args()
+    if args.favicon_only:
+        export_favicons()
+        return
     OUT.mkdir(parents=True, exist_ok=True)
     expected = {f"{n}.png" for names in SHEETS.values() for n in names}
     for stale in OUT.glob("slime_*.png"):          # sprites d'une ancienne version du compagnon
@@ -197,6 +215,7 @@ def main() -> None:
         sheet = find_sheet(stem)
         print(f"{sheet.relative_to(ROOT).as_posix()}")
         extract(sheet, names, args.hd)
+    export_favicons()
 
 
 if __name__ == "__main__":

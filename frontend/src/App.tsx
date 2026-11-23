@@ -87,7 +87,7 @@ export default function App() {
           </>
         )}
         <footer className="mt-10 text-center text-[11px] text-ink-mute">
-          Alerte Précoce Supply Chain · API {API_URL} · <a className="underline decoration-dotted" href={`${API_URL}/docs`} target="_blank" rel="noreferrer">documentation OpenAPI</a>
+          A.E.G.I.S. · API {API_URL} · <a className="underline decoration-dotted" href={`${API_URL}/docs`} target="_blank" rel="noreferrer">documentation OpenAPI</a>
         </footer>
       </main>
       <EvidenceDrawer />

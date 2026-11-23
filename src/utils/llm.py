@@ -6,6 +6,7 @@ copilot (`chat_with_tools`). Toute erreur devient une LLMError : l'appelant basc
 from __future__ import annotations
 
 import json
+import time
 from typing import Any, Optional
 
 import requests
@@ -23,6 +24,40 @@ class LLMError(Exception):
 
 def _headers() -> dict:
     return {"Authorization": f"Bearer {settings.llm_api_key}"} if settings.llm_api_key else {}
+
+
+# Ordre de préférence quand le modèle configuré n'est pas installé : le plus rapide d'abord sur CPU.
+PREFERRED_MODELS = ("qwen2.5:3b", "qwen2.5:1.5b", "qwen2.5:7b")
+_RESOLVE_TTL_S = 60
+_resolved: dict = {"key": None, "model": None, "at": 0.0}
+
+
+def _installed_models(timeout: float = 2) -> list[str]:
+    try:
+        r = requests.get(settings.llm_base_url.rstrip("/") + "/api/tags", headers=_headers(), timeout=timeout)
+        return [m.get("name", "") for m in r.json().get("models", [])] if r.status_code == 200 else []
+    except (requests.RequestException, ValueError):
+        return []
+
+
+def active_model(refresh: bool = False) -> str:
+    """Modèle réellement utilisé. Ollama : le modèle configuré s'il est installé, sinon (configuration « auto »
+    ou modèle absent) le premier installé parmi PREFERRED_MODELS, puis n'importe quel qwen2.5, puis n'importe quel
+    modèle. Serveur injoignable ou autre backend : le modèle configuré. Résultat gardé 60 s."""
+    configured = settings.llm_model
+    if settings.llm_backend != "ollama":
+        return configured
+    key = (settings.llm_base_url, configured)
+    if not refresh and _resolved["key"] == key and time.monotonic() - _resolved["at"] < _RESOLVE_TTL_S:
+        return _resolved["model"]
+    names = _installed_models()
+
+    def installed(m: str) -> Optional[str]:
+        return next((n for n in names if n == m or n == f"{m}:latest" or n.split(":latest")[0] == m), None)
+
+    model = installed(configured) or next((installed(m) for m in PREFERRED_MODELS if installed(m)), None)         or next((n for n in names if n.startswith("qwen2.5")), None) or (names[0] if names else configured)
+    _resolved.update(key=key, model=model, at=time.monotonic())
+    return model
 
 
 def llm_available(timeout: float = 3) -> bool:
@@ -68,8 +103,9 @@ def call_llm(system_prompt: str, user_prompt: str, timeout: Optional[float] = No
     """Appel en mode JSON, température 0. Renvoie le texte de la réponse."""
     messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     if settings.llm_backend == "ollama":
-        payload = {"model": settings.llm_model, "messages": messages, "stream": False, "format": "json",
-                   "options": {"temperature": 0}}
+        # keep_alive : le modèle reste chargé entre deux analyses (sur CPU, un rechargement coûte plusieurs secondes).
+        payload = {"model": active_model(), "messages": messages, "stream": False, "format": "json", "keep_alive": "15m",
+                   "options": {"temperature": 0, "num_predict": settings.llm_num_predict}}
     else:
         payload = {"model": settings.llm_model, "messages": messages, "temperature": 0,
                    "response_format": {"type": "json_object"}}
@@ -79,7 +115,7 @@ def call_llm(system_prompt: str, user_prompt: str, timeout: Optional[float] = No
 def chat_with_tools(messages: list[dict], tools: list[dict], timeout: Optional[float] = None) -> dict:
     """Un tour de conversation avec outils. Renvoie {"content": str, "tool_calls": [{"name", "arguments"}], "raw": message}."""
     if settings.llm_backend == "ollama":
-        payload = {"model": settings.llm_model, "messages": messages, "tools": tools, "stream": False,
+        payload = {"model": active_model(), "messages": messages, "tools": tools, "stream": False, "keep_alive": "15m",
                    "options": {"temperature": 0}}
     else:
         payload = {"model": settings.llm_model, "messages": messages, "tools": tools, "temperature": 0}

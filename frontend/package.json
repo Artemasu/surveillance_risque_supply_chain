@@ -1,5 +1,6 @@
 {
-  "name": "alerte-supply-chain-frontend",
+  "name": "aegis-frontend",
+  "description": "A.E.G.I.S. — Automated Early-warning & Graph Intelligence for Supply-chain : interface web (React, TypeScript, Vite).",
   "private": true,
   "version": "1.0.0",
   "type": "module",

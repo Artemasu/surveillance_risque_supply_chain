@@ -12,6 +12,7 @@ import html
 import json
 import logging
 import re
+import time
 from collections import Counter
 from datetime import timedelta
 from typing import Optional
@@ -501,12 +502,13 @@ class MediaNLP:
         return (f"Identifiant de l'événement : {cid}\n"
                 f"Articles ({len(arts)}) au format JSON :\n{json.dumps(arts, ensure_ascii=False, indent=1)}")
 
-    def llm_event(self, cid: str, group: list[Article], mentions: list[dict]) -> tuple[Optional[NormalizedEvent], list[str]]:
+    def llm_event(self, cid: str, group: list[Article], mentions: list[dict],
+                  timeout: Optional[float] = None) -> tuple[Optional[NormalizedEvent], list[str]]:
         """Événement par le LLM, contrôlé point par point et ancré dans les articles.
 
         Renvoie (événement ou None si « aucun », corrections appliquées). Lève LLMError si la sortie est inutilisable.
         """
-        raw = parse_llm_json(call_llm(LLM_SYSTEM_PROMPT, self._llm_user_prompt(cid, group)))
+        raw = parse_llm_json(call_llm(LLM_SYSTEM_PROMPT, self._llm_user_prompt(cid, group), timeout=timeout))
         notes: list[str] = []
         missing_keys = [k for k in ("event", "date", "location", "entities", "media") if k not in raw]
         if missing_keys:
@@ -576,22 +578,43 @@ class MediaNLP:
             log.warning("LLM injoignable à %s : bascule sur la baseline NLP.", settings.llm_base_url)
         reason = "USE_LLM = False" if not use_llm else "serveur LLM injoignable"
 
-        events, net_failures = [], 0
-        for cid in dict.fromkeys(a.cluster_id for a in arts):
-            group = [a for a in arts if a.cluster_id == cid]
-            ments = [m for m in mentions if m["cluster_id"] == cid]
-            ev, extractor, detail = None, "baseline", reason
-            if llm_on and net_failures < 2:
+        clusters = list(dict.fromkeys(a.cluster_id for a in arts))
+        groups = {cid: [a for a in arts if a.cluster_id == cid] for cid in clusters}
+        ments_by = {cid: [m for m in mentions if m["cluster_id"] == cid] for cid in clusters}
+
+        # LLM sur CPU : seuls les groupes les plus pertinents y passent, du plus pertinent au moins pertinent, chacun
+        # avec un délai strict, dans un budget global. Tous les autres sont traités par la baseline NLP.
+        ranked = sorted(clusters, key=lambda c: self.relevance(groups[c], ments_by[c], cls), reverse=True)
+        llm_set = set(ranked[:max(0, settings.llm_max_articles)]) if llm_on else set()
+        llm_out: dict[str, tuple] = {}
+        net_failures, started = 0, time.monotonic()
+        for cid in (c for c in ranked if c in llm_set):
+            left = settings.llm_budget_s - (time.monotonic() - started)
+            if net_failures >= 2:
+                llm_out[cid] = (None, "baseline", "repli sur la baseline : LLM désactivé après deux pannes réseau")
+            elif left < 1:
+                llm_out[cid] = (None, "baseline", f"repli sur la baseline : budget LLM de {settings.llm_budget_s:g} s épuisé")
+            else:
                 try:
-                    ev, notes = self.llm_event(cid, group, ments)
-                    extractor, detail, net_failures = "llm", " ; ".join(notes) or "sortie conforme", 0
+                    ev, notes = self.llm_event(cid, groups[cid], ments_by[cid], timeout=min(settings.llm_article_timeout_s, left))
+                    llm_out[cid] = (ev, "llm", " ; ".join(notes) or "sortie conforme")
+                    net_failures = 0
                 except LLMError as e:
                     net_failures += int(e.network)
-                    detail = f"repli sur la baseline : {e}"
+                    llm_out[cid] = (None, "baseline", f"repli sur la baseline : {e}")
                 except Exception as e:                   # le LLM ne doit jamais faire planter la chaîne
-                    detail = f"repli sur la baseline : erreur inattendue {type(e).__name__}"
+                    llm_out[cid] = (None, "baseline", f"repli sur la baseline : erreur inattendue {type(e).__name__}")
+
+        events = []
+        for cid in clusters:
+            group, ments = groups[cid], ments_by[cid]
+            if cid in llm_out:
+                ev, extractor, detail = llm_out[cid]
             elif llm_on:
-                detail = "repli sur la baseline : LLM désactivé après deux pannes réseau"
+                ev, extractor, detail = None, "baseline", (f"baseline : hors des {settings.llm_max_articles} groupes "
+                                                           "les plus pertinents confiés au LLM")
+            else:
+                ev, extractor, detail = None, "baseline", reason
             if extractor == "baseline":
                 ev = self.baseline_event(cid, group, ments, cls, broad=broad)
             if ev is None and extractor == "baseline":
@@ -600,3 +623,11 @@ class MediaNLP:
             if ev is not None:
                 events.append(ev)
         return events
+
+    @staticmethod
+    def relevance(group: list[Article], mentions: list[dict], cls: dict) -> float:
+        """Pertinence d'un groupe pour la supply chain : articles classés comme perturbation (et confiance),
+        entreprises, sites et ports du référentiel cités, taille du groupe (couverture presse)."""
+        typed = [cls[a.source_id] for a in group if cls[a.source_id]["event_type"] != "aucun"]
+        linked = len({m["ref_id"] for m in mentions if m.get("ref_id")})
+        return 2.0 * len(typed) + max((c["type_conf"] for c in typed), default=0.0) + 1.5 * min(linked, 4) + 0.5 * len(group)

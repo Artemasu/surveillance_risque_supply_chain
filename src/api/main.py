@@ -14,6 +14,7 @@ from src.config import settings
 from src.schemas.events import (Alert, ChatRequest, ChatResponse, GraphState, PipelineRunRequest, PipelineRunResult,
                                 SimulationRequest, SimulationResult)
 from src.service import ScenarioNotFound, SupplyChainService
+from src.utils.llm import active_model
 
 
 class Health(BaseModel):
@@ -21,7 +22,9 @@ class Health(BaseModel):
     nodes: int
     edges: int
     llm_enabled: bool
-    llm_model: str
+    llm_model: str                       # modèle configuré (OLLAMA_MODEL, benchmark local ou défaut)
+    llm_model_active: str = ""           # modèle réellement utilisé (repli sur un modèle installé si absent)
+    llm_auto: bool = False               # True : aucun modèle imposé par variable d'environnement
     last_run: Optional[PipelineRunResult] = None
 
 
@@ -34,9 +37,10 @@ class EventsResponse(BaseModel):
 
 def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     app = FastAPI(
-        title="Alerte Précoce Supply Chain",
+        title="A.E.G.I.S. API",
         version="1.0.0",
-        description="Agents médias, météo et finance ; graphe d'ontologie NetworkX ; simulation what-if ; copilot.")
+        description="**A.E.G.I.S.** — Automated Early-warning & Graph Intelligence for Supply-chain. "
+                    "Agents médias, météo et finance ; graphe d'ontologie NetworkX ; simulation what-if ; copilot.")
     app.state.service = service or SupplyChainService()
     # Front-end React (frontend/, serveur Vite) : seul ajout à l'API, aucune logique métier modifiée.
     app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -49,7 +53,8 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     def health(request: Request) -> Health:
         s = svc(request)
         return Health(status="ok", nodes=len(s.engine.nodes), edges=len(s.engine.edges), llm_enabled=settings.use_llm,
-                      llm_model=settings.llm_model, last_run=s.last_run)
+                      llm_model=settings.llm_model, llm_model_active=active_model(), llm_auto=settings.llm_auto,
+                      last_run=s.last_run)
 
     @app.get("/scenarios", tags=["pipeline"])
     def scenarios(request: Request) -> list[dict]:
