@@ -59,6 +59,22 @@ def store_suppliers(fiches: list[dict]) -> None:
                                               "updated_at": now} for f in fiches]))
 
 
+def store_sanctions(listes: pd.DataFrame) -> int:
+    """Listes de sanctions UE et US complètes (entités), pour l'explorateur de la base."""
+    if listes is None or listes.empty:
+        return 0
+    df = listes.copy()
+    df["source_id"] = df["source_id"].astype(str)
+    df = df[df["source_id"].str.len() > 4].drop_duplicates("source_id")
+    df["date_inscription"] = pd.to_datetime(df["date_inscription"], errors="coerce").dt.date
+    df["updated_at"] = datetime.now()
+    cols = ["source_id", "liste", "nom", "autres_noms", "programme", "date_inscription", "updated_at"]
+    with db.connect() as con:
+        con.execute("DELETE FROM fin_sanctions")
+        db.upsert("fin_sanctions", df[cols], con)
+    return len(df)
+
+
 def store_rules(regles: pd.DataFrame) -> None:
     if regles.empty:
         return
@@ -90,6 +106,7 @@ def ingest(debut: str = DEBUT_DEFAUT, suppliers: bool = True, rules: bool = True
         store_rules(reg.regles())
     if suppliers:
         listes, etat_s = reg.listes_sanctions()
+        store_sanctions(listes)
         fiches = []
         for cle in reg.FOURNISSEURS["cle"]:
             try:

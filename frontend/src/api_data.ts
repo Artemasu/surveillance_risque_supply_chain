@@ -61,4 +61,105 @@ export const dataApi = {
   stressTests: () => call<StressTest[]>("/graph/stress-tests"),
   sources: () => call<{ db: string; ready: boolean; counts: Record<string, number>; sources: any[]; calibrated_hubs: string[] }>("/sources/status"),
   job: (name: "forecast-meteo" | "ingest-finance") => call<{ job: string; result: any }>(`/jobs/${name}`, "POST"),
+
+  // Explorateur de la base unifiée (lecture seule)
+  dbSummary: () => call<DbSummary>("/database/summary"),
+  dbTables: () => call<DbTableInfo[]>("/database/tables"),
+  dbTable: (name: string, p: DbQuery) => call<DbPage>(`/database/tables/${encodeURIComponent(name)}${q(p as Record<string, string | number | undefined | null>)}`),
+  dbValues: (name: string, column: string) => call<string[]>(`/database/tables/${encodeURIComponent(name)}/values${q({ column })}`),
+  dbCsvUrl: (name: string, p: DbQuery) => `${API_URL}/database/tables/${encodeURIComponent(name)}${q({ ...(p as Record<string, string | number | undefined | null>), format: "csv", limit: undefined, offset: undefined })}`,
+  unifiedGraph: () => call<UnifiedGraph>("/database/unified-graph"),
 };
+
+export interface DbSummary {
+  ready: boolean;
+  db: string;
+  size_mb?: number;
+  tables?: number;
+  rows_total?: number;
+  domains: {
+    media?: { evenements: number; articles: number };
+    weather?: { indicateurs: number; sites: number; seuils: number; previsions: number; jours_en_alerte: number };
+    finance?: { valeurs: number; signaux: number; fournisseurs: number; sanctions: number; regles: number };
+    unified?: { evenements: number; liens: number; liaisons_referentiel: number; executions: number; historique_noeuds: number; par_agent: Record<string, number> };
+  };
+}
+
+export interface DbTableInfo {
+  name: string;
+  label: string;
+  domain: "media" | "weather" | "finance" | "unified";
+  description: string;
+  has_date: boolean;
+  filters: string[];
+  alert: boolean;
+  rank: string | null;
+  available: boolean;
+}
+
+export interface DbQuery {
+  limit?: number;
+  offset?: number;
+  q?: string;
+  date_from?: string;
+  date_to?: string;
+  site?: string;
+  symbol?: string;
+  indicator?: string;
+  family?: string;
+  agent?: string;
+  zone?: string;
+  type?: string;
+  topology?: string;
+  alert?: string;
+  min_rank?: number;
+}
+
+export interface DbPage {
+  name: string;
+  label: string;
+  total: number;
+  limit: number;
+  offset: number;
+  columns: string[];
+  rows: Record<string, any>[];
+}
+
+export interface UGNode {
+  id: string;
+  name: string;
+  type: import("./types").NodeType;
+  tier: number;
+  country?: string | null;
+  place?: string | null;
+  criticality: number;
+  stock_days: number;
+  risk: number;
+  direct: number;
+  propagated: number;
+  level: import("./types").RiskLevel;
+  signal_ids: string[];
+  families: string[];
+}
+
+export interface UGEvent {
+  id: string;
+  agent: import("./types").AgentName;
+  type: string;
+  family: string | null;
+  date: string | null;
+  label: string;
+  confidence: number;
+  intensity: number | null;
+  sources: string[];
+  links: { node_id: string; weight: number; link: string }[];
+}
+
+export interface UnifiedGraph {
+  topology: string;
+  topology_name: string;
+  run: { run_id: string; as_of: string; mode: string; scenario: string | null } | null;
+  nodes: UGNode[];
+  edges: import("./types").GraphEdge[];
+  events: UGEvent[];
+}

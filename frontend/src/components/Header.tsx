@@ -62,8 +62,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3 sm:px-6">
-        <div className="flex items-center gap-2.5 pr-2" title="A.E.G.I.S. — Automated Early-warning & Graph Intelligence for Supply-chain">
+      <div className="mx-auto flex max-w-[1440px] flex-nowrap items-center justify-between gap-2 px-4 py-3 sm:px-6">
+        <div className="flex shrink-0 items-center gap-2.5 pr-1" title="A.E.G.I.S. — Automated Early-warning & Graph Intelligence for Supply-chain">
           {/* Logo : le slime calme du Copilot, en pixel art net (classe slime-sprite = image-rendering: pixelated). */}
           <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-white ring-1 ring-line">
             <img
@@ -76,20 +76,22 @@ export default function Header() {
           </div>
           <div className="min-w-0 leading-tight">
             <div className="text-[15px] font-extrabold tracking-[0.06em]">A.E.G.I.S.</div>
-            <div className="hidden max-w-[22rem] truncate text-[11px] font-medium text-ink-mute sm:block">Automated Early-warning & Graph Intelligence for Supply-chain</div>
+            <div className="hidden max-w-[22rem] truncate text-[11px] font-medium text-ink-mute 2xl:block">Automated Early-warning & Graph Intelligence for Supply-chain</div>
           </div>
         </div>
 
-        <Segmented
-          value={st.mode}
-          onChange={st.setMode}
-          options={[
-            { value: "replay", label: "Replay scénario", icon: History },
-            { value: "live", label: "Live", icon: Radio },
-          ]}
-        />
+        <div className="shrink-0">
+          <Segmented
+            value={st.mode}
+            onChange={st.setMode}
+            options={[
+              { value: "replay", label: "Replay scénario", icon: History },
+              { value: "live", label: "Live", icon: Radio },
+            ]}
+          />
+        </div>
 
-        <div className="flex min-w-[260px] flex-1 items-center gap-3">
+        <div className="flex min-w-0 max-w-[260px] flex-1 items-center gap-3 truncate">
           {st.mode === "replay" ? (
             <Select label="Scénario" value={st.scenarioId} onChange={st.setScenarioId}>
               {st.scenarios.map((s) => (
@@ -111,10 +113,10 @@ export default function Header() {
           )}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={() => st.setUseLlm(!st.useLlm)}
-            className={`inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition ${st.useLlm ? "border-violet-200 bg-violet-50 text-violet-700" : "border-line bg-white text-ink-mute hover:text-ink-soft"}`}
+            className={`inline-flex items-center gap-2 whitespace-nowrap rounded-xl border px-3 py-2 text-xs font-semibold transition ${st.useLlm ? "border-violet-200 bg-violet-50 text-violet-700" : "border-line bg-white text-ink-mute hover:text-ink-soft"}`}
             title={`Extraction des événements médias par LLM local (${llmLabel}). Les 6 groupes d'articles les plus pertinents passent par le LLM (15 s max chacun, 30 s au total) ; le reste et toute panne basculent sur la baseline NLP.`}
             aria-pressed={st.useLlm}
           >
@@ -129,7 +131,7 @@ export default function Header() {
             whileTap={{ scale: 0.97 }}
             onClick={st.launch}
             disabled={st.loading || !!st.apiDown}
-            className="btn relative bg-ink text-white shadow-sm hover:bg-slate-800"
+            className="btn relative whitespace-nowrap bg-ink text-white shadow-sm hover:bg-slate-800"
           >
             {st.loading ? <Loader2 size={16} className="animate-spin" /> : st.run && !st.dirty ? <RefreshCw size={15} /> : <Play size={15} fill="currentColor" />}
             {st.loading ? "Analyse en cours…" : st.run && !st.dirty ? "Relancer" : "Lancer l'analyse"}

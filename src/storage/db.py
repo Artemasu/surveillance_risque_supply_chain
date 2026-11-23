@@ -66,6 +66,9 @@ CREATE TABLE IF NOT EXISTS fin_suppliers (
 CREATE TABLE IF NOT EXISTS fin_rules (
     id VARCHAR PRIMARY KEY, zone VARCHAR, famille VARCHAR, publication DATE, entree_en_vigueur DATE, titre VARCHAR,
     effet VARCHAR, url VARCHAR, delai_jours DOUBLE);
+CREATE TABLE IF NOT EXISTS fin_sanctions (
+    source_id VARCHAR PRIMARY KEY, liste VARCHAR, nom VARCHAR, autres_noms VARCHAR, programme VARCHAR,
+    date_inscription DATE, updated_at TIMESTAMP);
 CREATE TABLE IF NOT EXISTS fin_diesel (
     pays VARCHAR, date DATE, valeur DOUBLE, PRIMARY KEY (pays, date));
 CREATE TABLE IF NOT EXISTS fin_transmission (
@@ -166,6 +169,20 @@ def query(sql: str, params: Optional[list] = None) -> pd.DataFrame:
         return pd.DataFrame()
     with connect() as con:
         return con.execute(sql, params or []).df()
+
+
+def query_ro(sql: str, params: Optional[list] = None) -> pd.DataFrame:
+    """Lecture seule (explorateur de la base) : aucune écriture possible, même par erreur de requête."""
+    if not settings.db_path.exists():
+        return pd.DataFrame()
+    with connect(read_only=True) as con:
+        return con.execute(sql, params or []).df()
+
+
+def table_names() -> set[str]:
+    if not settings.db_path.exists():
+        return set()
+    return set(query_ro("SELECT table_name FROM information_schema.tables")["table_name"])
 
 
 def records(sql: str, params: Optional[list] = None) -> list[dict]:

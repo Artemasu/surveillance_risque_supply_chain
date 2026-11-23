@@ -32,6 +32,8 @@ def _clean(x: Any) -> Any:
         return [_clean(v) for v in x.tolist()]
     if isinstance(x, (list, tuple)):
         return [_clean(v) for v in x]
+    if isinstance(x, dict):
+        return {k: _clean(v) for k, v in x.items()}
     if isinstance(x, float) and (np.isnan(x) or np.isinf(x)):
         return None
     if isinstance(x, (np.floating,)):
