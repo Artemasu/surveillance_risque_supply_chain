@@ -12,7 +12,7 @@ from typing import Any, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 EventType = Literal["greve", "catastrophe", "sanction", "faillite", "cyberattaque", "penurie", "logistique",
-                    "meteo_extreme", "tension_marche", "aucun"]
+                    "meteo_extreme", "tension_marche", "difficulte_financiere", "aucun"]
 MEDIA_EVENT_TYPES = ["greve", "catastrophe", "sanction", "faillite", "cyberattaque", "penurie", "logistique", "aucun"]
 AgentName = Literal["media", "weather", "finance"]
 # « exposé » : nœud rattaché par un indice large (matière première, mot-clé sectoriel, pays), jamais par le LLM.
@@ -70,17 +70,43 @@ class WeatherBlock(Strict):
     forecast: bool = False
     provider: str = "open-meteo"
     source_id: str = Field(min_length=1)
+    # Seuils calibrés par site (volet Météo) : absents quand l'agent applique les seuils fixes de repli
+    indicator: Optional[str] = None             # pluie_3j, pluie_90j, rafales, neige, chaleur, gel, crue, basses_eaux
+    value: Optional[float] = None               # valeur de l'indicateur dominant
+    threshold: Optional[float] = None           # seuil propre au site (quantile 99 % ou 1 % sur 2010-2020)
+    unit: Optional[str] = None
+    rank: Optional[float] = Field(default=None, ge=0, le=1)   # 0,99 = parmi les 1 % de jours les plus extrêmes du site
+    level: Optional[str] = None                 # normal, inhabituel, exceptionnel
+    score: Optional[float] = Field(default=None, ge=0, le=1)  # score météo recalibré du site ce jour-là
+    risk: Optional[str] = None                  # conséquence supply chain de l'indicateur
+    indicators: list[dict[str, Any]] = Field(default_factory=list)   # tous les indicateurs en alerte au pic
+    temp_max_c: Optional[float] = None
+    temp_min_c: Optional[float] = None
+    snow_cm: Optional[float] = None
+    discharge_m3s: Optional[float] = None
 
 
 class FinanceBlock(Strict):
     instrument: str
     name: str
     date: str
-    close: float
-    change_5d_pct: float
+    close: Optional[float] = None
+    change_5d_pct: Optional[float] = None
     zscore: Optional[float] = None
     provider: str = "yfinance"
     source_id: str = Field(min_length=1)
+    # Volet Finance : signaux calibrés, fiches fournisseurs, sanctions, procédures collectives
+    kind: Literal["instrument", "signal", "bourse", "sanction", "procedure", "regle"] = "instrument"
+    family: Optional[str] = None                # énergie, fret, change, métaux, prix fournisseurs, fournisseurs...
+    indicator: Optional[float] = None           # variation % sur l'horizon, ou niveau (GSCPI)
+    measure: Optional[str] = None               # variation_% ou niveau
+    horizon: Optional[int] = None
+    threshold: Optional[float] = None
+    rank: Optional[float] = Field(default=None, ge=0, le=1)
+    unit: Optional[str] = None
+    impact: Optional[str] = None
+    detail: Optional[str] = None
+    url: Optional[str] = None
 
 
 class EventMeta(Strict):
@@ -234,6 +260,8 @@ class GraphState(Strict):
 class SimulationRequest(Strict):
     node_id: str = Field(min_length=1)
     severity: float = Field(ge=0, le=1)
+    extra: dict[str, float] = Field(default_factory=dict)   # stress test : autres nœuds touchés en même temps
+    scenario: Optional[str] = None                           # identifiant d'un stress test prédéfini (affichage)
 
 
 class NodeImpact(Strict):

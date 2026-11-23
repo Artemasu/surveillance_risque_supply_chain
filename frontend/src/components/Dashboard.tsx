@@ -11,6 +11,7 @@ import AdviceStrip from "./AdviceStrip";
 import RiskChart from "./RiskChart";
 import SignalTimeline from "./SignalTimeline";
 import { AgentBadge, Card, Empty, LevelBadge, SoftBar } from "./ui";
+import VoletsStrip from "./VoletsStrip";
 
 const LEVEL_WORD: Record<RiskLevel, string> = { ok: "Risque faible", info: "Risque modéré", warning: "Risque élevé", critical: "Risque critique" };
 const TYPE_PLURAL: Record<string, string> = {
@@ -223,6 +224,7 @@ export default function Dashboard() {
     <div className="space-y-5">
       <Synthesis />
       <Kpis />
+      <VoletsStrip />
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
         <div className="space-y-5">
           <Card title="Évolution de l'indice de risque" icon={LineChart} action={run?.mode === "replay" ? <span className="text-[11px] text-ink-mute">recalculé avec ce qui était connu chaque jour</span> : undefined}>

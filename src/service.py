@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import re
 from datetime import date, timedelta
 from pathlib import Path
@@ -16,6 +17,9 @@ from src.copilot.assistant import CopilotAssistant
 from src.graph.ontology_engine import CORRELATION_WINDOW_DAYS, OntologyEngine
 from src.schemas.events import (AgentResult, AgentSummary, ChatRequest, ChatResponse, NormalizedEvent,
                                 PipelineRunRequest, PipelineRunResult, TimelinePoint)
+from src.storage import db
+
+log = logging.getLogger("supplychain.service")
 
 
 class ScenarioNotFound(Exception):
@@ -41,15 +45,41 @@ class SupplyChainService:
             return False
         engine = OntologyEngine.from_yaml(path)              # lève une erreur claire si la topologie est invalide
         self.engine, self.topology_path = engine, path
+        names = {n.id: n.name for n in engine.nodes.values()}
+        site_config = engine.weather_site_config()
         self.agents = {
-            "media": MediaAgent(engine.company_referential(), engine.place_referential(), engine.soft_referential(),
-                                {n.id: n.name for n in engine.nodes.values()}),
-            "weather": WeatherAgent(engine.weather_hubs()),
-            "finance": FinanceAgent(engine.market_watch, {n.id: n.name for n in engine.nodes.values()}),
+            "media": MediaAgent(engine.company_referential(), engine.place_referential(), engine.soft_referential(), names),
+            "weather": WeatherAgent(engine.weather_hubs(), site_config, calibrations=lambda: self._weather_calibrations(site_config)),
+            "finance": FinanceAgent(engine.market_watch, names, signal_bindings=self.signal_bindings(engine),
+                                    supplier_bindings=engine.supplier_bindings),
         }
         self.assistant = CopilotAssistant(engine)
         self.agent_results = {}
+        if settings.persist_runs:
+            try:
+                db.save_bindings(self.topology_key(), engine)
+            except Exception as e:                      # base indisponible : l'analyse continue sans historique
+                log.warning("référentiel de liaisons non enregistré : %s", e)
         return True
+
+    @staticmethod
+    def signal_bindings(engine: OntologyEngine) -> list[dict]:
+        """Signaux calibrés -> nœuds en lien exact, et nœuds exposés (nommés ou par catégorie d'intrant)."""
+        out = []
+        for m in engine.market_signals:
+            exact = list(m.get("nodes", []))
+            exposed = [n for n in [*m.get("exposed", []), *engine.nodes_for_inputs(m.get("inputs", []))] if n not in exact]
+            out.append({"signal": m["signal"], "exact": exact, "exposed": list(dict.fromkeys(exposed))})
+        return out
+
+    @staticmethod
+    def _weather_calibrations(site_config: dict[str, dict]) -> dict:
+        """Calibrations de la base, indexées par nœud (plusieurs nœuds peuvent partager un site calibré)."""
+        cals = db.load_weather_calibrations({c["site"] for c in site_config.values()})
+        return {nid: cals[c["site"]] for nid, c in site_config.items() if c["site"] in cals}
+
+    def topology_key(self) -> str:
+        return self.topology_ref() or "topology.yaml"
 
     def topology_ref(self, path: Optional[Path] = None) -> Optional[str]:
         """Référence d'une topologie relative à data/ (None pour la topologie par défaut)."""
@@ -214,7 +244,20 @@ class SupplyChainService:
                 day=day, days_total=days_total, topology=self.topology_ref(), topology_name=self.engine.meta.get("company") or self.engine.meta.get("name", ""), as_of=as_of, agents=summaries, n_events=len(events),
                 n_signals=len(evaluation.signals), n_alerts=len(self.engine.alerts()),
                 global_risk_index=evaluation.index, degraded=degraded, message=message, timeline=timeline)
+            self._persist()
             return self.last_run
+
+    def _persist(self) -> None:
+        """Historique : chaque exécution réussie est enregistrée dans la base unifiée (jamais bloquant)."""
+        if not settings.persist_runs or self.last_run is None:
+            return
+        try:
+            payload = self.events_payload()["events"]
+            for item, ev in zip(payload, self.engine.events):
+                item["weights"] = self.engine.link_weights(ev)
+            db.record_run(self.last_run, self.engine, payload, self.topology_key())
+        except Exception as e:
+            log.warning("exécution non enregistrée dans la base : %s", e)
 
     # ------------------------------------------------------------------ lecture
     def events_payload(self) -> dict:

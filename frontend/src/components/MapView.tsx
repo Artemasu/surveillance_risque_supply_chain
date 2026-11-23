@@ -8,6 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createClickGuard } from "../clickGuard";
 import { propagationEdges } from "../graphUtils";
 import { LEVEL_STYLE, TYPE_LABEL, pct } from "../theme";
+import { FAMILY_STYLE } from "./viz";
 import type { GraphEdge, NodeState } from "../types";
 import { Segmented } from "./ui";
 
@@ -63,6 +64,10 @@ function geojson(nodes: NodeState[], edges: GraphEdge[], selected: string | null
         id: n.id, name: n.name, type: TYPE_LABEL[n.type], place: [n.place, n.country].filter(Boolean).join(", "),
         risk: n.risk, level: LEVEL_STYLE[n.level].label, color: LEVEL_STYLE[n.level].color, fill: LEVEL_STYLE[n.level].bg,
         r: 5 + n.criticality * 5, selected: n.id === selected ? 1 : 0, downstream: reach.has(n.id) && n.id !== selected ? 1 : 0,
+        // famille d'aléa dominante (identifiant du signal : sig:<nœud>:<famille>:<k>) -> anneau coloré
+        fam: n.signal_ids.length ? n.signal_ids[0].split(":")[2] ?? "" : "",
+        famColor: n.signal_ids.length ? FAMILY_STYLE[n.signal_ids[0].split(":")[2]]?.color ?? "" : "",
+        famLabel: [...new Set(n.signal_ids.map((s) => FAMILY_STYLE[s.split(":")[2]]?.label ?? s.split(":")[2]))].join(", "),
       },
     })),
   };
@@ -148,6 +153,10 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen, onDe
         },
       });
       m.addLayer({
+        id: "nodes-family", type: "circle", source: "nodes", filter: ["!=", ["get", "famColor"], ""],
+        paint: { "circle-radius": ["+", ["get", "r"], 3.5], "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": ["get", "famColor"], "circle-stroke-width": 2 },
+      });
+      m.addLayer({
         id: "nodes", type: "circle", source: "nodes",
         paint: {
           "circle-radius": ["get", "r"], "circle-color": ["get", "color"], "circle-opacity": 0.9,
@@ -172,6 +181,13 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen, onDe
         risk.style.color = String(p.color);
         risk.textContent = `${p.level} · risque ${pct(Number(p.risk))}`;
         el.append(title, sub, risk);
+        if (p.famLabel) {
+          const fam = document.createElement("div");
+          fam.className = "mt-0.5 text-[11px] font-semibold";
+          fam.style.color = String(p.famColor || "#475569");
+          fam.textContent = `Menace : ${p.famLabel}`;
+          el.append(fam);
+        }
         popup.setLngLat((f.geometry as Point).coordinates as [number, number]).setDOMContent(el).addTo(m);
       });
       m.on("mouseleave", "nodes", () => {

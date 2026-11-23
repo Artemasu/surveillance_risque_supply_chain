@@ -6,7 +6,7 @@ import type {
 } from "./types";
 
 export type Mode = "replay" | "live";
-export type View = "dashboard" | "chain";
+export type View = "dashboard" | "chain" | "weather" | "finance" | "history";
 
 export interface ChatMessage extends ChatTurn {
   mode?: string;

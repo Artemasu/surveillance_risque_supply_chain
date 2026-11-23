@@ -1,0 +1,81 @@
+site,indicateur,seuil
+Spruce Pine,pluie_3j,73.93999999999997
+Spruce Pine,pluie_90j,631.7
+Spruce Pine,rafales,95.73199999999997
+Spruce Pine,neige,3.7561999999999895
+Spruce Pine,chaleur,30.682999999999993
+Spruce Pine,gel,-14.5
+Spruce Pine,crue,28.440957142857133
+Spruce Pine,basses_eaux,5.680185714285715
+Austin,pluie_3j,80.63999999999997
+Austin,pluie_90j,632.448
+Austin,rafales,66.6
+Austin,neige,0.0
+Austin,chaleur,39.2
+Austin,gel,-3.8
+Austin,crue,363.4990285714263
+Austin,basses_eaux,9.585957142857144
+Savannah,pluie_3j,69.97999999999986
+Savannah,pluie_90j,761.834
+Savannah,rafales,72.7
+Savannah,neige,0.0
+Savannah,chaleur,35.88299999999999
+Savannah,gel,-3.3
+Savannah,crue,
+Savannah,basses_eaux,
+Kaub (Rhin),pluie_3j,30.069999999999986
+Kaub (Rhin),pluie_90j,279.8199999999999
+Kaub (Rhin),rafales,82.4
+Kaub (Rhin),neige,0.77
+Kaub (Rhin),chaleur,32.68299999999999
+Kaub (Rhin),gel,-9.485
+Kaub (Rhin),crue,3770.682699999997
+Kaub (Rhin),basses_eaux,547.7049
+Rotterdam,pluie_3j,34.2
+Rotterdam,pluie_90j,377.472
+Rotterdam,rafales,93.53199999999997
+Rotterdam,neige,1.108099999999995
+Rotterdam,chaleur,28.582999999999995
+Rotterdam,gel,-5.7
+Rotterdam,crue,
+Rotterdam,basses_eaux,
+Hambourg,pluie_3j,32.45499999999998
+Hambourg,pluie_90j,348.3959999999999
+Hambourg,rafales,80.23199999999997
+Hambourg,neige,2.24
+Hambourg,chaleur,30.782999999999994
+Hambourg,gel,-11.3
+Hambourg,crue,2157.3615857142813
+Hambourg,basses_eaux,102.11618571428572
+Ayutthaya,pluie_3j,66.66999999999997
+Ayutthaya,pluie_90j,850.872
+Ayutthaya,rafales,55.28099999999995
+Ayutthaya,neige,0.0
+Ayutthaya,chaleur,38.6
+Ayutthaya,gel,16.2
+Ayutthaya,crue,6769.860457142857
+Ayutthaya,basses_eaux,0.0
+Kaohsiung,pluie_3j,191.75999999999965
+Kaohsiung,pluie_90j,1589.4579999999999
+Kaohsiung,rafales,70.08099999999995
+Kaohsiung,neige,0.0
+Kaohsiung,chaleur,33.0
+Kaohsiung,gel,10.9
+Kaohsiung,crue,
+Kaohsiung,basses_eaux,
+Shanghai,pluie_3j,94.59999999999998
+Shanghai,pluie_90j,764.786
+Shanghai,rafales,76.24899999999998
+Shanghai,neige,0.0
+Shanghai,chaleur,30.182999999999993
+Shanghai,gel,0.6599999999999994
+Shanghai,crue,
+Shanghai,basses_eaux,
+Dongguan,pluie_3j,117.60499999999992
+Dongguan,pluie_90j,1172.5079999999996
+Dongguan,rafales,56.83199999999997
+Dongguan,neige,0.0
+Dongguan,chaleur,34.08299999999999
+Dongguan,gel,4.2
+Dongguan,crue,
+Dongguan,basses_eaux,

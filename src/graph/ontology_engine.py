@@ -28,6 +28,7 @@ from typing import Iterable, Optional
 import networkx as nx
 import yaml
 
+from src.analytics.thresholds import intensity_from_rank
 from src.schemas.events import (Alert, CorrelatedSignal, EntityRef, EventInfo, EventMeta, GraphEdge, GraphNode,
                                 GraphState, MitigationAction, MitigationPlan, NodeImpact, NodeState, NormalizedEvent,
                                 SimulationResult)
@@ -41,11 +42,12 @@ LEVEL_THRESHOLDS = (("critical", 0.60), ("warning", 0.35), ("info", 0.15))
 ALERT_THRESHOLD = 0.35
 
 BASE_SEVERITY = {"catastrophe": 0.80, "meteo_extreme": 0.80, "greve": 0.65, "logistique": 0.60, "sanction": 0.70,
-                 "faillite": 0.90, "cyberattaque": 0.65, "penurie": 0.60, "tension_marche": 0.45}
+                 "faillite": 0.90, "cyberattaque": 0.65, "penurie": 0.60, "tension_marche": 0.45,
+                 "difficulte_financiere": 0.55}
 # Deux événements de la même famille sur le même nœud décrivent le même aléa : ils se corroborent.
 FAMILY = {"catastrophe": "climat", "meteo_extreme": "climat", "greve": "operations", "logistique": "operations",
           "sanction": "reglementaire", "faillite": "financier", "cyberattaque": "cyber",
-          "penurie": "approvisionnement", "tension_marche": "marche"}
+          "penurie": "approvisionnement", "tension_marche": "marche", "difficulte_financiere": "financier"}
 TYPE_WEIGHT = {"produit_fini": 3.0, "usine": 2.0}
 FAMILY_LABELS = {"climat": "climat", "operations": "opérations", "reglementaire": "réglementaire", "financier": "financier",
                  "cyber": "cyber", "approvisionnement": "approvisionnement", "marche": "marché"}
@@ -75,14 +77,23 @@ def _parse_date(s: Optional[str]) -> Optional[date]:
 
 
 def event_intensity(ev: NormalizedEvent) -> float:
-    """Intensité entre 0,3 et 1 tirée des mesures brutes des agents météo et finance. 1 pour un article."""
+    """Intensité entre 0,3 et 1 tirée des mesures des agents météo et finance. 1 pour un article.
+
+    Seuils calibrés (volets Météo et Finance) : l'intensité vient du RANG, commun aux deux agents
+    (rang 0,90 -> 0,3 ; rang 0,999 -> 1). Sans calibration, repli sur les mesures brutes (seuils fixes).
+    Sanction ou procédure collective : fait établi, intensité 1."""
+    block = ev.weather or ev.finance
+    if block is not None and block.rank is not None:
+        return intensity_from_rank(block.rank) or 0.3
+    if ev.finance is not None and ev.finance.kind in ("sanction", "procedure", "regle"):
+        return 1.0
     if ev.weather is not None:
         gust = ev.weather.gust_max_kmh or ev.weather.wind_max_kmh or 0.0
         rain = ev.weather.precip_mm or 0.0
         return _clip(max((gust - 70) / 110, (rain - 40) / 210), 0.3, 1.0)
     if ev.finance is not None:
         z = abs(ev.finance.zscore) if ev.finance.zscore is not None else 0.0
-        return _clip(max(z / 4, abs(ev.finance.change_5d_pct) / 30), 0.3, 1.0)
+        return _clip(max(z / 4, abs(ev.finance.change_5d_pct or 0.0) / 30), 0.3, 1.0)
     return 1.0
 
 
@@ -126,6 +137,17 @@ class OntologyEngine:
         self._check_shares()
 
         self.market_watch: list[dict] = topology.get("market_watch", [])
+        # Liaisons avec les volets Météo et Finance (table entity_bindings de la base) :
+        #   weather_sites  : nœud -> indicateurs pertinents, fleuve ; site calibré = identifiant du nœud
+        #   market_signals : signal de marché calibré -> nœuds (exact) ou catégories d'intrants (exposé)
+        #   suppliers      : nœud -> fournisseur réel suivi (bourse, sanctions, maisons mères, BODACC)
+        self.weather_sites: dict[str, dict] = {w["node"]: w for w in topology.get("weather_sites", [])}
+        self.market_signals: list[dict] = topology.get("market_signals", [])
+        self.supplier_bindings: list[dict] = topology.get("suppliers", [])
+        for nid in [*self.weather_sites, *(s["node"] for s in self.supplier_bindings),
+                    *(n for m in self.market_signals for n in m.get("nodes", []))]:
+            if nid not in self.nodes:
+                raise ValueError(f"liaison météo/finance vers un nœud inconnu : {nid}")
         self.extra_places: list[dict] = topology.get("gazetteer", [])
         self._alias_index: dict[str, str] = {}       # alias normalisé -> nœud (noms, alias, identifiants)
         self._place_index: dict[str, list[str]] = defaultdict(list)   # lieu normalisé -> nœuds
@@ -213,6 +235,23 @@ class OntologyEngine:
 
     def weather_hubs(self) -> list[GraphNode]:
         return [n for n in self.nodes.values() if n.weather_watch and n.lat is not None]
+
+    def weather_site_config(self) -> dict[str, dict]:
+        """Par hub surveillé : indicateurs pertinents et fleuve (YAML `weather_sites`, sinon valeurs par défaut)."""
+        from src.analytics.weather_indicators import default_indicators
+        out = {}
+        for n in self.weather_hubs():
+            cfg = self.weather_sites.get(n.id, {})
+            fluvial = bool(cfg.get("fluvial", False))
+            out[n.id] = {"node": n.id, "site": cfg.get("site") or n.id, "name": n.name, "lat": n.lat, "lon": n.lon, "type": n.type, "country": n.country,
+                         "fluvial": fluvial, "role": cfg.get("role") or n.type,
+                         "indicators": cfg.get("indicators") or default_indicators(n.type, fluvial)}
+        return out
+
+    def nodes_for_inputs(self, inputs: Iterable[str]) -> list[str]:
+        """Nœuds qui reçoivent l'une de ces catégories d'intrants (cibles des liens actifs)."""
+        wanted = set(inputs)
+        return sorted({e.target for e in self.edges if not e.backup and e.input in wanted})
 
     # ------------------------------------------------------------------ rattachement et corrélation
     def link_weights(self, ev: NormalizedEvent) -> dict[str, float]:
@@ -517,14 +556,20 @@ class OntologyEngine:
             raise KeyError(f"nœud inconnu : {node_id}")
         return self.nodes[node_id]
 
-    def simulate_disruption(self, node_id: str, severity: float) -> SimulationResult:
-        """Teste une panne hypothétique. L'état réel (`self.current`, `self.events`) n'est jamais modifié."""
+    def simulate_disruption(self, node_id: str, severity: float, extra: Optional[dict[str, float]] = None) -> SimulationResult:
+        """Teste une panne hypothétique. L'état réel (`self.current`, `self.events`) n'est jamais modifié.
+
+        `extra` : autres nœuds touchés en même temps (stress test multi-nœuds), {nœud: gravité}."""
         node = self._require(node_id)
-        if not 0.0 <= severity <= 1.0:
-            raise ValueError("severity doit être comprise entre 0 et 1")
+        shocks = {node_id: severity, **(extra or {})}
+        for nid, sev in shocks.items():
+            self._require(nid)
+            if not 0.0 <= sev <= 1.0:
+                raise ValueError("severity doit être comprise entre 0 et 1")
         base = self.current.risks
         direct = dict(self.current.direct)                       # copie : on ne touche pas à l'état réel
-        direct[node_id] = max(direct.get(node_id, 0.0), severity)
+        for nid, sev in shocks.items():
+            direct[nid] = max(direct.get(nid, 0.0), sev)
         sim = self.propagate(direct)
         impacts = [NodeImpact(node_id=n, name=self.nodes[n].name, type=self.nodes[n].type, baseline=base[n]["risk"],
                               simulated=sim[n]["risk"], delta=round(sim[n]["risk"] - base[n]["risk"], 4),

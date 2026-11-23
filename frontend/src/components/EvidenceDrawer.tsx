@@ -6,6 +6,7 @@ import { useStore } from "../store";
 import { AGENT_STYLE, LEVEL_STYLE, TYPE_LABEL, frDate, pct } from "../theme";
 import type { CorrelatedSignal, EventEnvelope, NodeState } from "../types";
 import { AgentBadge, LevelBadge, SoftBar } from "./ui";
+import { RankGauge, rankText, signed } from "./viz";
 
 function LinkTag({ link }: { link: "exact" | "elargi" | null }) {
   if (!link) {
@@ -82,16 +83,43 @@ function EventCard({ env }: { env: EventEnvelope }) {
         </ul>
       )}
       {ev.weather && (
-        <p className="tnum mt-2 text-xs text-ink-soft">
-          {ev.weather.forecast ? "Prévision" : "Relevé"} {ev.weather.date} · vent {ev.weather.wind_max_kmh ?? "—"} km/h · rafales {ev.weather.gust_max_kmh ?? "—"} km/h · pluie{" "}
-          {ev.weather.precip_mm ?? "—"} mm
-        </p>
+        <div className="tnum mt-2 text-xs text-ink-soft">
+          <p>
+            {ev.weather.forecast ? "Prévision" : "Relevé"} {ev.weather.date} · vent {ev.weather.wind_max_kmh ?? "—"} km/h · rafales {ev.weather.gust_max_kmh ?? "—"} km/h · pluie{" "}
+            {ev.weather.precip_mm ?? "—"} mm
+          </p>
+          {ev.weather.indicator && (
+            <div className="mt-1.5 rounded-lg bg-teal-50/60 p-2 text-[11.5px] text-teal-900">
+              <b>{ev.weather.indicator.replace("_", " ")}</b> : {ev.weather.value} {ev.weather.unit} pour un seuil du site de {ev.weather.threshold} {ev.weather.unit} ·{" "}
+              {rankText(ev.weather.rank)} ({ev.weather.level})
+              {ev.weather.risk && <div className="mt-0.5 text-teal-800/80">{ev.weather.risk}</div>}
+              <div className="mt-1.5"><RankGauge rank={ev.weather.rank ?? null} alert /></div>
+            </div>
+          )}
+        </div>
       )}
       {ev.finance && (
-        <p className="tnum mt-2 text-xs text-ink-soft">
-          {ev.finance.name} : {ev.finance.change_5d_pct > 0 ? "+" : ""}
-          {ev.finance.change_5d_pct} % sur 5 séances{ev.finance.zscore != null ? ` · écart ${ev.finance.zscore} σ` : ""}
-        </p>
+        <div className="tnum mt-2 text-xs text-ink-soft">
+          {ev.finance.change_5d_pct != null ? (
+            <p>
+              {ev.finance.name} : {ev.finance.change_5d_pct > 0 ? "+" : ""}
+              {ev.finance.change_5d_pct} % sur 5 séances{ev.finance.zscore != null ? ` · écart ${ev.finance.zscore} σ` : ""}
+            </p>
+          ) : (
+            <p>{ev.finance.name}{ev.finance.detail ? ` : ${ev.finance.detail}` : ""}</p>
+          )}
+          {ev.finance.kind && ev.finance.kind !== "instrument" && ev.finance.indicator != null && (
+            <div className="mt-1.5 rounded-lg bg-amber-50/70 p-2 text-[11.5px] text-amber-900">
+              {ev.finance.measure === "niveau" ? "Niveau" : `Variation sur ${ev.finance.horizon} obs.`} : <b>{signed(ev.finance.indicator)}{ev.finance.measure === "niveau" ? "" : " %"}</b>
+              {ev.finance.threshold != null && ` (seuil ${signed(ev.finance.threshold)}${ev.finance.measure === "niveau" ? "" : " %"})`} · {rankText(ev.finance.rank)}
+              {ev.finance.impact && <div className="mt-0.5 text-amber-800/80">{ev.finance.impact}</div>}
+              <div className="mt-1.5"><RankGauge rank={ev.finance.rank ?? null} alert /></div>
+            </div>
+          )}
+          {(ev.finance.kind === "sanction" || ev.finance.kind === "procedure") && ev.finance.impact && (
+            <div className="mt-1.5 rounded-lg bg-rose-50 p-2 text-[11.5px] text-rose-900">{ev.finance.impact}</div>
+          )}
+        </div>
       )}
       <p className="mt-2 text-[10.5px] text-ink-mute">
         Extracteur {ev.meta.extractor} · confiance {pct(ev.meta.confidence)}

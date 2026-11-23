@@ -1,11 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { LayoutDashboard, Loader2, Network, Play, PlugZap } from "lucide-react";
+import { Banknote, CloudSun, History, LayoutDashboard, Loader2, Network, Play, PlugZap } from "lucide-react";
 import { API_URL } from "./api";
 import ChainView from "./components/ChainView";
 import Companion from "./components/Companion";
 import Dashboard from "./components/Dashboard";
 import EvidenceDrawer from "./components/EvidenceDrawer";
 import Header from "./components/Header";
+import { Suspense, lazy } from "react";
+
+// Pages des volets Météo et Finance et de l'historique : chargées à la demande (Recharts, MapLibre).
+const WeatherPage = lazy(() => import("./components/WeatherPage"));
+const FinancePage = lazy(() => import("./components/FinancePage"));
+const HistoryPage = lazy(() => import("./components/HistoryPage"));
+const PageLoading = () => <div className="card p-8 text-center text-sm text-ink-mute">Chargement…</div>;
 import { AgentBadge, Segmented } from "./components/ui";
 import { useStore } from "./store";
 
@@ -52,7 +59,7 @@ function Welcome() {
 }
 
 export default function App() {
-  const { run, state, error, view, setView } = useStore();
+  const { run, state, error, view, setView, apiDown } = useStore();
 
   return (
     <div className="min-h-screen pb-24">
@@ -65,23 +72,29 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-        {!run || !state ? (
+        {apiDown ? (
           <Welcome />
         ) : (
           <>
-            <div className="mb-5 flex items-center justify-between">
+            <div className="mb-5 flex items-center justify-between overflow-x-auto">
               <Segmented
                 value={view}
                 onChange={setView}
                 options={[
                   { value: "dashboard", label: "Tour de contrôle", icon: LayoutDashboard },
                   { value: "chain", label: "Chaîne & simulation", icon: Network },
+                  { value: "weather", label: "Météo", icon: CloudSun },
+                  { value: "finance", label: "Marchés & fournisseurs", icon: Banknote },
+                  { value: "history", label: "Historique", icon: History },
                 ]}
               />
             </div>
             <AnimatePresence mode="wait">
               <motion.div key={view} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
-                {view === "dashboard" ? <Dashboard /> : <ChainView />}
+                <Suspense fallback={<PageLoading />}>
+                  {view === "weather" ? <WeatherPage /> : view === "finance" ? <FinancePage /> : view === "history" ? <HistoryPage />
+                    : !run || !state ? <Welcome /> : view === "dashboard" ? <Dashboard /> : <ChainView />}
+                </Suspense>
               </motion.div>
             </AnimatePresence>
           </>

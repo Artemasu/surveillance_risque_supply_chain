@@ -43,7 +43,8 @@ export const api = {
   topologies: () => http<Topology[]>("/topologies"),
   run: (req: PipelineRunRequest) => post<PipelineRunResult>("/pipeline/run", req),
   state: () => http<GraphState>("/graph/state"),
-  simulate: (node_id: string, severity: number) => post<SimulationResult>("/graph/simulate", { node_id, severity }),
+  simulate: (node_id: string, severity: number, extra?: Record<string, number>, scenario?: string) =>
+    post<SimulationResult>("/graph/simulate", { node_id, severity, extra: extra ?? {}, scenario: scenario ?? null }),
   alerts: () => http<Alert[]>("/alerts"),
   events: () => http<EventsResponse>("/events"),
   chat: (message: string, history: ChatTurn[], context: Record<string, unknown>) =>

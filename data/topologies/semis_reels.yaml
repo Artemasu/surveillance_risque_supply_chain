@@ -1,0 +1,136 @@
+# Topologie RÉELLE des volets Météo et Finance : sites et fournisseurs du cas d'étude de nos collègues.
+#
+# Les ENTREPRISES et les SITES sont réels (Spruce Pine, Austin, Kaub, Rotterdam, Nexperia, Wolfspeed, Infineon...).
+# Les LIENS entre eux, leurs parts et leurs délais sont ILLUSTRATIFS : ils reconstituent une chaîne plausible
+# « quartz et carbure de silicium -> semi-conducteurs -> équipementiers automobiles européens », pas des contrats
+# connus. À corriger avec des données d'achat réelles.
+#
+# Sens des liens : source -> target = « source fournit target ». Parts d'un même intrant : somme = 1.
+# weather_sites.site = identifiant du site calibré par le notebook météo (python -m src.jobs import-notebooks).
+
+meta:
+  name: "Semi-conducteurs et équipementiers automobiles (sites et fournisseurs réels)"
+  company: "Cas d'étude réel (volets Météo et Finance)"
+  sector: semi-conducteurs
+  simulated_suppliers: false
+  illustrative_links: true
+
+nodes:
+  # ---------------- matières premières et métaux
+  - {id: rm_quartz_sp, name: "Quartz haute pureté (Spruce Pine)", type: matiere_premiere, tier: 4, criticality: 0.9, country: "United States", place: "Spruce Pine", lat: 35.915, lon: -82.065, weather_watch: true, aliases: ["Spruce Pine", "high-purity quartz", "quartz de haute pureté"], keywords: ["high-purity quartz", "quartz haute pureté"]}
+  - {id: rm_zinc_nyrstar, name: "Nyrstar Budel (zinc)", type: fournisseur, tier: 3, criticality: 0.5, country: Netherlands, place: Budel, lat: 51.27, lon: 5.57, stock_days: 20, company: true, aliases: ["Nyrstar", "Nyrstar Budel", "Nyrstar NV"], keywords: ["zinc smelter", "fonderie de zinc"]}
+
+  # ---------------- fournisseurs de rang 3 (substrats, fonderies, électronique)
+  - {id: sup_wolfspeed, name: "Wolfspeed", type: fournisseur, tier: 3, criticality: 0.8, country: "United States", place: Durham, lat: 35.99, lon: -78.90, stock_days: 15, company: true, aliases: ["Wolfspeed, Inc.", "Wolfspeed Inc", "Cree"], keywords: ["silicon carbide", "carbure de silicium", "SiC wafer"]}
+  - {id: sup_fab_austin, name: "Usines de semi-conducteurs d'Austin", type: fournisseur, tier: 3, criticality: 0.6, country: "United States", place: Austin, lat: 30.267, lon: -97.743, stock_days: 10, weather_watch: true, aliases: ["Austin fabs", "Austin chip plants"], keywords: ["Austin semiconductor"]}
+  - {id: sup_fab_kaohsiung, name: "Fonderies de Kaohsiung", type: fournisseur, tier: 3, criticality: 0.7, country: Taiwan, place: Kaohsiung, lat: 22.62, lon: 120.31, stock_days: 10, weather_watch: true, aliases: ["Kaohsiung foundries"], keywords: ["foundry", "fonderie de puces"]}
+  - {id: sup_dongguan, name: "Usines d'électronique de Dongguan", type: fournisseur, tier: 3, criticality: 0.5, country: China, place: Dongguan, lat: 23.02, lon: 113.75, stock_days: 15, weather_watch: true, aliases: ["Dongguan factories", "usines de Dongguan"], keywords: ["electronics factory", "usine d'électronique"]}
+  - {id: sup_ayutthaya, name: "Zones industrielles d'Ayutthaya", type: fournisseur, tier: 3, criticality: 0.5, country: Thailand, place: Ayutthaya, lat: 14.355, lon: 100.568, stock_days: 15, weather_watch: true, aliases: ["Ayutthaya industrial estates", "Rojana", "Hi-Tech Industrial Estate"], keywords: ["Thai flood", "inondations en Thaïlande"]}
+
+  # ---------------- fabricants de semi-conducteurs (rang 2)
+  - {id: sup_infineon, name: "Infineon (Dresde)", type: fournisseur, tier: 2, criticality: 0.8, country: Germany, place: Dresden, lat: 51.05, lon: 13.74, stock_days: 20, company: true, aliases: ["Infineon", "Infineon Technologies", "Infineon Technologies AG"], keywords: ["power semiconductor", "semi-conducteur de puissance"]}
+  - {id: sup_stmicro, name: "STMicroelectronics (Crolles)", type: fournisseur, tier: 2, criticality: 0.7, country: France, place: Crolles, lat: 45.27, lon: 5.88, stock_days: 20, company: true, aliases: ["STMicroelectronics", "STMicro", "ST Microelectronics"], keywords: ["semiconductor", "semi-conducteur"]}
+  - {id: sup_nexperia, name: "Nexperia (Hambourg)", type: fournisseur, tier: 2, criticality: 0.8, country: Germany, place: Hamburg, lat: 53.55, lon: 9.97, stock_days: 15, company: true, weather_watch: true, aliases: ["Nexperia", "Nexperia B.V.", "Nexperia BV"], keywords: ["discrete chips", "puces discrètes", "Wingtech"]}
+
+  # ---------------- ports et voies navigables
+  - {id: port_savannah, name: "Port de Savannah", type: port, tier: 2, criticality: 0.6, country: "United States", place: Savannah, lat: 32.08, lon: -81.09, weather_watch: true, aliases: ["Port of Savannah", "Savannah port", "Savannah"]}
+  - {id: port_kaohsiung_r, name: "Port de Kaohsiung", type: port, tier: 2, criticality: 0.8, country: Taiwan, place: Kaohsiung, lat: 22.61, lon: 120.30, weather_watch: true, aliases: ["Port of Kaohsiung", "Kaohsiung port", "port de Kaohsiung"]}
+  - {id: port_shanghai_r, name: "Port de Yangshan (Shanghai)", type: port, tier: 2, criticality: 0.8, country: China, place: Shanghai, lat: 30.62, lon: 122.06, weather_watch: true, aliases: ["Yangshan", "Port of Shanghai", "Shanghai port", "port de Shanghai"]}
+  - {id: port_rotterdam_r, name: "Port de Rotterdam", type: port, tier: 2, criticality: 0.9, country: Netherlands, place: Rotterdam, lat: 51.95, lon: 4.14, weather_watch: true, aliases: ["Port of Rotterdam", "Rotterdam port", "port de Rotterdam", "Hafen Rotterdam"]}
+  - {id: port_hamburg_r, name: "Port de Hambourg", type: port, tier: 2, criticality: 0.7, country: Germany, place: Hamburg, lat: 53.546, lon: 9.966, weather_watch: true, aliases: ["Port of Hamburg", "Hamburger Hafen", "port de Hambourg"]}
+  - {id: hub_kaub, name: "Rhin à Kaub", type: hub, tier: 2, criticality: 0.7, country: Germany, place: Kaub, lat: 50.085, lon: 7.765, weather_watch: true, aliases: ["Kaub", "Rhine at Kaub", "Rhein bei Kaub", "Rhin"], keywords: ["Rhine low water", "basses eaux du Rhin", "Niedrigwasser Rhein"]}
+
+  # ---------------- équipementiers (rang 1)
+  - {id: plant_valeo, name: "Valeo (Bietigheim-Bissingen)", type: usine, tier: 1, criticality: 0.9, country: Germany, place: Bietigheim-Bissingen, lat: 48.95, lon: 9.13, stock_days: 10, company: true, aliases: ["Valeo", "Valeo SE"]}
+  - {id: plant_forvia, name: "Forvia (Lippstadt)", type: usine, tier: 1, criticality: 0.8, country: Germany, place: Lippstadt, lat: 51.67, lon: 8.35, stock_days: 10, company: true, aliases: ["Forvia", "Forvia SE", "Faurecia", "Hella"]}
+
+  # ---------------- produits finis (clients automobiles)
+  - {id: prod_power_ecu, name: "Électronique de puissance pour véhicules électriques", type: produit_fini, tier: 0, criticality: 1.0, aliases: ["onduleurs de traction"]}
+  - {id: prod_cockpit, name: "Éclairage et électronique d'habitacle", type: produit_fini, tier: 0, criticality: 0.8, aliases: ["cockpit electronics"]}
+
+edges:
+  # quartz : Spruce Pine fournit l'essentiel du quartz de haute pureté (creusets) des fonderies
+  - {source: rm_quartz_sp, target: sup_infineon,      input: quartz, dependency: 1.0, lead_time_days: 25}
+  - {source: rm_quartz_sp, target: sup_stmicro,       input: quartz, dependency: 1.0, lead_time_days: 25}
+  - {source: rm_quartz_sp, target: sup_nexperia,      input: quartz, dependency: 1.0, lead_time_days: 25}
+  - {source: rm_quartz_sp, target: sup_fab_austin,    input: quartz, dependency: 1.0, lead_time_days: 5}
+  - {source: rm_quartz_sp, target: sup_fab_kaohsiung, input: quartz, dependency: 1.0, lead_time_days: 30}
+  # carbure de silicium
+  - {source: sup_wolfspeed, target: sup_infineon, input: substrats_sic, dependency: 1.0, lead_time_days: 20}
+  - {source: sup_wolfspeed, target: sup_stmicro,  input: substrats_sic, dependency: 1.0, lead_time_days: 20}
+  # fret Asie et Amérique -> Rotterdam / Hambourg
+  - {source: sup_fab_austin,    target: port_savannah,    input: puces_us,          dependency: 1.0, lead_time_days: 3}
+  - {source: port_savannah,     target: port_rotterdam_r, input: fret_us,           dependency: 1.0, lead_time_days: 14}
+  - {source: sup_fab_kaohsiung, target: port_kaohsiung_r, input: puces_tw,          dependency: 1.0, lead_time_days: 1}
+  - {source: sup_dongguan,      target: port_shanghai_r,  input: electronique_cn,   dependency: 1.0, lead_time_days: 3}
+  - {source: port_kaohsiung_r,  target: port_rotterdam_r, input: fret_asie,         dependency: 0.5, lead_time_days: 30}
+  - {source: port_shanghai_r,   target: port_rotterdam_r, input: fret_asie,         dependency: 0.5, lead_time_days: 32}
+  - {source: sup_ayutthaya,     target: port_rotterdam_r, input: fret_thai,         dependency: 1.0, lead_time_days: 30}
+  - {source: port_shanghai_r,   target: port_hamburg_r,   input: fret_asie_nord,    dependency: 1.0, lead_time_days: 34}
+  - {source: port_rotterdam_r,  target: hub_kaub,         input: barges_rhin,       dependency: 1.0, lead_time_days: 3}
+  # semi-conducteurs -> équipementiers
+  - {source: sup_infineon, target: plant_valeo,  input: puces_puissance, dependency: 0.5, lead_time_days: 3}
+  - {source: sup_stmicro,  target: plant_valeo,  input: puces_puissance, dependency: 0.3, lead_time_days: 3}
+  - {source: sup_nexperia, target: plant_valeo,  input: puces_puissance, dependency: 0.2, lead_time_days: 2}
+  - {source: sup_nexperia, target: plant_forvia, input: puces_logiques,  dependency: 1.0, lead_time_days: 2}
+  - {source: sup_stmicro,  target: plant_forvia, input: puces_logiques,  dependency: 0, backup: true, capacity: 0.3, lead_time_days: 4}
+  - {source: hub_kaub,         target: plant_valeo,  input: composants_asie, dependency: 1.0, lead_time_days: 2}
+  - {source: port_rotterdam_r, target: plant_forvia, input: composants_asie, dependency: 0.6, lead_time_days: 2}
+  - {source: port_hamburg_r,   target: plant_forvia, input: composants_asie, dependency: 0.4, lead_time_days: 2}
+  - {source: port_hamburg_r,   target: plant_valeo,  input: composants_asie_secours, dependency: 0, backup: true, capacity: 0.5, lead_time_days: 3}
+  - {source: rm_zinc_nyrstar,  target: plant_valeo,  input: zinc, dependency: 1.0, lead_time_days: 5}
+  - {source: rm_zinc_nyrstar,  target: plant_forvia, input: zinc, dependency: 1.0, lead_time_days: 5}
+  # équipementiers -> produits
+  - {source: plant_valeo,  target: prod_power_ecu, input: assemblage, dependency: 1.0}
+  - {source: plant_forvia, target: prod_cockpit,   input: assemblage, dependency: 1.0}
+
+gazetteer:
+  - {name: "United States", aliases: ["États-Unis", "USA", "US"], lat: 39.8, lon: -98.6, kind: pays}
+  - {name: Taiwan,      aliases: ["Taïwan"],                 lat: 23.70, lon: 120.96, kind: pays}
+  - {name: China,       aliases: ["Chine"],                  lat: 35.86, lon: 104.20, kind: pays}
+  - {name: Thailand,    aliases: ["Thaïlande"],              lat: 15.87, lon: 100.99, kind: pays}
+  - {name: Netherlands, aliases: ["Pays-Bas", "Niederlande"], lat: 52.13, lon: 5.29,  kind: pays}
+  - {name: Germany,     aliases: ["Allemagne", "Deutschland"], lat: 51.17, lon: 10.45, kind: pays}
+  - {name: France,      aliases: [],                         lat: 46.23, lon: 2.21,   kind: pays}
+
+# Pas d'instrument « market_watch » : les signaux calibrés ci-dessous les remplacent.
+market_watch: []
+
+# Sites calibrés par le notebook météo, avec leurs indicateurs pertinents (choix métier du notebook)
+weather_sites:
+  - {node: rm_quartz_sp,      site: spruce_pine, indicators: [pluie_3j, rafales, neige, crue], fluvial: true, role: "Mines de quartz haute pureté"}
+  - {node: sup_fab_austin,    site: austin,      indicators: [gel, chaleur, pluie_3j, crue], fluvial: true, role: "Usines de semi-conducteurs"}
+  - {node: port_savannah,     site: savannah,    indicators: [rafales, pluie_3j], role: "Port à conteneurs"}
+  - {node: hub_kaub,          site: kaub_rhin,   indicators: [basses_eaux, crue], fluvial: true, role: "Goulet de la navigation sur le Rhin"}
+  - {node: port_rotterdam_r,  site: rotterdam,   indicators: [rafales, neige], role: "Premier port européen"}
+  - {node: port_hamburg_r,    site: hambourg,    indicators: [rafales, neige, crue, basses_eaux], fluvial: true, role: "Port"}
+  - {node: sup_nexperia,      site: hambourg,    indicators: [rafales, neige, crue, basses_eaux], fluvial: true, role: "Usine de semi-conducteurs"}
+  - {node: sup_ayutthaya,     site: ayutthaya,   indicators: [pluie_90j, crue], fluvial: true, role: "Zones industrielles (électronique, auto)"}
+  - {node: sup_fab_kaohsiung, site: kaohsiung,   indicators: [rafales, pluie_3j], role: "Fonderies"}
+  - {node: port_kaohsiung_r,  site: kaohsiung,   indicators: [rafales, pluie_3j], role: "Port"}
+  - {node: port_shanghai_r,   site: shanghai,    indicators: [rafales, pluie_3j], role: "Port de Yangshan"}
+  - {node: sup_dongguan,      site: dongguan,    indicators: [pluie_3j, rafales], role: "Usines d'électronique"}
+
+market_signals:
+  - {signal: gaz_europe, nodes: [rm_zinc_nyrstar]}          # cas validé : gaz -> arrêt de la fonderie de Budel (2022)
+  - {signal: zinc,       nodes: [rm_zinc_nyrstar]}
+  - {signal: carbone_eua, exposed: [rm_zinc_nyrstar]}
+  - {signal: electricite_DE, exposed: [sup_infineon, sup_nexperia]}
+  - {signal: cuivre,     exposed: [plant_valeo, plant_forvia]}
+  - {signal: aluminium,  exposed: [plant_forvia]}
+  - {signal: nickel,     exposed: [plant_valeo]}
+  - {signal: brent,      inputs: [fret_asie, fret_us, fret_thai, fret_asie_nord]}
+  - {signal: gscpi,      exposed: [port_kaohsiung_r, port_shanghai_r, port_rotterdam_r, port_hamburg_r, port_savannah]}
+  - {signal: gazole_EU,  inputs: [composants_asie]}
+  - {signal: eur_usd,    exposed: [plant_valeo, plant_forvia]}
+  - {signal: eur_cny,    exposed: [plant_forvia]}
+  - {signal: prix_production_EU, exposed: [plant_valeo, plant_forvia]}
+
+suppliers:
+  - {node: sup_wolfspeed,   proxy: wolfspeed}
+  - {node: sup_nexperia,    proxy: nexperia}
+  - {node: sup_infineon,    proxy: infineon}
+  - {node: sup_stmicro,     proxy: stmicro}
+  - {node: plant_valeo,     proxy: valeo}
+  - {node: plant_forvia,    proxy: forvia}
+  - {node: rm_zinc_nyrstar, proxy: nyrstar}

@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from src.api.routes_data import router as data_router
 from src.config import settings
 from src.schemas.events import (Alert, ChatRequest, ChatResponse, GraphState, PipelineRunRequest, PipelineRunResult,
                                 SimulationRequest, SimulationResult)
@@ -86,7 +87,7 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     def graph_simulate(req: SimulationRequest, request: Request) -> SimulationResult:
         """Simulation what-if d'une panne. L'état réel n'est pas modifié."""
         try:
-            return svc(request).engine.simulate_disruption(req.node_id, req.severity)
+            return svc(request).engine.simulate_disruption(req.node_id, req.severity, req.extra or None)
         except KeyError:
             raise HTTPException(status_code=404, detail=f"nœud inconnu : {req.node_id}")
 
@@ -111,6 +112,7 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
         """Copilot : LLM avec outils si disponible, sinon réponse déterministe à partir du graphe."""
         return svc(request).chat(req)
 
+    app.include_router(data_router)          # volets Météo et Finance, historique, stress tests
     return app
 
 

@@ -21,6 +21,8 @@ SCENARIO = "crisis_asia_semiconductors"
 def isolated_cache(tmp_path, monkeypatch):
     """Chaque test a son propre cache disque : rien n'est écrit dans data/cache."""
     monkeypatch.setenv("SC_CACHE_DIR", str(tmp_path / "cache"))
+    monkeypatch.setenv("SC_DB_PATH", str(tmp_path / "aegis.duckdb"))   # base unifiée isolée
+    monkeypatch.setenv("SC_OFFLINE", "1")          # connecteurs météo/finance : cache seul, jamais le réseau
 
 
 @pytest.fixture

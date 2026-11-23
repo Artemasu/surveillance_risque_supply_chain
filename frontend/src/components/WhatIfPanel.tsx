@@ -3,19 +3,38 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ChevronDown, FlaskConical, Loader2, PackageX, ShieldCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { dataApi } from "../api_data";
 import { useStore } from "../store";
 import { LEVEL_STYLE, TYPE_LABEL, fmt1, indexLevel, pct } from "../theme";
 import type { NodeState, SimulationResult } from "../types";
+import type { StressTest } from "../types_data";
 import { Empty, LevelBadge } from "./ui";
+import { FAMILY_STYLE, FamilyChip } from "./viz";
 
 const KIND_LABEL = { reallocation: "Réallocation", route_secours: "Route de secours", stock: "Stock", surveillance: "Surveillance" } as const;
 
 export default function WhatIfPanel({ nodes, onResult }: { nodes: NodeState[]; onResult: (r: SimulationResult | null) => void }) {
-  const { whatIfNode, setWhatIfNode, openNode } = useStore();
+  const { whatIfNode, setWhatIfNode, openNode, run } = useStore();
   const [severity, setSeverity] = useState(80);
   const [res, setRes] = useState<SimulationResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  // Stress tests tirés des volets Météo et Finance : plusieurs nœuds touchés en même temps
+  const [tests, setTests] = useState<StressTest[]>([]);
+  const [stress, setStress] = useState<StressTest | null>(null);
+  useEffect(() => {
+    dataApi.stressTests().then(setTests).catch(() => setTests([]));
+    setStress(null);
+  }, [run?.topology, run?.scenario]);
+  useEffect(() => {
+    if (stress && whatIfNode !== Object.keys(stress.shocks)[0]) setStress(null);    // choix manuel d'un nœud
+  }, [whatIfNode, stress]);
+
+  const pickStress = (id: string) => {
+    const t = tests.find((x) => x.id === id) ?? null;
+    setStress(t);
+    if (t) setWhatIfNode(Object.keys(t.shocks)[0]);
+  };
 
   useEffect(() => {
     if (!whatIfNode) {
@@ -28,7 +47,9 @@ export default function WhatIfPanel({ nodes, onResult }: { nodes: NodeState[]; o
       setBusy(true);
       setErr(null);
       try {
-        const r = await api.simulate(whatIfNode, severity / 100);
+        const r = stress
+          ? await api.simulate(whatIfNode, stress.shocks[whatIfNode] ?? severity / 100, stress.shocks, stress.id)
+          : await api.simulate(whatIfNode, severity / 100);
         if (!cancelled) {
           setRes(r);
           onResult(r);
@@ -43,7 +64,10 @@ export default function WhatIfPanel({ nodes, onResult }: { nodes: NodeState[]; o
       cancelled = true;
       clearTimeout(t);
     };
-  }, [whatIfNode, severity, onResult]);
+  }, [whatIfNode, severity, onResult, stress]);
+
+  const families = [...new Set(tests.map((t) => t.family))];
+  const nodeName = (id: string) => nodes.find((n) => n.id === id)?.name ?? id;
 
   const sorted = [...nodes].sort((a, b) => a.type.localeCompare(b.type) || a.name.localeCompare(b.name));
   const dIdx = res ? res.simulated_index - res.baseline_index : 0;
@@ -59,6 +83,34 @@ export default function WhatIfPanel({ nodes, onResult }: { nodes: NodeState[]; o
           <div className="text-[11px] text-ink-mute">L'état réel n'est jamais modifié.</div>
         </div>
       </div>
+
+      {tests.length > 0 && (
+        <label className="block">
+          <span className="label">Stress test (volets Météo et Finance)</span>
+          <div className="relative mt-1.5">
+            <select className="select" value={stress?.id ?? ""} onChange={(e) => (e.target.value ? pickStress(e.target.value) : (setStress(null), setWhatIfNode(null)))}>
+              <option value="">— Aucun : panne d'un seul nœud —</option>
+              {families.map((f) => (
+                <optgroup key={f} label={FAMILY_STYLE[f]?.label ?? f}>
+                  {tests.filter((t) => t.family === f).map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+                </optgroup>
+              ))}
+            </select>
+            <ChevronDown size={15} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-mute" />
+          </div>
+          {stress && (
+            <div className="mt-2 rounded-xl border border-violet-100 bg-violet-50/50 p-2.5 text-[11.5px] text-violet-900">
+              <div className="mb-1 flex items-center gap-1.5"><FamilyChip family={stress.family} /> {stress.detail}</div>
+              <div className="flex flex-wrap gap-1">
+                {Object.entries(stress.shocks).map(([n, s]) => (
+                  <span key={n} className="tnum rounded-md bg-white px-1.5 py-0.5 ring-1 ring-violet-100">{nodeName(n)} · {pct(s)}</span>
+                ))}
+              </div>
+              <div className="mt-1 text-[10.5px] text-violet-700/80">Gravités calculées comme le moteur le ferait pour un événement au centile 99,5 (liens exposés pondérés).</div>
+            </div>
+          )}
+        </label>
+      )}
 
       <label className="block">
         <span className="label">Nœud en panne</span>
@@ -89,7 +141,9 @@ export default function WhatIfPanel({ nodes, onResult }: { nodes: NodeState[]; o
           step={5}
           value={severity}
           onChange={(e) => setSeverity(Number(e.target.value))}
-          className="range mt-2 w-full"
+          disabled={!!stress}
+          title={stress ? "Gravités fixées par le stress test" : undefined}
+          className={`range mt-2 w-full ${stress ? "opacity-40" : ""}`}
           style={{ ["--pct" as string]: `${severity}%`, ["--fill" as string]: LEVEL_STYLE[indexLevel(severity)].color + "88", ["--thumb" as string]: LEVEL_STYLE[indexLevel(severity)].color }}
         />
         <div className="mt-1 flex justify-between text-[10px] text-ink-mute">

@@ -128,3 +128,36 @@ market_watch:
   - {id: LITHIUM,          name: "Lithium",      yf: "LIT",  nodes: [rm_lithium]}
   - {id: CUIVRE,           name: "Cuivre",       yf: "HG=F", nodes: [rm_copper]}
   - {id: TERRES_RARES,     name: "Terres rares", yf: "REMX", nodes: [rm_rare_earths]}
+
+# ---------------------------------------------------------------- liaisons avec les volets Météo et Finance
+# weather_sites : seuils calibrés par site (volet Météo). `site` = site calibré dans la base (par défaut, le nœud) ;
+#   les quatre ports ci-dessous reprennent les sites déjà calibrés par le notebook météo (python -m src.jobs
+#   import-notebooks). Les autres hubs gardent les seuils fixes tant qu'on ne lance pas
+#   python -m src.jobs calibrate-meteo.
+weather_sites:
+  - {node: port_rotterdam, site: rotterdam, indicators: [rafales, neige]}
+  - {node: port_hamburg,   site: hambourg,  indicators: [rafales, neige, crue, basses_eaux], fluvial: true}
+  - {node: port_kaohsiung, site: kaohsiung, indicators: [rafales, pluie_3j]}
+  - {node: port_shanghai,  site: shanghai,  indicators: [rafales, pluie_3j]}
+
+# market_signals : signaux calibrés du volet Finance. nodes = lien exact ; exposed / inputs = exposition large
+# (rôle « exposé », poids réduit) aux nœuds nommés ou à ceux qui reçoivent ces catégories d'intrants.
+market_signals:
+  - {signal: cuivre,     nodes: [rm_copper]}
+  - {signal: nickel,     exposed: [sup_cathode_kr]}
+  - {signal: aluminium,  exposed: [plant_pack_fr]}
+  - {signal: brent,      inputs: [fret_puces, fret_cellules, fret_moteurs]}
+  - {signal: gscpi,      exposed: [port_kaohsiung, port_shanghai, port_singapore, port_rotterdam, port_hamburg]}
+  - {signal: gaz_europe, exposed: [sup_wafer_de, plant_assembly_de]}
+  - {signal: electricite_DE, exposed: [sup_wafer_de, plant_ecu_de]}
+  - {signal: eur_cny,    exposed: [plant_pack_fr, sup_motor_jp]}
+  - {signal: eur_usd,    exposed: [plant_ecu_de]}
+  - {signal: prix_production_EU, exposed: [plant_ecu_de, plant_pack_fr, plant_assembly_fr, plant_assembly_de]}
+  - {signal: gazole_EU,  inputs: [cellules, moteurs, packs_batterie]}
+
+# suppliers : fournisseurs RÉELS suivis comme référence (proxy) d'un fournisseur fictif du même métier.
+# Leur fiche (bourse, sanctions sur eux ou leur maison mère, BODACC) alimente le risque du nœud fictif.
+suppliers:
+  - {node: sup_chip_nl,  proxy: nexperia,  note: "Waal Semiconductors (Nimègue) <-> Nexperia (Nimègue), même métier"}
+  - {node: sup_chip_tw,  proxy: wolfspeed, note: "puces de puissance : Wolfspeed comme référence cotée"}
+  - {node: plant_ecu_de, proxy: infineon,  note: "modules de puissance allemands : Infineon comme référence cotée"}

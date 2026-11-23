@@ -169,7 +169,8 @@ def custom(data_dir):
 
 def test_list_topologies(service, custom):
     shipped = service.list_topologies()
-    assert [(t["ref"], t["default"], t["nodes"]) for t in shipped] == [(None, True, 30), ("topologies/pharma_helvia.yaml", False, 19)]
+    assert [(t["ref"], t["default"], t["nodes"]) for t in shipped] == [
+        (None, True, 30), ("topologies/pharma_helvia.yaml", False, 19), ("topologies/semis_reels.yaml", False, 20)]
     assert shipped[1]["company"] == "Helvia Pharma" and shipped[0]["active"] and not shipped[1]["active"]
     found = {t["ref"]: t for t in custom.list_topologies()}
     assert set(found) == {None, "topology_pharma.yaml", "topologies/cassee.yaml"}, "data/topology_*.yaml est détecté"
@@ -324,7 +325,7 @@ def test_live_topology_selector_runs_on_chosen_chain(embedded, monkeypatch):
     at = start(MAIN)
     at.radio(key="mode_label").set_value("Live").run()
     options = at.selectbox(key="topology_ref").options
-    assert len(options) == 2 and any("Helvia Pharma" in o for o in options)
+    assert len(options) == 3 and any("Helvia Pharma" in o for o in options)
     at.selectbox(key="topology_ref").set_value("topologies/pharma_helvia.yaml").run()
     press(at, "Exécuter le pipeline")
     assert any("Helvia Pharma" in c.value and "Mode live" in c.value for c in at.caption)

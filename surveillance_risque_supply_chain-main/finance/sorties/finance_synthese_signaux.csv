@@ -1,0 +1,23 @@
+signal,nom,famille,impact,seuil,alertes_par_an,cas_testes,cas_detectes,meilleure_avance_jours
+brent,Pétrole Brent,énergie,Carburant puis transport plus chers,25.58,0.15,0.0,0.0,
+gaz_europe,"Gaz naturel, Europe",énergie,Fournisseurs énergivores plus chers,8.87,0.67,1.0,1.0,63.0
+gazole_EU,"Gazole à la pompe, moyenne UE",énergie,Transport routier plus cher,4.72,0.51,0.0,0.0,
+gscpi,Pression supply chain (GSCPI),fret,Délais et coûts de fret en hausse,0.73,0.1,1.0,0.0,
+eur_usd,Euro en dollars,change,Importations en dollars plus chères,-6.77,0.07,0.0,0.0,
+eur_cny,Euro en yuans,change,Importations de Chine plus chères,-6.65,0.09,0.0,0.0,
+cuivre,Cuivre,métaux,Composants électriques plus chers,15.05,0.19,0.0,0.0,
+aluminium,Aluminium,métaux,Pièces et emballages plus chers,9.22,0.33,0.0,0.0,
+zinc,Zinc,métaux,Acier galvanisé et alliages plus chers,10.12,0.52,0.0,0.0,
+nickel,Nickel,métaux,Batteries et inox plus chers,12.04,0.45,0.0,0.0,
+prix_production_EU,"Prix de production industriels, UE",prix fournisseurs,Les fournisseurs industriels augmentent leurs prix,1.46,0.18,0.0,0.0,
+carbone_eua,Carbone EU ETS,énergie,Industriels soumis au quota carbone et importations CBAM plus chers,,,0.0,0.0,
+electricite_DE,"Électricité de gros, Allemagne",énergie,Fournisseurs électro-intensifs plus chers,,,0.0,0.0,
+bourse_wolfspeed,Bourse : Wolfspeed,fournisseurs,"Carbure de silicium (puces de puissance) : fournisseur en difficulté, faillite possible",-49.44,0.01,1.0,1.0,94.0
+bourse_wingtech,Bourse : Wingtech (maison mère de Nexperia),fournisseurs,"Puces (via Nexperia) : fournisseur en difficulté, faillite possible",-34.11,0.12,1.0,0.0,
+bourse_infineon,Bourse : Infineon,fournisseurs,"Semi-conducteurs : fournisseur en difficulté, faillite possible",-23.14,0.12,0.0,0.0,
+bourse_stmicro,Bourse : STMicroelectronics,fournisseurs,"Semi-conducteurs : fournisseur en difficulté, faillite possible",-27.49,0.12,0.0,0.0,
+bourse_valeo,Bourse : Valeo,fournisseurs,"Équipements automobiles : fournisseur en difficulté, faillite possible",-28.11,0.09,0.0,0.0,
+bourse_forvia,Bourse : Forvia,fournisseurs,"Équipements automobiles : fournisseur en difficulté, faillite possible",-31.15,0.1,0.0,0.0,
+federal_register,Règles US (Federal Register),règles,Fournisseur coupé ou taxé,,,1.0,1.0,326.0
+drewry_wci,Fret Drewry (valeurs publiées),fret,Délais et coûts d'import d'Asie,,,1.0,1.0,25.0
+sanction_maison_mere,Sanction sur la maison mère,sanctions et propriété,Fournisseur coupé,,,1.0,1.0,329.0

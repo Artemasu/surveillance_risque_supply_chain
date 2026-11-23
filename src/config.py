@@ -85,6 +85,21 @@ class Settings:
         return Path(os.getenv("SC_CACHE_DIR", self.data_dir / "cache"))
 
     @property
+    def db_path(self) -> Path:
+        """Base unifiée DuckDB (médias + météo + finance, historique des exécutions). SC_DB_PATH pour la déplacer."""
+        return Path(os.getenv("SC_DB_PATH", self.data_dir / "aegis.duckdb"))
+
+    @property
+    def offline(self) -> bool:
+        """SC_OFFLINE=1 : les connecteurs des volets Météo et Finance lisent seulement leur cache (tests, démo)."""
+        return _bool("SC_OFFLINE", False)
+
+    @property
+    def persist_runs(self) -> bool:
+        """Chaque exécution du pipeline est enregistrée dans la base (désactivable : SC_PERSIST=0)."""
+        return _bool("SC_PERSIST", True)
+
+    @property
     def scenario_dir(self) -> Path:
         return self.data_dir / "replay_scenarios"
 

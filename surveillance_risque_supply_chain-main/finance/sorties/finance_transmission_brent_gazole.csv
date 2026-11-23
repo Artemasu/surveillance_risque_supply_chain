@@ -1,0 +1,9 @@
+pays,decalage_semaines,correlation
+BE,1,0.387
+DE,0,0.363
+ES,1,0.59
+EU,1,0.537
+FR,1,0.51
+IT,1,0.444
+NL,1,0.453
+PL,1,0.271

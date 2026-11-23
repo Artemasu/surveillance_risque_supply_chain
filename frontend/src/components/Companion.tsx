@@ -4,6 +4,17 @@ import { Eraser, Loader2, SendHorizontal, Sparkles, Wrench, X } from "lucide-rea
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStore, type ChatMessage } from "../store";
 import Slime, { useCopilotSlime, useSlimeRisk, type SlimePose, type SlimeState } from "./Slime";
+import { FAMILY_STYLE } from "./viz";
+
+const FAMILY_PHRASE: Record<string, string> = {
+  climat: "tempête, crue ou sécheresse en vue",
+  marche: "tension sur les prix et le fret",
+  reglementaire: "sanction ou nouvelle règle",
+  financier: "fournisseur fragilisé",
+  operations: "grève ou blocage logistique",
+  approvisionnement: "pénurie annoncée",
+  cyber: "cyberattaque signalée",
+};
 
 // ------------------------------------------------------------------ rendu Markdown minimal (gras, listes, code)
 function inline(text: string) {
@@ -215,9 +226,17 @@ function ChatBubble({ onClose, slime }: { onClose: () => void; slime: SlimeState
 
 // ------------------------------------------------------------------ compagnon
 export default function Companion() {
-  const { run, alerts, loading, whatIfNode, state, apiDown } = useStore();
+  const { run, alerts, loading, whatIfNode, state, apiDown, events } = useStore();
   const [open, setOpen] = useState(false);
   const [showStatus, setShowStatus] = useState(true);
+
+  // Famille d'aléa dominante (climat, marché, sanction...) : le Slime réagit au type de menace, pas seulement au niveau.
+  const family = useMemo(() => {
+    const topAlert = alerts.slice().sort((a, b) => b.priority - a.priority)[0];
+    const pool = (events?.signals ?? []).filter((s) => !topAlert || topAlert.signal_ids.includes(s.id));
+    const best = (pool.length ? pool : events?.signals ?? []).slice().sort((a, b) => b.contribution - a.contribution)[0];
+    return best && best.contribution >= 0.05 ? best.family : null;
+  }, [alerts, events]);
 
   // Statut contextuel. Un conseil (tension, simulation, panne) affiché dans la bulle fait lever la pancarte.
   const top = alerts.slice().sort((a, b) => b.priority - a.priority)[0];
@@ -229,8 +248,8 @@ export default function Companion() {
   else if (loading) [status, advice] = ["J'observe les sources… Médias, Finance, Météo.", false];
   else if (!run) status = "Prêt quand vous l'êtes : lancez une analyse.";
   else if (whatIfName) status = `Mode simulation actif : panne de ${whatIfName}.`;
-  else if (serious.length && top) status = `Attention : tension détectée sur ${top.node_name}.`;
-  else if (alerts.length && top) status = `À surveiller : ${top.node_name}.`;
+  else if (serious.length && top) status = family && FAMILY_PHRASE[family] ? `${FAMILY_STYLE[family].emoji} Attention : ${FAMILY_PHRASE[family]} sur ${top.node_name}.` : `Attention : tension détectée sur ${top.node_name}.`;
+  else if (alerts.length && top) status = family && FAMILY_PHRASE[family] ? `${FAMILY_STYLE[family].emoji} À surveiller : ${FAMILY_PHRASE[family]} sur ${top.node_name}.` : `À surveiller : ${top.node_name}.`;
   else [status, advice] = ["Chaîne fluide aujourd'hui.", false];
   if (run?.mode === "replay" && !whatIfName && !loading && !apiDown) status = `Replay J${run.day} · ${status}`;
 
@@ -271,11 +290,23 @@ export default function Companion() {
             className="relative block rounded-3xl p-1 transition-shadow hover:ring-2 hover:ring-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
           >
             <Slime state={slime} scale={1.25} box={90} />
-            {!open && (
+            {!open && (family && run && !whatIfName ? (
+              <motion.span
+                key={family}
+                initial={{ scale: 0, y: 6 }}
+                animate={{ scale: 1, y: [0, -3, 0] }}
+                transition={{ y: { repeat: Infinity, duration: 2.2 }, scale: { type: "spring", stiffness: 300 } }}
+                title={`Menace dominante : ${FAMILY_STYLE[family]?.label ?? family}`}
+                className="absolute -left-1 top-2 grid h-7 w-7 place-items-center rounded-full text-[15px] shadow ring-1 ring-line"
+                style={{ background: FAMILY_STYLE[family]?.bg ?? "#fff" }}
+              >
+                {FAMILY_STYLE[family]?.emoji ?? "•"}
+              </motion.span>
+            ) : (
               <span className="absolute -left-1 top-3 grid h-5 w-5 place-items-center rounded-full bg-white text-sky-600 shadow ring-1 ring-line">
                 <Sparkles size={11} />
               </span>
-            )}
+            ))}
           </button>
         </div>
       </div>

@@ -25,9 +25,32 @@ python -m venv .venv
 pip install -r requirements.txt
 python -m spacy download xx_ent_wiki_sm      # facultatif : sans lui, l'agent médias utilise les référentiels seuls
 
+python -m src.jobs import-notebooks          # base unifiée data/aegis.duckdb depuis les sorties des notebooks Météo et Finance
 uvicorn src.api.main:app --port 8000         # terminal 1 : API, documentation sur http://localhost:8000/docs
-pytest                                       # 155 tests
+pytest                                       # 168 tests
 ```
+
+### Volets Météo et Finance, base unifiée
+
+Les notebooks de `surveillance_risque_supply_chain-main/` (volets Météo et Finance) sont factorisés en modules :
+`src/connectors/` (Open-Meteo, marchés, registres : sanctions, GLEIF, BODACC, Federal Register, avec un cache disque
+par source), `src/analytics/` (seuils = quantile sur 2010-2020, rang, épisodes, score recalibré : même méthode pour les
+deux volets), `src/storage/db.py` (base DuckDB : observations, seuils, indicateurs jour par jour, événements des trois
+agents rattachés aux nœuds, historique de chaque exécution). Les agents météo et finance appliquent les seuils propres à
+chaque site ou signal quand ils sont calibrés, sinon les seuils fixes d'origine.
+
+```bash
+python -m src.jobs import-notebooks                                  # sans réseau : 10 sites météo, 17 signaux, 8 fournisseurs
+python -m src.jobs calibrate-meteo --topology topologies/semis_reels.yaml   # réseau : ERA5 2010 -> aujourd'hui des hubs non calibrés
+python -m src.jobs forecast-meteo                                    # réseau : prévisions 16 jours des sites calibrés
+python -m src.jobs ingest-finance                                    # réseau : signaux, fiches fournisseurs, règles
+python -m src.jobs status
+```
+
+Topologies : `data/topology.yaml` relie ses ports et fournisseurs fictifs aux sites et entreprises réels (sections
+`weather_sites`, `market_signals`, `suppliers`) ; `data/topologies/semis_reels.yaml` est la chaîne réelle du cas
+d'étude (sites et entreprises réels, liens illustratifs). Carbone EU ETS et électricité allemande : déposer
+`data/manuel/carbone_eua.csv` et `data/manuel/electricite_DE.csv` (colonnes date, valeur).
 
 ### Interface web React (recommandée)
 
@@ -244,6 +267,11 @@ Limites connues :
 | GET | `/events` | événements normalisés et signaux corrélés |
 | POST | `/chat` | copilot : `{"message": "...", "history": [], "context": {}}` |
 | GET | `/scenarios`, `/topologies`, `/health` | scénarios et topologies disponibles, état du service |
+| GET | `/weather/overview`, `/weather/sites/{site}/series`, `/weather/heatmap`, `/weather/episodes` | volet Météo (base unifiée) |
+| GET | `/finance/overview`, `/finance/signals/{signal}/series`, `/finance/base100`, `/finance/score`, `/finance/suppliers/{cle}`, `/finance/rules`, `/finance/diesel` | volet Finance |
+| GET | `/history/runs`, `/history/risk`, `/history/events`, `/history/compare` | historique des exécutions |
+| GET | `/graph/stress-tests` | stress tests prédéfinis (centile 99,5) ; `/graph/simulate` accepte `extra: {nœud: gravité}` |
+| POST | `/jobs/forecast-meteo`, `/jobs/ingest-finance` | collectes courtes déclenchées depuis l'interface |
 
 `status: "error"` sur `/pipeline/run` signale une panne de collecte, jamais une absence d'alerte. L'état précédent
 est alors conservé (sauf si la topologie vient de changer : le graphe est alors vide). Une topologie introuvable donne 404,

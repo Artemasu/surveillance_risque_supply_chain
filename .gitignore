@@ -6,3 +6,13 @@ data/cache/
 data/raw/
 data/processed/
 .env
+
+# base unifiée DuckDB (régénérable : python -m src.jobs import-notebooks)
+data/aegis.duckdb
+data/aegis.duckdb.wal
+data/manuel/
+# cache disque des notebooks des volets Météo et Finance (régénérable)
+surveillance_risque_supply_chain-main/meteo/data/cache/
+surveillance_risque_supply_chain-main/finance/data/cache/
+# fichiers verrou d'Office
+~$*
