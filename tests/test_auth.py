@@ -84,3 +84,13 @@ def test_jeton_expire_ou_modifie(app, monkeypatch):
     assert auth.lire_jeton(jeton[:-2] + "xx", data) is None
     monkeypatch.setattr(auth.time, "time", lambda: 10 ** 11)
     assert auth.lire_jeton(jeton, data) is None
+
+
+def test_acces_developpement_seulement_avec_aegis_dev(app, monkeypatch):
+    c, _ = app
+    monkeypatch.delenv("AEGIS_DEV", raising=False)
+    assert c.post("/auth/dev").status_code == 404
+    monkeypatch.setenv("AEGIS_DEV", "1")
+    r = c.post("/auth/dev")
+    assert r.status_code == 200 and r.json()["profil"]["role"] == "equipe"
+    assert c.get("/database/tables", headers={"Authorization": f"Bearer {r.json()['jeton']}"}).status_code != 401

@@ -34,13 +34,22 @@ LONGUEUR_MIN_MDP = 12
 _SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1}
 
 # Routes accessibles sans compte : page vitrine (santé du service), connexion, inscription, documentation.
-ROUTES_PUBLIQUES = {"/health", "/auth/connexion", "/clients/parametres", "/clients/inscription",
+ROUTES_PUBLIQUES = {"/health", "/auth/connexion", "/auth/dev", "/clients/parametres", "/clients/inscription",
                     "/docs", "/docs/oauth2-redirect", "/redoc", "/openapi.json"}
 
 
 def auth_active() -> bool:
     """SC_AUTH=0 désactive la protection (tests automatisés uniquement)."""
     return os.getenv("SC_AUTH", "1").strip().lower() not in {"0", "false", "non", "off"}
+
+
+def acces_dev_actif() -> bool:
+    """Accès « développement » sans mot de passe : uniquement si l'API est lancée avec AEGIS_DEV=1 (jamais en production)."""
+    return os.getenv("AEGIS_DEV", "0").strip().lower() in {"1", "true", "oui", "on"}
+
+
+PROFIL_DEV = {"role": "equipe", "email": "dev@aegis.local", "nom": "Mode développement", "topology_ref": None,
+              "client_id": None, "societe": None}
 
 
 def dossier_comptes(data_dir: Optional[Path] = None) -> Path:

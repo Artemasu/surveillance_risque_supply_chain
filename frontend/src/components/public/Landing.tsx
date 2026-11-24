@@ -6,14 +6,15 @@
 // tout s'arrête si le système demande moins d'animations (MotionConfig reducedMotion="user" et CSS).
 // Les couleurs de fond sont écrites en valeurs directes (bg-[#...]) : la page reste correcte même si la
 // configuration Tailwind n'a pas encore été rechargée.
-import { MotionConfig, motion } from "framer-motion";
+import { MotionConfig, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Banknote, Bell, Briefcase, CloudSun, Cpu, EyeOff, Factory, History, LayoutDashboard,
   Lock, MessageSquareText, Network, Radar, Route, ShieldCheck, type LucideIcon,
 } from "lucide-react";
-import { Suspense, lazy, type CSSProperties, type ReactNode } from "react";
+import { Suspense, lazy, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { AgentBadge } from "../ui";
 import type { AgentName } from "../../types";
+import DemoDefilante from "./DemoDefilante";
 import PublicShell, { aller } from "./PublicShell";
 
 const Globe = lazy(() => import("./Globe"));       // three.js chargé à part : le texte s'affiche tout de suite
@@ -94,7 +95,22 @@ function Tampon() {
   );
 }
 
+/** Vrai sur un grand écran (≥ 1024 px) : la démonstration défilante y remplace la frise verticale. */
+function useGrandEcran() {
+  const requete = "(min-width: 1024px)";
+  const [grand, setGrand] = useState(() => typeof window !== "undefined" && window.matchMedia(requete).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(requete);
+    const maj = () => setGrand(mq.matches);
+    mq.addEventListener("change", maj);
+    return () => mq.removeEventListener("change", maj);
+  }, []);
+  return grand;
+}
+
 export default function Landing() {
+  const reduit = useReducedMotion();
+  const defilante = useGrandEcran() && !reduit;
   return (
     <MotionConfig reducedMotion="user">
       <PublicShell sombre>
@@ -177,7 +193,8 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Démonstration : aplat bleu canard */}
+        {/* Démonstration : fiches défilantes sur grand écran, frise verticale sinon */}
+        {defilante ? <DemoDefilante jours={DEMO} fond={C.canardFonce} /> : (
         <section id="demonstration" className="relative scroll-mt-20 overflow-hidden text-white" style={{ background: C.canardFonce }}>
           <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full opacity-30 blur-3xl" style={{ background: C.canard }} />
           <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
@@ -187,16 +204,19 @@ export default function Landing() {
                 Un laboratoire fabrique un antibiotique injectable à Tours. Ses principes actifs viennent d'Inde et de Chine et arrivent par Anvers. Voici ce que voient les trois agents.
               </p>
             </div>
-            <ol className="relative mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Frise : une ligne par jour, lecture de haut en bas, sans cartes */}
+            <ol className="relative mt-16 border-b border-white/15">
               {DEMO.map((d, i) => (
-                <motion.li key={d.jour} {...apparition} transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
-                  className="flex flex-col gap-5 rounded-[24px] bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur transition duration-300 hover:bg-white/[0.1]">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <span className="text-4xl font-bold" style={DISPLAY}>J{d.jour}</span>
-                    <span className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white/70">{d.maillon}</span>
+                <motion.li key={d.jour} {...apparition} transition={{ duration: 0.45, delay: Math.min(i, 3) * 0.05 }}
+                  className="group grid gap-4 border-t border-white/15 py-7 transition-colors duration-300 hover:bg-white/[0.04] sm:grid-cols-[120px_1fr] lg:grid-cols-[140px_1fr_260px] lg:items-center">
+                  <div className="flex items-center gap-4">
+                    <span className="text-5xl font-bold leading-none" style={{ ...DISPLAY, color: { media: C.moutarde, weather: C.olive, finance: "#5FC4CF" }[d.agents[0]] }}>J{d.jour}</span>
                   </div>
-                  <p className="flex-1 text-[15px] leading-relaxed text-white/90">{d.texte}</p>
-                  <div className="flex flex-wrap gap-1.5">{d.agents.map((a) => <AgentBadge key={a} agent={a} size="xs" />)}</div>
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">{d.maillon}</p>
+                    <p className="mt-2 text-lg leading-relaxed text-white">{d.texte}</p>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 lg:justify-end">{d.agents.map((a) => <AgentBadge key={a} agent={a} />)}</div>
                 </motion.li>
               ))}
             </ol>
@@ -206,6 +226,7 @@ export default function Landing() {
             <p className="mt-3 text-xs text-white/45">Scénario fictif écrit pour la démonstration : ni les articles, ni les mesures, ni les entreprises ne sont réels.</p>
           </div>
         </section>
+        )}
 
         {/* Profils */}
         <section style={{ background: C.creme }}>

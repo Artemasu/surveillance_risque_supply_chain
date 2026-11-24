@@ -8,8 +8,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from src.auth import (ROUTES_EQUIPE, ROUTES_ETAT, ROUTES_PUBLIQUES, auth_active, connecter, lire_jeton,
-                      topologie_autorisee)
+from src.auth import (PROFIL_DEV, ROUTES_EQUIPE, ROUTES_ETAT, ROUTES_PUBLIQUES, acces_dev_actif, auth_active, connecter,
+                      creer_jeton, lire_jeton, topologie_autorisee)
 
 router = APIRouter(prefix="/auth", tags=["connexion"])
 
@@ -27,6 +27,15 @@ def connexion(body: Identifiants, request: Request) -> dict:
     except PermissionError as e:
         raise HTTPException(status_code=401, detail=str(e))
     return {"jeton": jeton, "profil": profil}
+
+
+@router.post("/dev")
+def connexion_dev(request: Request) -> dict:
+    """Session équipe sans mot de passe, pour le développement. Répond 404 tant que l'API n'est pas lancée avec AEGIS_DEV=1."""
+    if not acces_dev_actif():
+        raise HTTPException(status_code=404, detail="accès développement désactivé : relancez l'API avec AEGIS_DEV=1")
+    profil = dict(PROFIL_DEV)
+    return {"jeton": creer_jeton(profil, request.app.state.service.data_dir), "profil": profil}
 
 
 @router.get("/moi")

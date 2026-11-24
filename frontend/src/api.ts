@@ -73,6 +73,8 @@ export const api = {
   clientParams: () => http<{ gabarits: Gabarit[]; version_notice: string; conservation_annees: number }>("/clients/parametres"),
   inscription: (body: Inscription) => post<InscriptionResultat>("/clients/inscription", body),
   connexion: (email: string, mot_de_passe: string) => post<{ jeton: string; profil: Profil }>("/auth/connexion", { email, mot_de_passe }),
+  // Accès sans mot de passe pendant le développement (API lancée avec AEGIS_DEV=1)
+  connexionDev: () => post<{ jeton: string; profil: Profil }>("/auth/dev", {}),
   exportClient: (id: string) => http<Record<string, unknown>>(`/clients/${id}/export`),
   supprimerClient: (id: string) => http<{ supprimes: string[] }>(`/clients/${id}`, { method: "DELETE" }),
 };
