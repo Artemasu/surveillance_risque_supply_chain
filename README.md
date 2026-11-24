@@ -272,6 +272,7 @@ Limites connues :
 | GET | `/history/runs`, `/history/risk`, `/history/events`, `/history/compare` | historique des exécutions |
 | GET | `/graph/stress-tests` | stress tests prédéfinis (centile 99,5) ; `/graph/simulate` accepte `extra: {nœud: gravité}` |
 | POST | `/jobs/forecast-meteo`, `/jobs/ingest-finance` | collectes courtes déclenchées depuis l'interface |
+| GET, POST, DELETE | `/clients/parametres`, `/clients/inscription`, `/clients/{id}/export`, `/clients/{id}` | inscription d'un client, export et suppression de ses données (RGPD) |
 
 `status: "error"` sur `/pipeline/run` signale une panne de collecte, jamais une absence d'alerte. L'état précédent
 est alors conservé (sauf si la topologie vient de changer : le graphe est alors vide). Une topologie introuvable donne 404,
@@ -386,6 +387,32 @@ python scripts/export_soutenance.py --scenario crisis_pharma_api --node plant_ff
 | `indice_global_crisis_asia_semiconductors.txt` | légende jour par jour, à coller sous la figure |
 
 Le script rejoue le scénario jour par jour : les chiffres des figures sont ceux du moteur, aucun n'est écrit en dur.
+
+## Inscription des clients
+
+L'onglet **Nouveau client** de l'interface React crée l'espace d'une entreprise en quatre étapes : entreprise, chaîne
+d'approvisionnement (décrite ou issue d'un gabarit sectoriel), interlocuteur, validation. Le serveur (`src/onboarding.py`)
+géocode les sites, construit la topologie, la valide avec le moteur de graphe, puis écrit :
+
+| Fichier | Contenu | Données personnelles |
+|---|---|---|
+| `data/clients/<id>.json` | fiche : entreprise, interlocuteur, preuve du consentement, date de fin de conservation | oui |
+| `data/topologies/client_<id>.yaml` | chaîne d'approvisionnement, disponible en mode live | non |
+| `data/replay_scenarios/client_<id>_modele.json` | scénario modèle (`meta`, `media`, `weather`, `finance`) à compléter | non |
+
+Protection des données :
+
+- **minimisation** : prénom, nom, e-mail professionnel (adresses de messageries grand public refusées), fonction facultative ;
+- **séparation** : la topologie et le scénario ne contiennent qu'un identifiant aléatoire, jamais l'interlocuteur ;
+- **secret des affaires** : les fournisseurs sont pseudonymisés par défaut (« Fournisseur A ») ; seuls des noms de villes
+  sortent du serveur (géocodage Open-Meteo), les analyses par LLM restent locales ;
+- **consentement** : notice d'information versionnée (`NOTICE_VERSION`), acceptation horodatée dans la fiche ;
+- **droits** : `GET /clients/{id}/export` (accès, portabilité), `DELETE /clients/{id}` (effacement des trois fichiers) ;
+  `Registre.purger()` supprime les fiches dont la durée de conservation (3 ans) est dépassée ;
+- **Git** : les trois fichiers sont exclus par `.gitignore`.
+
+Avant une mise en service : remplacer l'adresse `CONTACT_RGPD` de `frontend/src/components/OnboardingPage.tsx`, ajouter
+une authentification aux routes d'export et de suppression, et planifier la purge.
 
 ## Adapter le projet à votre entreprise
 

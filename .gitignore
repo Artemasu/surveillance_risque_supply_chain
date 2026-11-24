@@ -18,3 +18,8 @@ surveillance_risque_supply_chain-main/finance/data/cache/
 ~$*
 
 Claude outputs/
+
+# Espaces clients : données personnelles (fiches) et chaînes d'approvisionnement confidentielles
+data/clients/
+data/topologies/client_*.yaml
+data/replay_scenarios/client_*_modele.json

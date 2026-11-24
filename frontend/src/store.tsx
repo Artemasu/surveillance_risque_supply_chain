@@ -6,7 +6,7 @@ import type {
 } from "./types";
 
 export type Mode = "replay" | "live";
-export type View = "dashboard" | "chain" | "weather" | "finance" | "history" | "database";
+export type View = "dashboard" | "chain" | "weather" | "finance" | "history" | "database" | "onboarding";
 
 export interface ChatMessage extends ChatTurn {
   mode?: string;
@@ -30,6 +30,7 @@ interface Store {
   setDay: (d: number) => void;
   topologyRef: string;
   setTopologyRef: (r: string) => void;
+  refreshTopologies: () => Promise<void>;
   useLlm: boolean;
   setUseLlm: (v: boolean) => void;
 
@@ -204,9 +205,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return (run.topology ?? "") !== topologyRef;
   }, [run, mode, scenarioId, day, topologyRef]);
 
+  // Après une inscription : la nouvelle chaîne et son scénario modèle apparaissent dans les sélecteurs.
+  const refreshTopologies = useCallback(async () => {
+    const [tp, sc] = await Promise.all([api.topologies(), api.scenarios()]);
+    setTopologies(tp);
+    setScenarios(sc);
+  }, []);
+
   const value: Store = {
     health, apiDown, scenarios, topologies, mode, setMode, scenarioId, setScenarioId, day, setDay, topologyRef,
-    setTopologyRef, useLlm, setUseLlm, run, state, alerts, events, loading, error, launch, dirty, chat, chatBusy, ask,
+    setTopologyRef, refreshTopologies, useLlm, setUseLlm, run, state, alerts, events, loading, error, launch, dirty, chat, chatBusy, ask,
     clearChat, drawer,
     openNode: (nodeId) => setDrawer({ kind: "node", nodeId }),
     openEvent: (envelope) => setDrawer({ kind: "event", envelope }),

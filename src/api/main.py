@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from src.api.routes_clients import router as clients_router
 from src.api.routes_data import router as data_router
 from src.api.routes_database import router as database_router
 from src.config import settings
@@ -115,6 +116,7 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
 
     app.include_router(data_router)          # volets Météo et Finance, historique, stress tests
     app.include_router(database_router)      # explorateur de la base unifiée et du graphe (lecture seule)
+    app.include_router(clients_router)       # inscription des clients et droits RGPD
     return app
 
 

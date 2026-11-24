@@ -82,6 +82,37 @@ export interface Topology {
   active: boolean;
 }
 
+// Inscription d'un client (src/onboarding.py)
+export interface Gabarit {
+  id: string;
+  label: string;
+  noeuds: number;
+}
+
+export interface Inscription {
+  entreprise: { raison_sociale: string; secteur: string; pays: string; taille: string };
+  contact: { prenom: string; nom: string; email: string; fonction: string | null };
+  gabarit: string | null;
+  chaine: {
+    sites: { nom: string; ville: string; pays: string; stock_jours: number }[];
+    points_logistiques: { nom: string; ville: string; pays: string; type: "port" | "hub" }[];
+    fournisseurs: { nom: string; ville: string; pays: string; categorie: string; site: string; part_pct: number; passage: string | null; stock_jours: number; critique: boolean }[];
+    produits: { nom: string; site: string }[];
+  } | null;
+  pseudonymiser_fournisseurs: boolean;
+  consentements: { traitement: boolean; habilitation: boolean; version_notice: string };
+}
+
+export interface InscriptionResultat {
+  client_id: string;
+  topology_ref: string;
+  scenario_id: string;
+  noeuds: number;
+  liens: number;
+  points_faibles: string[];
+  conservation_jusqu_au: string;
+}
+
 export interface GraphEdge {
   source: string;
   target: string;

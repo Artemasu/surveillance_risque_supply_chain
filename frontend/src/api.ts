@@ -1,7 +1,7 @@
 // Client HTTP de l'API FastAPI (src/api/main.py). URL surchargeable par VITE_API_URL.
 import type {
-  Alert, ChatResponse, ChatTurn, EventsResponse, GraphState, Health, PipelineRunRequest, PipelineRunResult,
-  Scenario, SimulationResult, Topology,
+  Alert, ChatResponse, ChatTurn, EventsResponse, Gabarit, GraphState, Health, Inscription, InscriptionResultat,
+  PipelineRunRequest, PipelineRunResult, Scenario, SimulationResult, Topology,
 } from "./types";
 
 export const API_URL: string = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "") ?? "http://localhost:8000";
@@ -49,4 +49,6 @@ export const api = {
   events: () => http<EventsResponse>("/events"),
   chat: (message: string, history: ChatTurn[], context: Record<string, unknown>) =>
     post<ChatResponse>("/chat", { message, history, context }),
+  clientParams: () => http<{ gabarits: Gabarit[]; version_notice: string; conservation_annees: number }>("/clients/parametres"),
+  inscription: (body: Inscription) => post<InscriptionResultat>("/clients/inscription", body),
 };
