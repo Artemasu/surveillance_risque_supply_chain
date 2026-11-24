@@ -28,6 +28,7 @@ def inscription(**chaine) -> dict:
         "entreprise": {"raison_sociale": "Orvane Santé", "secteur": "Pharmacie", "pays": "France", "taille": "PME"},
         "contact": {"prenom": "Camille", "nom": "Martin", "email": "c.martin@orvane-sante.fr", "fonction": "Achats"},
         "pseudonymiser_fournisseurs": True,
+        "mot_de_passe": "Chaine-2026-sure",
         "consentements": {"traitement": True, "habilitation": True, "version_notice": NOTICE_VERSION},
     }
     corps.update(chaine or {"chaine": {
@@ -56,6 +57,7 @@ def test_inscription_chaine_declaree(client):
     assert "Fournisseur A (principe actif)" in topo
     fiche = json.loads((data / "clients" / f"{res['client_id']}.json").read_text(encoding="utf-8"))
     assert fiche["contact"]["email"] == "c.martin@orvane-sante.fr" and fiche["consentements"]["version_notice"] == NOTICE_VERSION
+    assert "Chaine-2026-sure" not in json.dumps(fiche) and fiche["authentification"]["algo"] == "scrypt"
     scenario = json.loads((data / "replay_scenarios" / f"{res['scenario_id']}.json").read_text(encoding="utf-8"))
     assert set(scenario) == {"meta", "media", "weather", "finance"} and scenario["meta"]["topology"] == res["topology_ref"]
     assert any("Fournisseur C" in p for p in res["points_faibles"])     # flacons : source unique
@@ -67,6 +69,8 @@ def test_inscription_gabarit_et_droits(client):
     res = c.post("/clients/inscription", json=inscription(gabarit="pharma")).json()
     export = c.get(f"/clients/{res['client_id']}/export").json()
     assert export["fiche"]["entreprise"]["raison_sociale"] == "Orvane Santé" and "Orvane" in export["topologie"]
+    assert "authentification" not in export["fiche"]
+    assert c.post("/clients/inscription", json=inscription(gabarit="pharma")).status_code == 422   # adresse déjà utilisée
     assert len(c.delete(f"/clients/{res['client_id']}").json()["supprimes"]) == 3
     assert not list((data / "clients").glob("*.json")) and not list((data / "topologies").glob("client_*"))
     assert c.get(f"/clients/{res['client_id']}/export").status_code == 404
@@ -80,6 +84,7 @@ def test_inscription_gabarit_et_droits(client):
     lambda d: d.update(gabarit="pharma"),                                          # gabarit ET chaîne
     lambda d: d["chaine"]["fournisseurs"][0].update(site="Usine inconnue"),        # référence cassée
     lambda d: d.update(champ_inconnu=1),                                           # champ non prévu
+    lambda d: d.update(mot_de_passe="court1"),                                     # mot de passe trop court
 ])
 def test_inscription_refusee(client, modif):
     c, data = client

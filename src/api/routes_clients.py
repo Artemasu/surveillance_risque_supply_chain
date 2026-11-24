@@ -1,8 +1,7 @@
 """Inscription des clients et droits RGPD (accès, portabilité, effacement).
 
 Aucune donnée personnelle n'est écrite dans les journaux. Les fiches sont dans data/clients/ (hors Git).
-Limite de la version de démonstration : l'export et la suppression ne demandent que l'identifiant client,
-long et aléatoire ; une mise en production exigera une authentification de l'interlocuteur.
+L'export et la suppression demandent une session : celle du client concerné ou d'un compte équipe.
 """
 from __future__ import annotations
 
@@ -45,9 +44,16 @@ def inscription(ins: Inscription, request: Request) -> InscriptionResultat:
         raise HTTPException(status_code=422, detail=str(e))
 
 
+def _autoriser(request: Request, client_id: str) -> None:
+    session = getattr(request.state, "session", None)
+    if session and session.get("role") != "equipe" and session.get("client_id") != client_id:
+        raise HTTPException(status_code=403, detail="accès réservé au client concerné")
+
+
 @router.get("/{client_id}/export")
 def export(client_id: str, request: Request) -> dict:
     """Droit d'accès et de portabilité : données conservées pour ce client, au format JSON."""
+    _autoriser(request, client_id)
     try:
         return _registre(request).exporter(client_id)
     except KeyError:
@@ -57,6 +63,7 @@ def export(client_id: str, request: Request) -> dict:
 @router.delete("/{client_id}")
 def suppression(client_id: str, request: Request) -> dict:
     """Droit à l'effacement : supprime la fiche, la topologie et le scénario du client."""
+    _autoriser(request, client_id)
     try:
         return {"supprimes": _registre(request).supprimer(client_id)}
     except KeyError:

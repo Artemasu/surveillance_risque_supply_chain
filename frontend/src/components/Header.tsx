@@ -1,6 +1,9 @@
 // Barre supérieure de pilotage : mode, scénario + jour (replay) ou topologie (live), LLM local, lancement.
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Cpu, History, Loader2, Play, Radio, RefreshCw } from "lucide-react";
+import { ChevronDown, Cpu, Download, History, Loader2, LogOut, Play, Radio, RefreshCw, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { api } from "../api";
+import { session } from "../session";
 import { useStore } from "../store";
 import { AGENTS, AGENT_STYLE, frDate } from "../theme";
 import { AGENT_ICON, Segmented } from "./ui";
@@ -43,6 +46,85 @@ function SourceDots() {
           </span>
         );
       })}
+    </div>
+  );
+}
+
+/** Menu du compte : identité, droits RGPD (export, suppression) pour un client, déconnexion. */
+function Compte() {
+  const profil = session.profil();
+  const [ouvert, setOuvert] = useState(false);
+  const [confirmer, setConfirmer] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const zone = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const fermer = (e: MouseEvent) => !zone.current?.contains(e.target as Node) && (setOuvert(false), setConfirmer(false));
+    document.addEventListener("mousedown", fermer);
+    return () => document.removeEventListener("mousedown", fermer);
+  }, []);
+  if (!profil) return null;
+  const initiales = profil.nom.split(/\s+/).map((m) => m[0]).join("").slice(0, 2).toUpperCase();
+
+  const exporter = async () => {
+    try {
+      const data = await api.exportClient(profil.client_id!);
+      const lien = document.createElement("a");
+      lien.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+      lien.download = "aegis_mes_donnees.json";
+      lien.click();
+      URL.revokeObjectURL(lien.href);
+    } catch (e) {
+      setMessage((e as Error).message);
+    }
+  };
+  const supprimer = async () => {
+    try {
+      await api.supprimerClient(profil.client_id!);
+      session.fermer();
+      window.location.hash = "#/";
+    } catch (e) {
+      setMessage((e as Error).message);
+    }
+  };
+
+  return (
+    <div ref={zone} className="relative">
+      <button onClick={() => setOuvert(!ouvert)} className="grid h-9 w-9 place-items-center rounded-full bg-ink text-xs font-bold text-white ring-2 ring-white hover:bg-slate-800" title={profil.email} aria-expanded={ouvert}>
+        {initiales || "?"}
+      </button>
+      {ouvert && (
+        <div className="card absolute right-0 top-11 z-40 w-72 p-2 shadow-soft">
+          <div className="border-b border-line px-3 pb-3 pt-2">
+            <p className="text-sm font-bold">{profil.nom}</p>
+            <p className="truncate text-xs text-ink-mute">{profil.email}</p>
+            <p className="mt-1 text-xs text-ink-soft">{profil.role === "equipe" ? "Équipe A.E.G.I.S. · toutes les chaînes" : profil.societe}</p>
+          </div>
+          {profil.role === "client" && (
+            <>
+              <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-50" onClick={exporter}>
+                <Download size={15} className="text-ink-mute" /> Exporter mes données
+              </button>
+              {!confirmer ? (
+                <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-rose-700 hover:bg-rose-50" onClick={() => setConfirmer(true)}>
+                  <Trash2 size={15} /> Supprimer mon espace
+                </button>
+              ) : (
+                <div className="m-1 rounded-lg bg-rose-50 p-3 text-xs text-rose-900">
+                  Votre fiche, votre chaîne et votre scénario seront définitivement supprimés.
+                  <div className="mt-2 flex gap-2">
+                    <button className="btn bg-rose-600 px-2.5 py-1 text-xs text-white hover:bg-rose-700" onClick={supprimer}>Supprimer</button>
+                    <button className="btn-ghost px-2.5 py-1 text-xs" onClick={() => setConfirmer(false)}>Annuler</button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          {message && <p className="px-3 py-1 text-xs text-orange-800">{message}</p>}
+          <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-50" onClick={() => { session.fermer(); window.location.hash = "#/"; }}>
+            <LogOut size={15} className="text-ink-mute" /> Se déconnecter
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -137,6 +219,7 @@ export default function Header() {
             {st.loading ? "Analyse en cours…" : st.run && !st.dirty ? "Relancer" : "Lancer l'analyse"}
             {st.dirty && st.run && !st.loading && <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2 border-white bg-amber-400" title="Sélection modifiée depuis la dernière analyse" />}
           </motion.button>
+          <Compte />
         </div>
       </div>
 

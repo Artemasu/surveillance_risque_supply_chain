@@ -1,0 +1,16 @@
+# Copier ce fichier en .env (même dossier) et le compléter. Le fichier .env ne doit JAMAIS aller sur GitHub.
+
+# Fournisseur du LLM : ollama (local, gratuit) | mistral | anthropic | openai | compatible
+LLM_FOURNISSEUR=ollama
+
+# Modèle (facultatif : sinon celui par défaut du fournisseur, voir llm/config.py)
+# LLM_MODELE=qwen3:8b
+
+# Clé API du fournisseur choisi (inutile pour Ollama)
+# MISTRAL_API_KEY=
+# ANTHROPIC_API_KEY=
+# OPENAI_API_KEY=
+
+# Pour un autre serveur au format OpenAI (LLM_FOURNISSEUR=compatible)
+# LLM_URL=
+# LLM_CLE=

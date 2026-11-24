@@ -100,6 +100,7 @@ export interface Inscription {
     produits: { nom: string; site: string }[];
   } | null;
   pseudonymiser_fournisseurs: boolean;
+  mot_de_passe: string;
   consentements: { traitement: boolean; habilitation: boolean; version_notice: string };
 }
 

@@ -23,6 +23,7 @@ def isolated_cache(tmp_path, monkeypatch):
     monkeypatch.setenv("SC_CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setenv("SC_DB_PATH", str(tmp_path / "aegis.duckdb"))   # base unifiée isolée
     monkeypatch.setenv("SC_OFFLINE", "1")          # connecteurs météo/finance : cache seul, jamais le réseau
+    monkeypatch.setenv("SC_AUTH", "0")             # comptes testés à part (tests/test_auth.py)
 
 
 @pytest.fixture

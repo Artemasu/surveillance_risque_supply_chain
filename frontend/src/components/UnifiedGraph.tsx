@@ -211,7 +211,7 @@ export default function UnifiedGraph({ data }: { data: UG }) {
                   <g key={n.id} transform={`translate(${p.x} ${p.y})`} opacity={dim ? 0.35 : 1} className="cursor-pointer"
                     onPointerUp={(ev) => { ev.stopPropagation(); if (!onUp()) setSel({ kind: "node", id: n.id }); }}
                     onMouseEnter={() => setHover(n.id)} onMouseLeave={() => setHover(null)}>
-                    {(hit || isSel) && <circle r={22} fill="none" stroke={isSel ? "#0f172a" : "#0ea5e9"} strokeWidth={2} strokeDasharray={hit && !isSel ? "3 3" : undefined} />}
+                    {(hit || isSel) && <circle r={22} fill="none" stroke={isSel ? "#0f172a" : "#017F8D"} strokeWidth={2} strokeDasharray={hit && !isSel ? "3 3" : undefined} />}
                     {n.families[0] && <circle r={17} fill="none" stroke={FAMILY_STYLE[n.families[0]]?.color ?? "#94a3b8"} strokeWidth={2} />}
                     <NodeShape type={n.type} r={12} fill={lv.bg} stroke={lv.color} />
                     <text y={30} textAnchor="middle" className="fill-slate-700 text-[10.5px] font-semibold">{n.name.length > 22 ? `${n.name.slice(0, 21)}…` : n.name}</text>

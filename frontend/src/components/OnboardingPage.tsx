@@ -1,14 +1,15 @@
-// Page « Nouveau client » : inscription en quatre étapes (entreprise, chaîne, interlocuteur, validation).
+// Page publique « Créer un espace » : inscription en quatre étapes (entreprise, chaîne, interlocuteur, validation).
 // Données personnelles réduites au contact professionnel, stockées à part de la chaîne (voir src/onboarding.py).
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowLeft, ArrowRight, Building2, Check, CheckCircle2, Download, EyeOff, Factory, Loader2, Network, Plus,
+  ArrowLeft, ArrowRight, Building2, Check, CheckCircle2, EyeOff, Factory, KeyRound, Loader2, Network, Plus,
   ShieldCheck, Trash2, UserRound, type LucideIcon,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
-import { API_URL, api } from "../api";
+import { api } from "../api";
+import { session } from "../session";
 import type { Gabarit, Inscription, InscriptionResultat } from "../types";
-import { useStore } from "../store";
+import { aller } from "./public/PublicShell";
 import { Card } from "./ui";
 
 // Adresse de contact pour l'exercice des droits : à remplacer par l'adresse réelle avant toute mise en service.
@@ -34,9 +35,10 @@ const vide = { site: (): Site => ({ nom: "", ville: "", pays: "", stock_jours: 1
   produit: (site = ""): Produit => ({ nom: "", site }) };
 
 const rempli = (...v: (string | undefined)[]) => v.every((x) => (x ?? "").trim().length > 0);
+// Mêmes règles que le serveur (src/auth.py) : 12 caractères, pas uniquement des lettres ni uniquement des chiffres.
+const mdpRobuste = (m: string) => m.length >= 12 && !/^[\p{L}]+$/u.test(m) && !/^\d+$/.test(m);
 
 export default function OnboardingPage() {
-  const { refreshTopologies, setMode, setTopologyRef, setView } = useStore();
   const [step, setStep] = useState(0);
   const [params, setParams] = useState<{ gabarits: Gabarit[]; version_notice: string; conservation_annees: number } | null>(null);
   const [entreprise, setEntreprise] = useState({ raison_sociale: "", secteur: "", pays: "", taille: "PME" as (typeof TAILLES)[number] });
@@ -48,6 +50,7 @@ export default function OnboardingPage() {
   const [produits, setProduits] = useState<Produit[]>([vide.produit()]);
   const [pseudo, setPseudo] = useState(true);
   const [contact, setContact] = useState({ prenom: "", nom: "", email: "", fonction: "" });
+  const [mdp, setMdp] = useState({ valeur: "", confirmation: "" });
   const [accords, setAccords] = useState({ traitement: false, habilitation: false });
   const [busy, setBusy] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -63,7 +66,8 @@ export default function OnboardingPage() {
     source === "gabarit" ? !!gabarit
       : sites.every((s) => rempli(s.nom, s.ville, s.pays)) && fournisseurs.every((f) => rempli(f.nom, f.ville, f.pays, f.categorie, f.site))
         && points.every((p) => rempli(p.nom, p.ville, p.pays)) && produits.every((p) => rempli(p.nom, p.site)),
-    rempli(contact.prenom, contact.nom) && /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(contact.email.trim()),
+    rempli(contact.prenom, contact.nom) && /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(contact.email.trim())
+      && mdpRobuste(mdp.valeur) && mdp.valeur === mdp.confirmation,
     accords.traitement && accords.habilitation,
   ];
 
@@ -75,6 +79,7 @@ export default function OnboardingPage() {
       ? { sites, points_logistiques: points, produits, fournisseurs: fournisseurs.map((f) => ({ ...f, passage: f.passage || null })) }
       : null,
     pseudonymiser_fournisseurs: pseudo,
+    mot_de_passe: mdp.valeur,
     consentements: { ...accords, version_notice: params?.version_notice ?? "" },
   });
 
@@ -82,9 +87,7 @@ export default function OnboardingPage() {
     setBusy(true);
     setErreur(null);
     try {
-      const r = await api.inscription(corps());
-      setResultat(r);
-      await refreshTopologies();
+      setResultat(await api.inscription(corps()));
     } catch (e) {
       setErreur((e as Error).message);
     } finally {
@@ -97,7 +100,12 @@ export default function OnboardingPage() {
       <Confirmation
         r={resultat}
         societe={entreprise.raison_sociale}
-        onAnalyse={() => { setMode("live"); setTopologyRef(resultat.topology_ref); setView("dashboard"); }}
+        onAcceder={async () => {
+          // connexion directe avec les identifiants qui viennent d'être choisis
+          const s = await api.connexion(contact.email.trim(), mdp.valeur);
+          session.ouvrir(s.jeton, s.profil);
+          aller("#/");
+        }}
       />
     );
   }
@@ -105,8 +113,8 @@ export default function OnboardingPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-5">
       <div>
-        <h1 className="text-xl font-extrabold tracking-tight">Nouveau client</h1>
-        <p className="text-sm text-ink-mute">Créez l'espace de surveillance d'une entreprise en quelques minutes. Seules les informations utiles au service sont demandées.</p>
+        <h1 className="text-xl font-extrabold tracking-tight">Créer un espace</h1>
+        <p className="text-sm text-ink-mute">Votre espace de surveillance en quelques minutes. Seules les informations utiles au service sont demandées.</p>
       </div>
 
       <ol className="grid grid-cols-4 gap-2">
@@ -250,6 +258,16 @@ export default function OnboardingPage() {
                   <Field label="Fonction (facultatif)"><input className="input" value={contact.fonction} onChange={(e) => setContact({ ...contact, fonction: e.target.value })} maxLength={80} autoComplete="organization-title" /></Field>
                 </div>
                 <p className="mt-3 text-xs text-ink-mute">Aucun numéro de téléphone ni donnée personnelle supplémentaire n'est demandé.</p>
+              </Card>
+              <Card title="Mot de passe" icon={KeyRound}>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Mot de passe"><input className="input" type="password" value={mdp.valeur} onChange={(e) => setMdp({ ...mdp, valeur: e.target.value })} maxLength={200} autoComplete="new-password" /></Field>
+                  <Field label="Confirmation"><input className="input" type="password" value={mdp.confirmation} onChange={(e) => setMdp({ ...mdp, confirmation: e.target.value })} maxLength={200} autoComplete="new-password" /></Field>
+                </div>
+                <p className={`mt-3 text-xs ${mdp.valeur && !mdpRobuste(mdp.valeur) ? "text-orange-700" : "text-ink-mute"}`}>
+                  12 caractères minimum, avec des lettres et des chiffres ou des symboles.
+                  {mdp.confirmation && mdp.valeur !== mdp.confirmation ? " Les deux saisies diffèrent." : ""}
+                </p>
               </Card>
               <Notice annees={params?.conservation_annees ?? 3} version={params?.version_notice} />
             </div>
@@ -398,7 +416,18 @@ function Notice({ annees, version }: { annees: number; version?: string }) {
   );
 }
 
-function Confirmation({ r, societe, onAnalyse }: { r: InscriptionResultat; societe: string; onAnalyse: () => void }) {
+function Confirmation({ r, societe, onAcceder }: { r: InscriptionResultat; societe: string; onAcceder: () => Promise<void> }) {
+  const [busy, setBusy] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
+  const acceder = async () => {
+    setBusy(true);
+    try {
+      await onAcceder();
+    } catch (e) {
+      setErreur((e as Error).message);
+      setBusy(false);
+    }
+  };
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <div className="card p-6 text-center">
@@ -407,9 +436,10 @@ function Confirmation({ r, societe, onAnalyse }: { r: InscriptionResultat; socie
         <p className="mt-1 text-sm text-ink-soft">
           La chaîne de {societe} compte {r.noeuds} nœuds et {r.liens} liens. Elle est disponible en mode live et dispose d'un scénario modèle à compléter.
         </p>
-        <button className="btn mx-auto mt-5 bg-ink text-white hover:bg-slate-800" onClick={onAnalyse}>
-          Analyser cette chaîne <ArrowRight size={15} />
+        <button className="btn mx-auto mt-5 bg-ink text-white hover:bg-slate-800" onClick={acceder} disabled={busy}>
+          {busy ? <Loader2 size={15} className="animate-spin" /> : null} Accéder à mon espace <ArrowRight size={15} />
         </button>
+        {erreur && <p className="mt-3 text-sm text-orange-800">{erreur}</p>}
       </div>
       {r.points_faibles.length > 0 && (
         <Card title="Premiers points de vigilance">
@@ -420,12 +450,23 @@ function Confirmation({ r, societe, onAnalyse }: { r: InscriptionResultat; socie
       )}
       <Card title="Vos données">
         <p className="text-sm text-ink-soft">
-          Identifiant client : <code className="rounded bg-slate-100 px-1.5">{r.client_id}</code>. Conservez-le : il permet d'exporter ou de supprimer vos données. Conservation jusqu'au {new Date(r.conservation_jusqu_au).toLocaleDateString("fr-FR")}, sauf nouveau contact.
+          Conservation jusqu'au {new Date(r.conservation_jusqu_au).toLocaleDateString("fr-FR")}, sauf nouveau contact. Une fois connecté, le menu de votre compte permet d'exporter vos données ou de supprimer votre espace à tout moment.
         </p>
-        <a className="btn-ghost mt-3 w-fit" href={`${API_URL}/clients/${r.client_id}/export`} target="_blank" rel="noreferrer">
-          <Download size={15} /> Exporter mes données (JSON)
-        </a>
       </Card>
+    </div>
+  );
+}
+
+/** Page publique « Protection des données » (lien du pied de page). */
+export function NoticePage() {
+  const [p, setP] = useState<{ version_notice: string; conservation_annees: number } | null>(null);
+  useEffect(() => {
+    api.clientParams().then(setP).catch(() => undefined);
+  }, []);
+  return (
+    <div className="mx-auto max-w-3xl space-y-4">
+      <h1 className="text-xl font-extrabold tracking-tight">Protection des données</h1>
+      <Notice annees={p?.conservation_annees ?? 3} version={p?.version_notice} />
     </div>
   );
 }

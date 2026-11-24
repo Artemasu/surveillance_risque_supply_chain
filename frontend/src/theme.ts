@@ -4,9 +4,10 @@ import type { AgentName, NodeType, RiskLevel } from "./types";
 export const AGENTS: AgentName[] = ["media", "finance", "weather"];
 
 export const AGENT_STYLE: Record<AgentName, { label: string; bg: string; bg2: string; border: string; text: string; dot: string }> = {
-  media: { label: "Médias", bg: "#FEF9C3", bg2: "#FEF3C7", border: "#FDE047", text: "#854D0E", dot: "#EAB308" },
-  finance: { label: "Finance", bg: "#DBEAFE", bg2: "#E0F2FE", border: "#93C5FD", text: "#1E40AF", dot: "#3B82F6" },
-  weather: { label: "Météo", bg: "#DCFCE7", bg2: "#D1FAE5", border: "#86EFAC", text: "#166534", dot: "#22C55E" },
+  // Charte A.E.G.I.S. : moutarde (médias), bleu canard (finance), vert olive (météo) — voir tailwind.config.js.
+  media: { label: "Médias", bg: "#FBF1D0", bg2: "#FDF6E1", border: "#ECB920", text: "#6E5200", dot: "#ECB920" },
+  finance: { label: "Finance", bg: "#D6EDEF", bg2: "#E8F4F5", border: "#5FAFB8", text: "#01545D", dot: "#017F8D" },
+  weather: { label: "Météo", bg: "#EEF2DC", bg2: "#F4F6E8", border: "#A2B153", text: "#4A5520", dot: "#A2B153" },
 };
 
 export const LEVEL_STYLE: Record<RiskLevel, { label: string; color: string; bg: string }> = {

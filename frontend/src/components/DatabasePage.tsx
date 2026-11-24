@@ -2,6 +2,7 @@
 // paginé des tables Médias, Météo, Finance et de la base unifiée (lecture seule, export CSV).
 import { ChevronLeft, ChevronRight, CloudSun, Database, Download, Link2, Network, Newspaper, Search, ShieldAlert, Table2, TrendingUp } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { telecharger } from "../api";
 import { dataApi, type DbQuery, type DbTableInfo } from "../api_data";
 import { useStore } from "../store";
 import { AGENT_STYLE, frDate } from "../theme";
@@ -137,9 +138,9 @@ function TableExplorer() {
             </select>
           </label>
         )}
-        <a href={dataApi.dbCsvUrl(name, p)} className="btn-ghost ml-auto !py-1 text-xs" download>
+        <button onClick={() => telecharger(dataApi.dbCsvUrl(name, p), `${name}.csv`)} className="btn-ghost ml-auto !py-1 text-xs">
           <Download size={13} /> Export CSV
-        </a>
+        </button>
       </div>
 
       {page.error ? <Empty>{page.error}</Empty> : (

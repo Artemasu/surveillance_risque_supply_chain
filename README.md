@@ -273,6 +273,7 @@ Limites connues :
 | GET | `/graph/stress-tests` | stress tests prédéfinis (centile 99,5) ; `/graph/simulate` accepte `extra: {nœud: gravité}` |
 | POST | `/jobs/forecast-meteo`, `/jobs/ingest-finance` | collectes courtes déclenchées depuis l'interface |
 | GET, POST, DELETE | `/clients/parametres`, `/clients/inscription`, `/clients/{id}/export`, `/clients/{id}` | inscription d'un client, export et suppression de ses données (RGPD) |
+| POST, GET | `/auth/connexion`, `/auth/moi` | connexion (jeton de 8 heures) et profil de la session |
 
 `status: "error"` sur `/pipeline/run` signale une panne de collecte, jamais une absence d'alerte. L'état précédent
 est alors conservé (sauf si la topologie vient de changer : le graphe est alors vide). Une topologie introuvable donne 404,
@@ -388,9 +389,26 @@ python scripts/export_soutenance.py --scenario crisis_pharma_api --node plant_ff
 
 Le script rejoue le scénario jour par jour : les chiffres des figures sont ceux du moteur, aucun n'est écrit en dur.
 
+## Page vitrine, comptes et connexion
+
+Sans compte, l'interface React n'affiche que la page vitrine (fonctionnement, démonstration fictive, fonctionnalités,
+confidentialité), la connexion (`#/connexion`), l'inscription (`#/inscription`) et la notice (`#/donnees`). Toutes les
+routes de l'API exigent un jeton (`Authorization: Bearer ...`), sauf `/health`, `/auth/connexion`, `/clients/parametres`,
+`/clients/inscription` et la documentation.
+
+| Compte | Création | Voit |
+|---|---|---|
+| client | page d'inscription | sa chaîne et les chaînes de démonstration ; ni la base complète, ni les autres clients |
+| équipe | `python -m src.auth creer-compte --email ... --nom "..."` | toutes les chaînes, l'onglet Base & Graphe, les collectes |
+
+Mots de passe hachés (scrypt), jeton signé valable 8 heures, cinq essais de connexion par quart d'heure. Comptes et clé de
+signature dans `data/clients/` (hors Git) ; `AEGIS_SECRET` permet d'imposer la clé. `SC_AUTH=0` désactive la protection
+(tests automatisés uniquement). Limite actuelle : le serveur conserve une seule analyse à la fois ; un client ne voit
+l'état du graphe que si la dernière analyse porte sur une chaîne qu'il a le droit de voir.
+
 ## Inscription des clients
 
-L'onglet **Nouveau client** de l'interface React crée l'espace d'une entreprise en quatre étapes : entreprise, chaîne
+La page **Créer un espace** (`#/inscription`) crée l'espace d'une entreprise en quatre étapes : entreprise, chaîne
 d'approvisionnement (décrite ou issue d'un gabarit sectoriel), interlocuteur, validation. Le serveur (`src/onboarding.py`)
 géocode les sites, construit la topologie, la valide avec le moteur de graphe, puis écrit :
 
@@ -407,7 +425,7 @@ Protection des données :
 - **secret des affaires** : les fournisseurs sont pseudonymisés par défaut (« Fournisseur A ») ; seuls des noms de villes
   sortent du serveur (géocodage Open-Meteo), les analyses par LLM restent locales ;
 - **consentement** : notice d'information versionnée (`NOTICE_VERSION`), acceptation horodatée dans la fiche ;
-- **droits** : `GET /clients/{id}/export` (accès, portabilité), `DELETE /clients/{id}` (effacement des trois fichiers) ;
+- **droits** : menu du compte, ou `GET /clients/{id}/export` (accès, portabilité) et `DELETE /clients/{id}` (effacement des trois fichiers) ;
   `Registre.purger()` supprime les fiches dont la durée de conservation (3 ans) est dépassée ;
 - **Git** : les trois fichiers sont exclus par `.gitignore`.
 

@@ -5,10 +5,11 @@ import { Loader2, RefreshCw, type LucideIcon } from "lucide-react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 /** Ordre catégoriel fixe (palette de référence validée daltonisme) : la couleur suit l'entité, jamais son rang. */
-export const SERIES = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"];
+// Séries catégorielles : bleu canard de la charte en premier ; ordre vérifié pour les daltonismes (dataviz).
+export const SERIES = ["#017F8D", "#eb6834", "#6250d6", "#8A9A3B", "#e87ba4", "#C99A00", "#e34948"];
 
 /** Rampe séquentielle (un seul ton, clair -> foncé) pour les rangs 0,5 -> 1. */
-const SEQ = ["#f1f5f9", "#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"];
+const SEQ = ["#f1f5f9", "#D6EDEF", "#ADDADF", "#7FC2C9", "#3FA0AA", "#017F8D", "#01545D", "#013F46"];
 export function rankColor(rank: number | null | undefined): string {
   if (rank == null) return "#f8fafc";
   if (rank < 0.5) return SEQ[0];
@@ -94,7 +95,7 @@ export function RankGauge({ rank, alert, threshold = 0.99 }: { rank: number | nu
     <div className="relative h-1.5 w-full overflow-visible rounded-full bg-slate-100" title={rankText(rank)}>
       <motion.div
         className="h-full rounded-full"
-        style={{ background: alert ? STATUS.alert : "#3987e5" }}
+        style={{ background: alert ? STATUS.alert : "#017F8D" }}
         initial={{ width: 0 }}
         animate={{ width: `${Math.max(2, (rank ?? 0) * 100)}%` }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}

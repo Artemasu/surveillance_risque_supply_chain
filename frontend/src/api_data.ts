@@ -1,5 +1,6 @@
 // Client des volets Météo et Finance, de l'historique et des stress tests (src/api/routes_data.py).
 import { API_URL, ApiError } from "./api";
+import { session } from "./session";
 import type {
   FinanceOverview, FinRule, FinSeries, HistoryEvent, HistoryRun, NodeRiskPoint, StressTest, WeatherOverview, WxSeries,
 } from "./types_data";
@@ -7,10 +8,12 @@ import type {
 async function call<T>(path: string, method: "GET" | "POST" = "GET"): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`${API_URL}${path}`, { method, headers: { "Content-Type": "application/json" } });
+    const jeton = session.jeton();
+    res = await fetch(`${API_URL}${path}`, { method, headers: { "Content-Type": "application/json", ...(jeton ? { Authorization: `Bearer ${jeton}` } : {}) } });
   } catch {
     throw new ApiError(0, `API injoignable sur ${API_URL}`);
   }
+  if (res.status === 401 && session.jeton()) session.fermer();     // session expirée : retour à la connexion
   if (!res.ok) {
     let detail = res.statusText;
     try {

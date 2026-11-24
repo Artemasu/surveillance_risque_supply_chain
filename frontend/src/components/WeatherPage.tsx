@@ -22,7 +22,7 @@ function siteColor(s: WxSite) {
   if (s.alert_today) return STATUS.critical;
   if (s.forecast_alerts) return STATUS.alert;
   if ((s.score ?? 0) >= 0.9) return STATUS.watch;
-  return "#2a78d6";
+  return "#017F8D";
 }
 
 function SitesMap({ sites, selected, onSelect }: { sites: WxSite[]; selected: string | null; onSelect: (s: string) => void }) {
@@ -78,7 +78,7 @@ function SitesMap({ sites, selected, onSelect }: { sites: WxSite[]; selected: st
     <div className="relative h-[340px] overflow-hidden rounded-xl ring-1 ring-line">
       <div ref={box} className="h-full w-full" />
       <div className="absolute bottom-2 left-2 flex flex-wrap gap-2 rounded-lg bg-white/90 px-2 py-1 text-[10.5px] text-ink-soft shadow-sm">
-        {[["Alerte aujourd'hui", STATUS.critical], ["Alerte prévue (16 j)", STATUS.alert], ["Score ≥ 0,9", STATUS.watch], ["Normal", "#2a78d6"]].map(([l, c]) => (
+        {[["Alerte aujourd'hui", STATUS.critical], ["Alerte prévue (16 j)", STATUS.alert], ["Score ≥ 0,9", STATUS.watch], ["Normal", "#017F8D"]].map(([l, c]) => (
           <span key={l} className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full" style={{ background: c }} />{l}</span>
         ))}
       </div>
@@ -124,9 +124,9 @@ function SeriesChart({ site, indicators, labels }: { site: WxSite; indicators: s
               <XAxis dataKey="date" {...AXIS} tickFormatter={(d) => frDate(d, { month: "short", year: "2-digit" })} minTickGap={40} />
               <YAxis {...AXIS} width={48} />
               <Tooltip content={<ChartTip unit={unit} fmtLabel={(d) => frDate(d, { day: "numeric", month: "long", year: "numeric" })} />} />
-              <Area dataKey="band" name="Saison 2010-2020 (p10–p90)" stroke="none" fill="#cde2fb" fillOpacity={0.55} isAnimationActive={false} />
-              <Line dataKey="p50" name="Médiane saisonnière" stroke="#86b6ef" strokeDasharray="3 3" strokeWidth={1.5} dot={false} isAnimationActive={false} />
-              <Line dataKey="value" name="Observé (ERA5)" stroke="#2a78d6" strokeWidth={2} dot={false} isAnimationActive={false} />
+              <Area dataKey="band" name="Saison 2010-2020 (p10–p90)" stroke="none" fill="#D6EDEF" fillOpacity={0.55} isAnimationActive={false} />
+              <Line dataKey="p50" name="Médiane saisonnière" stroke="#7FC2C9" strokeDasharray="3 3" strokeWidth={1.5} dot={false} isAnimationActive={false} />
+              <Line dataKey="value" name="Observé (ERA5)" stroke="#017F8D" strokeWidth={2} dot={false} isAnimationActive={false} />
               <Line dataKey="forecast" name="Prévision 16 j" stroke="#eb6834" strokeWidth={2} strokeDasharray="5 3" dot={{ r: 2 }} isAnimationActive={false} />
               <Scatter dataKey="alertDot" name="Jour en alerte" fill={STATUS.critical} shape="circle" isAnimationActive={false} />
               {data?.threshold != null && (
@@ -156,7 +156,7 @@ function Seasonality({ site }: { site: string }) {
           <XAxis dataKey="mois" {...AXIS} />
           <YAxis {...AXIS} allowDecimals={false} />
           <Tooltip content={<ChartTip unit="jours" />} cursor={{ fill: "#f1f5f9" }} />
-          <Bar dataKey="jours" name="Jours d'alerte (15 ans)" fill="#2a78d6" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="jours" name="Jours d'alerte (15 ans)" fill="#017F8D" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

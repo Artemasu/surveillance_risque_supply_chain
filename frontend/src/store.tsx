@@ -1,12 +1,13 @@
 // État global de l'application : sélection du pilotage, résultats du pipeline, Copilot, tiroir de preuves.
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { api } from "./api";
+import { session } from "./session";
 import type {
   Alert, ChatTurn, EventEnvelope, EventsResponse, GraphState, Health, PipelineRunResult, Scenario, ToolCall, Topology,
 } from "./types";
 
 export type Mode = "replay" | "live";
-export type View = "dashboard" | "chain" | "weather" | "finance" | "history" | "database" | "onboarding";
+export type View = "dashboard" | "chain" | "weather" | "finance" | "history" | "database";
 
 export interface ChatMessage extends ChatTurn {
   mode?: string;
@@ -137,8 +138,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             setScenarioIdRaw(sc[0].id);
             setDay(sc[0].days ?? 1);
           }
-          const active = tp.find((t) => t.active) ?? tp[0];
+          // Compte client : on ouvre directement sa chaîne, en mode live.
+          const sienne = tp.find((t) => t.ref && t.ref === session.profil()?.topology_ref);
+          const active = sienne ?? tp.find((t) => t.active) ?? tp[0];
           setTopologyRef(active?.ref ?? "");
+          if (sienne) setMode("live");
         }
         setApiDown(null);
       } catch (e) {

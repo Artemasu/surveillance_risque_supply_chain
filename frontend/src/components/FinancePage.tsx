@@ -66,7 +66,7 @@ function SignalDetail({ s }: { s: FinSignal }) {
             <XAxis dataKey="date" {...AXIS} tickFormatter={(d) => frDate(d, { month: "short", year: "2-digit" })} minTickGap={40} />
             <YAxis {...AXIS} width={46} />
             <Tooltip content={<ChartTip unit={unitInd} fmtLabel={fullDate} />} />
-            <Area dataKey="indicateur" name={s.mesure === "variation_%" ? `Variation sur ${s.horizon} obs.` : "Niveau"} stroke="#2a78d6" fill="#cde2fb" fillOpacity={0.5} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls />
+            <Area dataKey="indicateur" name={s.mesure === "variation_%" ? `Variation sur ${s.horizon} obs.` : "Niveau"} stroke="#017F8D" fill="#D6EDEF" fillOpacity={0.5} strokeWidth={2} dot={false} isAnimationActive={false} connectNulls />
             <Line dataKey="alerteVal" name="En alerte" stroke={STATUS.critical} strokeWidth={3} dot={false} isAnimationActive={false} />
             {s.seuil != null && <ReferenceLine y={s.seuil} stroke={STATUS.critical} strokeDasharray="6 4" label={{ value: `seuil ${num(s.seuil)} ${unitInd}`, position: "insideTopLeft", fill: STATUS.critical, fontSize: 11 }} />}
             <ReferenceLine y={0} stroke="#cbd5e1" />
@@ -142,7 +142,7 @@ function ScoreChart() {
           <YAxis {...AXIS} domain={[0, 1]} tickFormatter={(v) => `${Math.round(v * 100)}`} />
           <Tooltip content={<ChartTip fmtLabel={fullDate} />} />
           <ReferenceLine y={0.99} stroke={STATUS.critical} strokeDasharray="4 4" />
-          <Area dataKey="score" name="Score finance (max hebdo)" stroke="#2a78d6" fill="#cde2fb" strokeWidth={1.5} isAnimationActive={false} />
+          <Area dataKey="score" name="Score finance (max hebdo)" stroke="#017F8D" fill="#D6EDEF" strokeWidth={1.5} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -175,7 +175,7 @@ function SupplierDrawer({ cle, onClose }: { cle: string; onClose: () => void }) 
                     <XAxis dataKey="date" hide />
                     <YAxis {...AXIS} width={40} domain={["auto", "auto"]} />
                     <Tooltip content={<ChartTip fmtLabel={fullDate} />} />
-                    <Line dataKey="valeur" name="Cours" stroke="#2a78d6" dot={false} strokeWidth={1.5} isAnimationActive={false} />
+                    <Line dataKey="valeur" name="Cours" stroke="#017F8D" dot={false} strokeWidth={1.5} isAnimationActive={false} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -282,7 +282,7 @@ function Diesel() {
             <YAxis {...AXIS} domain={[0, "auto"]} />
             <Tooltip content={<ChartTip unit="€/L" />} cursor={{ fill: "#f1f5f9" }} />
             <Bar dataKey="prix" name="Gazole TTC" radius={[4, 4, 0, 0]}>
-              {rows.map((r) => <Cell key={r.pays} fill={r.pays === "EU" ? "#52514e" : "#2a78d6"} />)}
+              {rows.map((r) => <Cell key={r.pays} fill={r.pays === "EU" ? "#52514e" : "#017F8D"} />)}
             </Bar>
           </BarChart>
         </ResponsiveContainer>

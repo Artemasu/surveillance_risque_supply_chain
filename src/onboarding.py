@@ -6,7 +6,8 @@ Principes de protection des données (RGPD) appliqués ici :
     scénario ; la topologie ne porte qu'un identifiant client aléatoire ;
   - confidentialité des affaires : les noms de fournisseurs peuvent être remplacés par des pseudonymes ;
   - preuve du consentement : version de la notice et horodatage conservés avec la fiche ;
-  - droits des personnes : export (portabilité) et suppression complète (effacement) par identifiant ;
+  - droits des personnes : export (portabilité) et suppression complète (effacement) depuis le compte ;
+  - mot de passe : seule son empreinte scrypt est conservée (src/auth.py) ;
   - aucun fichier client n'est suivi par Git (voir .gitignore).
 Les lieux (ville, pays) sont géocodés par Open-Meteo : seuls des noms de lieux quittent le serveur.
 """
@@ -24,6 +25,7 @@ from typing import Callable, Literal, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from scripts.generate_sector_config import PRESETS, build_empty_scenario, build_topology, slugify, topology_yaml
+from src.auth import email_utilise, hacher, verifier_robustesse
 from src.graph.ontology_engine import OntologyEngine
 
 NOTICE_VERSION = "2026-11-v1"          # à incrémenter à chaque modification de la notice affichée
@@ -141,7 +143,14 @@ class Inscription(Strict):
     gabarit: Optional[str] = None                 # clé de PRESETS : chaîne type à compléter plus tard
     chaine: Optional[Chaine] = None               # chaîne décrite par le client
     pseudonymiser_fournisseurs: bool = True
+    mot_de_passe: str = Field(max_length=200)     # haché dès la réception, jamais écrit en clair
     consentements: Consentements
+
+    @field_validator("mot_de_passe")
+    @classmethod
+    def robuste(cls, v: str) -> str:
+        verifier_robustesse(v)
+        return v
 
     @model_validator(mode="after")
     def une_chaine(self) -> "Inscription":
@@ -267,6 +276,8 @@ class Registre:
                 "scenario": self.data_dir / "replay_scenarios" / f"{nom}_modele.json"}
 
     def inscrire(self, ins: Inscription, geocoder: Callable[[str, str], dict]) -> InscriptionResultat:
+        if email_utilise(ins.contact.email, self.data_dir):
+            raise ValueError("un compte existe déjà pour cette adresse e-mail : connectez-vous")
         client_id = secrets.token_hex(8)                     # aléatoire : ne révèle ni l'entreprise ni l'ordre
         chemins = self._chemins(client_id)
         societe = ins.entreprise.raison_sociale
@@ -292,6 +303,7 @@ class Registre:
             "entreprise": ins.entreprise.model_dump(),
             "contact": ins.contact.model_dump(),
             "consentements": {**ins.consentements.model_dump(), "horodatage": maintenant.isoformat(timespec="seconds")},
+            "authentification": hacher(ins.mot_de_passe),
             "topologie": ref,
             "scenario": chemins["scenario"].stem,
         }
@@ -310,7 +322,9 @@ class Registre:
         c = self._chemins(client_id)
         if not c["fiche"].exists():
             raise KeyError(client_id)
-        return {"fiche": json.loads(c["fiche"].read_text(encoding="utf-8")),
+        fiche = json.loads(c["fiche"].read_text(encoding="utf-8"))
+        fiche.pop("authentification", None)                  # l'empreinte du mot de passe n'est jamais exportée
+        return {"fiche": fiche,
                 "topologie": c["topologie"].read_text(encoding="utf-8") if c["topologie"].exists() else None}
 
     def supprimer(self, client_id: str) -> list[str]:
@@ -329,6 +343,8 @@ class Registre:
         aujourd_hui = aujourd_hui or date.today()
         purges = []
         for fiche in self.dossier_fiches.glob("*.json"):
+            if not re.fullmatch(r"[a-z0-9]{16}", fiche.stem):
+                continue                                     # comptes équipe, pas une fiche client
             try:
                 limite = date.fromisoformat(json.loads(fiche.read_text(encoding="utf-8"))["conservation_jusqu_au"])
             except (OSError, ValueError, KeyError):

@@ -10,9 +10,11 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from src.api.routes_auth import ProtectionMiddleware, router as auth_router
 from src.api.routes_clients import router as clients_router
 from src.api.routes_data import router as data_router
 from src.api.routes_database import router as database_router
+from src.auth import auth_active, scenario_autorise, topologie_autorisee
 from src.config import settings
 from src.schemas.events import (Alert, ChatRequest, ChatResponse, GraphState, PipelineRunRequest, PipelineRunResult,
                                 SimulationRequest, SimulationResult)
@@ -45,6 +47,9 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
         description="**A.E.G.I.S.** — Automated Early-warning & Graph Intelligence for Supply-chain. "
                     "Agents médias, météo et finance ; graphe d'ontologie NetworkX ; simulation what-if ; copilot.")
     app.state.service = service or SupplyChainService()
+    # Comptes : toute route non publique exige un jeton (src/auth.py). Ajouté avant CORS pour que les réponses 401
+    # portent aussi les en-têtes CORS.
+    app.add_middleware(ProtectionMiddleware)
     # Front-end React (frontend/, serveur Vite) : seul ajout à l'API, aucune logique métier modifiée.
     app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                        allow_methods=["*"], allow_headers=["*"])
@@ -55,24 +60,32 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     @app.get("/health", response_model=Health, tags=["système"])
     def health(request: Request) -> Health:
         s = svc(request)
+        session = request.state.session
+        # la dernière analyse n'est montrée qu'à un compte qui a le droit de voir sa chaîne
+        visible = not auth_active() or (session is not None and topologie_autorisee(session, s.topology_ref()))
         return Health(status="ok", nodes=len(s.engine.nodes), edges=len(s.engine.edges), llm_enabled=settings.use_llm,
                       llm_model=settings.llm_model, llm_model_active=active_model(), llm_auto=settings.llm_auto,
-                      last_run=s.last_run)
+                      last_run=s.last_run if visible else None)
 
     @app.get("/scenarios", tags=["pipeline"])
     def scenarios(request: Request) -> list[dict]:
         """Scénarios de replay disponibles dans data/replay_scenarios."""
-        return svc(request).list_scenarios()
+        session = request.state.session
+        return [sc for sc in svc(request).list_scenarios() if scenario_autorise(session, sc["id"])]
 
     @app.get("/topologies", tags=["pipeline"])
     def topologies(request: Request) -> list[dict]:
         """Topologies disponibles (une par entreprise ou secteur). `ref` se passe à /pipeline/run en mode live."""
-        return svc(request).list_topologies()
+        session = request.state.session
+        return [t for t in svc(request).list_topologies() if topologie_autorisee(session, t["ref"])]
 
     @app.post("/pipeline/run", response_model=PipelineRunResult, tags=["pipeline"])
     async def pipeline_run(req: PipelineRunRequest, request: Request) -> PipelineRunResult:
         """Lance les trois agents puis le moteur de graphe. `status="error"` signale une panne de collecte,
         jamais une absence d'alerte."""
+        session = request.state.session
+        if not (scenario_autorise(session, req.scenario) and topologie_autorisee(session, req.topology)):
+            raise HTTPException(status_code=403, detail="chaîne réservée à un autre client")
         try:
             return await svc(request).run_pipeline(req)
         except ScenarioNotFound as e:
@@ -117,6 +130,7 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     app.include_router(data_router)          # volets Météo et Finance, historique, stress tests
     app.include_router(database_router)      # explorateur de la base unifiée et du graphe (lecture seule)
     app.include_router(clients_router)       # inscription des clients et droits RGPD
+    app.include_router(auth_router)          # connexion
     return app
 
 

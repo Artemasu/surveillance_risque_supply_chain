@@ -1,0 +1,12 @@
+# Environnement et caches Python
+.venv/
+__pycache__/
+
+# Secrets (clés API)
+.env
+
+# Données téléchargées ou recalculables
+data/cache/
+data/meteo.db
+1991_2020/
+*.tif

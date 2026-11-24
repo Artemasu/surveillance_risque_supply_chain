@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Banknote, CloudSun, Database, History, LayoutDashboard, Loader2, Network, Play, PlugZap, UserPlus } from "lucide-react";
+import { Banknote, CloudSun, Database, History, LayoutDashboard, Loader2, Network, Play, PlugZap } from "lucide-react";
 import { API_URL } from "./api";
 import ChainView from "./components/ChainView";
 import Companion from "./components/Companion";
@@ -13,9 +13,9 @@ const WeatherPage = lazy(() => import("./components/WeatherPage"));
 const FinancePage = lazy(() => import("./components/FinancePage"));
 const HistoryPage = lazy(() => import("./components/HistoryPage"));
 const DatabasePage = lazy(() => import("./components/DatabasePage"));
-const OnboardingPage = lazy(() => import("./components/OnboardingPage"));
 const PageLoading = () => <div className="card p-8 text-center text-sm text-ink-mute">Chargement…</div>;
 import { AgentBadge, Segmented } from "./components/ui";
+import { session } from "./session";
 import { useStore } from "./store";
 
 function Welcome() {
@@ -62,6 +62,7 @@ function Welcome() {
 
 export default function App() {
   const { run, state, error, view, setView, apiDown } = useStore();
+  const profil = session.profil();
 
   return (
     <div className="min-h-screen pb-24">
@@ -88,15 +89,15 @@ export default function App() {
                   { value: "weather", label: "Météo", icon: CloudSun },
                   { value: "finance", label: "Marchés & fournisseurs", icon: Banknote },
                   { value: "history", label: "Historique", icon: History },
-                  { value: "database", label: "Base & Graphe", icon: Database },
-                  { value: "onboarding", label: "Nouveau client", icon: UserPlus },
+                  // explorateur de toute la base : réservé aux comptes équipe
+                  ...(profil?.role === "equipe" ? [{ value: "database" as const, label: "Base & Graphe", icon: Database }] : []),
                 ]}
               />
             </div>
             <AnimatePresence mode="wait">
               <motion.div key={view} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22 }}>
                 <Suspense fallback={<PageLoading />}>
-                  {view === "weather" ? <WeatherPage /> : view === "finance" ? <FinancePage /> : view === "history" ? <HistoryPage /> : view === "database" ? <DatabasePage /> : view === "onboarding" ? <OnboardingPage />
+                  {view === "weather" ? <WeatherPage /> : view === "finance" ? <FinancePage /> : view === "history" ? <HistoryPage /> : view === "database" ? <DatabasePage />
                     : !run || !state ? <Welcome /> : view === "dashboard" ? <Dashboard /> : <ChainView />}
                 </Suspense>
               </motion.div>
