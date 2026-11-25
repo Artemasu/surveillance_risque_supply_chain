@@ -5,7 +5,7 @@
 // Le tracé est calculé sur la position réelle des éléments repérés par des attributs data-fil, donc il suit
 // la mise en page à toutes les largeurs. Les cartes ne sont pas modifiées : le fil passe derrière elles.
 // « Réduire les animations » : fil entièrement coloré, sans boules en mouvement.
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 const CANARD = "#017F8D";
@@ -33,23 +33,7 @@ function chemin(points: Pt[], r = RAYON): string {
   return `${d} L${xn},${yn}`;
 }
 
-/** Longueur du tracé (virages arrondis négligés) jusqu'au point le plus proche de cible, et longueur totale. */
-function longueurs(points: Pt[], cible?: Pt): { jusqua: number; total: number } {
-  let total = 0, jusqua = 0, meilleur = Infinity;
-  for (let i = 1; i < points.length; i++) {
-    const [x0, y0] = points[i - 1], [x1, y1] = points[i];
-    const l = Math.hypot(x1 - x0, y1 - y0);
-    if (cible && l > 0) {
-      const t = Math.max(0, Math.min(1, ((cible[0] - x0) * (x1 - x0) + (cible[1] - y0) * (y1 - y0)) / (l * l)));
-      const dist = Math.hypot(x0 + t * (x1 - x0) - cible[0], y0 + t * (y1 - y0) - cible[1]);
-      if (dist < meilleur) { meilleur = dist; jusqua = total + t * l; }
-    }
-    total += l;
-  }
-  return { jusqua, total };
-}
-
-interface Noeud { d: string; x: number; y: number; part: number; couleur: string }   // part = fraction du fil à la jonction
+interface Noeud { d: string; x: number; y: number; jx: number; jy: number; couleur: string }   // (jx, jy) : jonction sur le fil
 
 interface Trace {
   l: number; h: number;
@@ -66,11 +50,46 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
   const reduit = useReducedMotion();
   const uid = useId().replace(/:/g, "");      // identifiants SVG propres à chaque fil (il y en a deux sur la page)
 
-  // Remplissage au défilement : commence quand le haut de la zone atteint le bas de l'écran.
-  const { scrollYProgress } = useScroll({ target: zone, offset: ["start 80%", "end 85%"] });
-  const avance = useTransform(scrollYProgress, (v) => (reduit ? 1 : Math.min(1, Math.max(0, v))));
+  // Remplissage calé sur l'écran : la tête du fil coloré suit une ligne placée aux deux tiers de la hauteur
+  // de l'écran. Table « longueur parcourue → hauteur » du tracé, puis plus grande longueur dont la hauteur
+  // est au-dessus de cette ligne. Les passages horizontaux se remplissent d'un trait quand la ligne les
+  // franchit ; un ressort court lisse ces sauts sans retard visible.
+  const LIGNE = 0.66;
+  const table = useRef<{ total: number; y: number[]; pas: number } | null>(null);
+  const brut = useMotionValue(reduit ? 1 : 0);
+  const avance = useSpring(brut, { stiffness: 260, damping: 34, restDelta: 0.0005 });
+  const { scrollY } = useScroll();
+  const caler = () => {
+    const t = table.current, racine = zone.current;
+    if (reduit) { brut.set(1); return; }
+    if (!t || !racine) return;
+    const cible = window.innerHeight * LIGNE - racine.getBoundingClientRect().top;
+    let i = 0;
+    while (i + 1 < t.y.length && t.y[i + 1] <= cible) i++;
+    const enBas = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;   // bas de page : fil complet
+    brut.set(enBas && cible > 0 ? 1 : t.y[0] > cible ? 0 : Math.min(1, (i * t.pas) / t.total));
+  };
+  useMotionValueEvent(scrollY, "change", caler);
   const [atteint, setAtteint] = useState(reduit ? 1 : 0);
-  useEffect(() => avance.on("change", (v) => setAtteint((a) => (Math.abs(a - v) > 0.01 || v === 1 || v === 0 ? v : a))), [avance]);
+  useMotionValueEvent(avance, "change", (v) => setAtteint((a) => (Math.abs(a - v) > 0.005 || v >= 0.999 || v <= 0.001 ? v : a)));
+  const [parts, setParts] = useState<number[]>([]);
+
+  // table du tracé et position des jonctions, refaites à chaque nouveau tracé
+  useEffect(() => {
+    const p = fil.current;
+    if (!trace || !p) return;
+    const total = p.getTotalLength(), pas = 6, y: number[] = [], pts: { x: number; y: number }[] = [];
+    for (let l = 0; l <= total; l += pas) { const q = p.getPointAtLength(l); y.push(q.y); pts.push(q); }
+    for (let i = 1; i < y.length; i++) y[i] = Math.max(y[i], y[i - 1]);   // tracé toujours descendant
+    table.current = { total, y, pas };
+    setParts(trace.branches.map((b) => {
+      let k = 0, d = Infinity;
+      pts.forEach((q, i) => { const e = Math.hypot(q.x - b.jx, q.y - b.jy); if (e < d) { d = e; k = i; } });
+      return Math.min(0.995, (k * pas) / total);
+    }));
+    caler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trace]);
 
   // ---- tracé, recalculé quand la mise en page change
   useLayoutEffect(() => {
@@ -106,7 +125,7 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
         const yArrivee = a.y + a.h / 2, xArrivee = a.x + a.l + 14;
         const pts: Pt[] = [[droite, 0], [droite, yHaut], [xStation, yHaut], [xStation, yBas], [gauche, yBas], [gauche, yRangee],
           [droite, yRangee], [droite, yArrivee], [xArrivee, yArrivee]];
-        const branches = [{ d: "", x: xArrivee, y: yArrivee, part: 0.985, couleur: "#0F172A" }];   // arrivée : le produit livré
+        const branches = [{ d: "", x: xArrivee, y: yArrivee, jx: xArrivee, jy: yArrivee, couleur: "#0F172A" }];   // arrivée : le produit livré
         setTrace({ l: L, h: H, principal: chemin(pts), branches });
         return;
       }
@@ -123,8 +142,7 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
       const branches = Array.from(racine.querySelectorAll<HTMLElement>("[data-fil-mot]")).map((el, i) => {
         const b = pos(el);
         const x = b.x + 1, y = b.y;           // le fil rejoint le liseré coloré au-dessus de chaque mot
-        const { jusqua, total } = longueurs(principal, [x, yMots]);
-        return { d: `M${x},${yMots} L${x},${y}`, x, y, part: jusqua / total, couleur: SIGNAUX[i % 3] };
+        return { d: `M${x},${yMots} L${x},${y}`, x, y, jx: x, jy: yMots, couleur: SIGNAUX[i % 3] };
       });
       setTrace({ l: L, h: H, principal: chemin(principal), branches });
     };
@@ -192,12 +210,12 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
           {/* rail discret, puis fil coloré qui avance avec le défilement */}
           <path d={trace.principal} fill="none" stroke={CANARD} strokeOpacity={0.14} strokeWidth={1.5} />
           {trace.branches.filter((b) => b.d).map((b, i) => (
-            <path key={`r${i}`} d={b.d} fill="none" stroke={CANARD} strokeOpacity={atteint >= b.part ? 0.55 : 0.14} strokeWidth={1.5} style={{ transition: "stroke-opacity .6s" }} />
+            <path key={`r${i}`} d={b.d} fill="none" stroke={CANARD} strokeOpacity={atteint >= (parts[i] ?? 2) ? 0.55 : 0.14} strokeWidth={1.5} style={{ transition: "stroke-opacity .6s" }} />
           ))}
           <motion.path ref={fil} d={trace.principal} fill="none" stroke={`url(#fil-degrade-${uid})`} strokeWidth={2} strokeLinecap="round" style={{ pathLength: avance }} />
           {/* nœuds : jonctions des fournisseurs, comme les points des sites sur le globe */}
           {trace.branches.map((b, i) => {
-            const actif = atteint >= b.part;
+            const actif = atteint >= (parts[i] ?? 2);
             return (
               <g key={`n${i}`} style={{ transition: "opacity .6s", opacity: actif ? 1 : 0.35 }}>
                 <circle cx={b.x} cy={b.y} r={7} fill={b.couleur} opacity={0.18}>

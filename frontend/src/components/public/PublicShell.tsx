@@ -14,29 +14,18 @@ export function Logo({ clair = false }: { clair?: boolean }) {
       <span className={`grid h-9 w-9 place-items-center overflow-hidden rounded-xl ${clair ? "bg-white/10 ring-1 ring-white/15" : "bg-gradient-to-br from-sky-50 to-white ring-1 ring-line"}`}>
         <img src={`${import.meta.env.BASE_URL}copilot/slime_calm_idle.png`} alt="" draggable={false} className="slime-sprite block select-none" style={{ width: 33 }} />
       </span>
-      <span className="leading-tight">
-        <span className={`block text-[15px] font-bold tracking-[0.08em] ${clair ? "text-white" : "text-ink"}`} style={{ fontFamily: '"Space Grotesk", "Plus Jakarta Sans", sans-serif' }}>A.E.G.I.S.</span>
-        <span className={`hidden text-[10px] font-semibold uppercase tracking-[0.16em] sm:block ${clair ? "text-white/50" : "text-ink-mute"}`}>Détecter · Comprendre · Anticiper</span>
-      </span>
+      <span className={`text-[15px] font-bold tracking-[0.08em] ${clair ? "text-white" : "text-ink"}`} style={{ fontFamily: '"Space Grotesk", "Plus Jakarta Sans", sans-serif' }}>A.E.G.I.S.</span>
     </a>
   );
 }
 
-export default function PublicShell({ children, nav = true, sombre = false }: { children: ReactNode; nav?: boolean; sombre?: boolean }) {
-  const lien = sombre ? "text-white/70 hover:text-white" : "text-ink-soft hover:text-ink";
+// `nav` est conservé pour compatibilité (Login, inscription) : la barre n'affiche plus de liens de navigation.
+export default function PublicShell({ children, sombre = false }: { children: ReactNode; nav?: boolean; sombre?: boolean }) {
   return (
     <div className={`min-h-screen ${sombre ? "bg-[#061417]" : "bg-canvas"}`}>
       <header className={`sticky top-0 z-30 backdrop-blur-md ${sombre ? "border-b border-white/10 bg-[#061417]/95" : "border-b border-line/70 bg-white/85"}`}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Logo clair={sombre} />
-          {nav && (
-            <nav className={`hidden items-center gap-7 text-sm font-medium md:flex ${lien}`}>
-              <a href="#fonctionnement" className={lien}>Fonctionnement</a>
-              <a href="#demonstration" className={lien}>Démonstration</a>
-              <a href="#fonctionnalites" className={lien}>Fonctionnalités</a>
-              <a href="#confidentialite" className={lien}>Confidentialité</a>
-            </nav>
-          )}
           <div className="flex items-center gap-2">
             <button className={`btn hidden rounded-full sm:inline-flex ${sombre ? "border border-white/20 text-white hover:bg-white/10" : "btn-ghost"}`} onClick={() => aller("#/inscription")}>
               Créer un espace
