@@ -2,7 +2,7 @@
 // Trame : bandeau nuit avec le globe 3D, grands mots-clés, étapes, démonstration, profils,
 // fonctionnalités, confidentialité, appel à l'action. Aplats de la charte. Deux polices seulement, celles du
 // titre : sans-serif gras, et l'italique à empattements pour les mots forts, en bleu canard, moutarde ou olive.
-// Mouvement sobre : apparitions douces, aucune animation liée au défilement de la page, rien qui clignote ;
+// Mouvement sobre : apparitions douces, un fil d'approvisionnement qui se colore au défilement (FilSupplyChain) ;
 // tout s'arrête si le système demande moins d'animations (MotionConfig reducedMotion="user" et CSS).
 // Les couleurs de fond sont écrites en valeurs directes (bg-[#...]) : la page reste correcte même si la
 // configuration Tailwind n'a pas encore été rechargée.
@@ -15,6 +15,7 @@ import { Suspense, lazy, useEffect, useState, type CSSProperties, type ReactNode
 import { AgentBadge } from "../ui";
 import type { AgentName } from "../../types";
 import DemoDefilante from "./DemoDefilante";
+import FilSupplyChain from "./FilSupplyChain";
 import PublicShell, { aller } from "./PublicShell";
 
 const Globe = lazy(() => import("./Globe"));       // three.js chargé à part : le texte s'affiche tout de suite
@@ -157,15 +158,17 @@ export default function Landing() {
           </a>
         </section>
 
+        {/* Mots-clés et étapes, reliés par le fil d'approvisionnement */}
+        <FilSupplyChain>
         {/* Grands mots-clés */}
         <section id="mots" style={{ background: C.creme }}>
-          <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-            <p className="max-w-3xl text-3xl font-medium leading-snug tracking-tight text-[#0F172A] sm:text-5xl" style={DISPLAY}>
+          <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
+            <p data-fil="phrase" className="max-w-3xl text-3xl font-medium leading-snug tracking-tight text-[#0F172A] sm:text-5xl" style={DISPLAY}>
               Une rupture ne commence jamais chez vous. Elle commence <It color={C.canard}>à l'autre bout du monde</It>, dans un article, une prévision, un cours qui décroche.
             </p>
-            <div className="mt-20 grid gap-12 md:grid-cols-3">
+            <div data-fil="mots" className="mt-20 grid gap-12 md:grid-cols-3">
               {MOTS.map((m, i) => (
-                <motion.div key={m.mot} {...apparition} transition={{ duration: 0.5, delay: i * 0.08 }} className="border-t-2 pt-6" style={{ borderColor: m.couleur }}>
+                <motion.div key={m.mot} data-fil-mot {...apparition} transition={{ duration: 0.5, delay: i * 0.08 }} className="border-t-2 pt-6" style={{ borderColor: m.couleur }}>
                   <span className="text-sm font-bold text-[#0F172A]/40">0{i + 1}</span>
                   <h3 className="mt-2 text-4xl font-bold tracking-tight text-[#0F172A] lg:text-5xl" style={DISPLAY}>{m.mot}</h3>
                   <p className="mt-3 max-w-xs leading-relaxed text-[#475569]">{m.texte}</p>
@@ -177,14 +180,14 @@ export default function Landing() {
 
         {/* Étapes */}
         <section id="fonctionnement" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
             <Titre sur="Fonctionnement">De votre chaîne <It color={C.canard}>à l'alerte</It>,<br className="hidden sm:block" /> en quatre étapes.</Titre>
-            <ol className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <ol data-fil="etapes" className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {ETAPES.map((e, i) => (
                 <motion.li key={e.titre} {...apparition} transition={{ duration: 0.5, delay: i * 0.06 }}
                   className="group relative flex flex-col overflow-hidden rounded-[28px] border border-[#E2E8F0] bg-white p-7 transition duration-300 hover:-translate-y-1 hover:border-transparent hover:shadow-[0_20px_50px_rgba(1,84,93,0.12)]">
                   <span className="text-6xl font-bold leading-none" style={{ ...DISPLAY, color: i % 2 ? C.olive : C.canard }}>{String(i + 1).padStart(2, "0")}</span>
-                  <span className="mt-8 grid h-11 w-11 place-items-center rounded-full text-white" style={{ background: i % 2 ? C.olive : C.canard }}><e.icon size={18} /></span>
+                  <span data-fil-icone className="mt-8 grid h-11 w-11 place-items-center rounded-full text-white" style={{ background: i % 2 ? C.olive : C.canard }}><e.icon size={18} /></span>
                   <h3 className="mt-5 text-lg font-bold text-[#0F172A]">{e.titre}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-[#475569]">{e.texte}</p>
                 </motion.li>
@@ -192,6 +195,8 @@ export default function Landing() {
             </ol>
           </div>
         </section>
+
+        </FilSupplyChain>
 
         {/* Démonstration : fiches défilantes sur grand écran, frise verticale sinon */}
         {defilante ? <DemoDefilante jours={DEMO} fond={C.canardFonce} /> : (
@@ -228,14 +233,16 @@ export default function Landing() {
         </section>
         )}
 
+        {/* Profils, fonctionnalités, confidentialité et appel à l'action, reliés par la suite du fil */}
+        <FilSupplyChain parcours="bas">
         {/* Profils */}
         <section style={{ background: C.creme }}>
-          <div className="mx-auto grid max-w-6xl gap-14 px-4 py-28 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-28 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
             <Titre sur="Pour qui">Une lecture <It color={C.olive}>pour chaque</It> métier.</Titre>
-            <div className="divide-y divide-[#0F172A]/10 border-y border-[#0F172A]/10">
+            <div data-fil="profils" className="divide-y divide-[#0F172A]/10 border-y border-[#0F172A]/10">
               {PROFILS.map((p) => (
                 <motion.div key={p.titre} {...apparition} className="group flex items-center gap-5 py-7">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#0F172A] text-white transition group-hover:bg-[#017F8D]"><p.icon size={19} /></span>
+                  <span data-fil-station className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#0F172A] text-white transition group-hover:bg-[#017F8D]"><p.icon size={19} /></span>
                   <div>
                     <h3 className="text-xl font-bold text-[#0F172A]" style={DISPLAY}>{p.titre}</h3>
                     <p className="text-[#475569]">{p.texte}</p>
@@ -248,12 +255,12 @@ export default function Landing() {
 
         {/* Fonctionnalités */}
         <section id="fonctionnalites" className="scroll-mt-20 bg-white">
-          <div className="mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
             <Titre sur="Fonctionnalités">Tout ce qu'il faut <It color={C.canard}>pour voir venir.</It></Titre>
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div data-fil="fonctions" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {FONCTIONS.map((f, i) => (
                 <motion.div key={f.titre} {...apparition} transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
-                  className="rounded-[24px] border border-[#E2E8F0] p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+                  className="rounded-[24px] border border-[#E2E8F0] bg-white p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
                   <span className="grid h-12 w-12 place-items-center rounded-2xl" style={{ background: `${f.couleur}22`, color: f.couleur === C.moutarde ? "#9C7700" : f.couleur }}><f.icon size={21} /></span>
                   <h3 className="mt-5 text-lg font-bold text-[#0F172A]">{f.titre}</h3>
                   <p className="mt-1.5 leading-relaxed text-[#475569]">{f.texte}</p>
@@ -266,7 +273,7 @@ export default function Landing() {
 
         {/* Confidentialité : aplat vert olive */}
         <section id="confidentialite" className="scroll-mt-20" style={{ background: C.olive }}>
-          <div className="mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
             <Titre sur="Confidentialité">Votre chaîne reste <It>la vôtre.</It></Titre>
             <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {CONFIANCE.map((c) => (
@@ -282,7 +289,7 @@ export default function Landing() {
 
         {/* Appel à l'action : aplat moutarde */}
         <section style={{ background: C.moutarde }}>
-          <div className="mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-24 sm:px-6 md:flex-row md:items-center md:justify-between">
+          <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-24 sm:px-6 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-5xl font-bold leading-[0.95] tracking-tight text-[#0F172A] sm:text-7xl" style={DISPLAY}>Une chaîne <It>à surveiller ?</It></h2>
               <p className="mt-5 max-w-lg text-lg text-[#0F172A]/75">Créez votre espace en quelques minutes. Vous pourrez exporter ou supprimer vos données à tout moment.</p>
@@ -293,9 +300,10 @@ export default function Landing() {
                 <button className="rounded-full border border-[#0F172A]/25 px-6 py-3.5 text-sm font-semibold text-[#0F172A] transition hover:bg-[#0F172A]/5" onClick={() => aller("#/connexion")}>J'ai déjà un compte</button>
               </div>
             </div>
-            <Tampon />
+            <div data-fil="arrivee"><Tampon /></div>
           </div>
         </section>
+        </FilSupplyChain>
       </PublicShell>
     </MotionConfig>
   );
