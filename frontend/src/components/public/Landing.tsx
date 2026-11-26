@@ -15,6 +15,7 @@ import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState, type CSSP
 import { AgentBadge } from "../ui";
 import type { AgentName } from "../../types";
 import DemoDefilante from "./DemoDefilante";
+import { useDefilementDoux } from "./defilementDoux";
 import FilSupplyChain from "./FilSupplyChain";
 import Intro, { introAJouer } from "./Intro";
 import PublicShell, { aller } from "./PublicShell";
@@ -73,6 +74,14 @@ const CONFIANCE: { titre: string; texte: string; icon: LucideIcon }[] = [
   { titre: "Fournisseurs pseudonymisés", texte: "Par défaut, leurs noms ne sont pas conservés.", icon: EyeOff },
   { titre: "Intelligence artificielle locale", texte: "Les analyses tournent sur nos serveurs, sans service tiers.", icon: Cpu },
   { titre: "Conforme au RGPD", texte: "Données minimales, export et suppression à tout moment.", icon: ShieldCheck },
+];
+
+// Cartes de confidentialité : aplats de la charte A.E.G.I.S., chacun avec la couleur de son trait de lumière
+const TEINTES_CONFIANCE = [
+  { fond: "#061417", texte: "#FFFFFF", pastille: "#ECB920", icone: "#0F172A", laser: "#ECB920" },
+  { fond: "#017F8D", texte: "#FFFFFF", pastille: "#F4F1EA", icone: "#017F8D", laser: "#F4F1EA" },
+  { fond: "#ECB920", texte: "#0F172A", pastille: "#0F172A", icone: "#ECB920", laser: "#017F8D" },
+  { fond: "#F4F1EA", texte: "#0F172A", pastille: "#017F8D", icone: "#FFFFFF", laser: "#017F8D" },
 ];
 
 function Titre({ sur, children, clair = false }: { sur: string; children: ReactNode; clair?: boolean }) {
@@ -197,6 +206,8 @@ export default function Landing() {
   const introJouee = useRef(intro);
   const boiteGlobe = useRef<HTMLDivElement>(null);
   const texteVisible = !intro || introSortie;
+  // défilement adouci (souris et pavé tactile), à l'arrêt pendant l'intro
+  useDefilementDoux(!reduit, intro);
   return (
     <MotionConfig reducedMotion="user">
       <PublicShell sombre>
@@ -251,7 +262,7 @@ export default function Landing() {
         <FilSupplyChain>
         {/* Grands mots-clés */}
         <section id="mots" style={{ background: C.creme }}>
-          <div className="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-44 sm:px-6 lg:py-64">
             <p data-fil="phrase" className="max-w-3xl text-3xl font-medium leading-snug tracking-tight text-[#0F172A] sm:text-5xl" style={DISPLAY}>
               Une rupture ne commence jamais chez vous. Elle commence <It color={C.canard}>à l'autre bout du monde</It>, dans un article, une prévision, un cours qui décroche.
             </p>
@@ -269,7 +280,7 @@ export default function Landing() {
 
         {/* Étapes */}
         <section id="fonctionnement" className="scroll-mt-20 bg-white">
-          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-44 sm:px-6 lg:py-64">
             <Titre sur="Fonctionnement">De votre chaîne <It color={C.canard}>à l'alerte</It>,<br className="hidden sm:block" /> en quatre étapes.</Titre>
             <ol data-fil="etapes" className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
               {ETAPES.map((e, i) => (
@@ -291,7 +302,7 @@ export default function Landing() {
         {defilante ? <DemoDefilante jours={DEMO} fond={C.canardFonce} /> : (
         <section id="demonstration" className="relative scroll-mt-20 overflow-hidden text-white" style={{ background: C.canardFonce }}>
           <div className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full opacity-30 blur-3xl" style={{ background: C.canard }} />
-          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-44 sm:px-6 lg:py-64">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
               <Titre sur="Démonstration" clair>Une crise <It color={C.moutarde}>en cascade</It>, jour après jour.</Titre>
               <p className="text-lg leading-relaxed text-white/75">
@@ -326,7 +337,7 @@ export default function Landing() {
         <FilSupplyChain parcours="bas">
         {/* Profils */}
         <section style={{ background: C.creme }}>
-          <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-28 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+          <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-44 sm:px-6 lg:py-64 lg:grid-cols-[0.9fr_1.1fr]">
             <Titre sur="Pour qui">Une lecture <It color={C.olive}>pour chaque</It> métier.</Titre>
             {/* séparateurs raccourcis : ils commencent après les pastilles, pour ne pas croiser le fil qui les relie */}
             <div data-fil="profils">
@@ -349,9 +360,9 @@ export default function Landing() {
         {/* Grand écran : section figée le temps que les cartes sortent du fil par paires (haut / bas), sur environ
             1,6 écran de défilement ; ailleurs, simple apparition */}
         <section id="fonctionnalites" ref={sectionFonctions} data-fil={figee ? "fonctions-figee" : undefined}
-          className={`scroll-mt-20 bg-white ${figee ? "h-[calc(260vh-4rem)]" : ""}`}>
+          className={`scroll-mt-20 bg-white ${figee ? "h-[calc(260vh-4rem+16rem)] pb-64" : ""}`}>
           <div className={figee ? "sticky top-16 flex h-[calc(100vh-4rem)] items-center" : ""}>
-          <div className={`relative mx-auto w-full max-w-6xl px-4 sm:px-6 ${figee ? "py-6" : "py-28"}`}>
+          <div className={`relative mx-auto w-full max-w-6xl px-4 sm:px-6 ${figee ? "py-6" : "py-44 lg:py-64"}`}>
             <Titre sur="Fonctionnalités">Tout ce qu'il faut <It color={C.canard}>pour voir venir.</It></Titre>
             {figee && <LigneFigee grille={grilleFonctions} />}
             <div ref={grilleFonctions} data-fil="fonctions" className={`${figee ? "mt-10" : "mt-14"} grid gap-5 sm:grid-cols-2 lg:grid-cols-3`}>
@@ -371,16 +382,38 @@ export default function Landing() {
 
         {/* Confidentialité : aplat vert olive */}
         <section id="confidentialite" className="scroll-mt-20" style={{ background: C.olive }}>
-          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
+          <div className="relative mx-auto max-w-6xl px-4 py-44 sm:px-6 lg:py-64">
             <Titre sur="Confidentialité">Votre chaîne reste <It>la vôtre.</It></Titre>
             <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {CONFIANCE.map((c) => (
-                <motion.div key={c.titre} {...apparition} className="rounded-[24px] bg-[#F4F1EA]/60 p-6 ring-1 ring-[#0F172A]/5 backdrop-blur">
-                  <c.icon size={20} className="text-[#0F172A]" />
-                  <h3 className="mt-4 font-bold text-[#0F172A]">{c.titre}</h3>
-                  <p className="mt-1 text-sm text-[#0F172A]/75">{c.texte}</p>
-                </motion.div>
-              ))}
+              {/* cartes en aplats de la charte ; un trait de lumière (« laser ») tourne sur leur
+                  bord avec un halo derrière, et elles arrivent une à une avec un petit rebond */}
+              {CONFIANCE.map((c, i) => {
+                const t = TEINTES_CONFIANCE[i % TEINTES_CONFIANCE.length];
+                const laser = `conic-gradient(from 0deg, transparent 0deg, transparent 250deg, ${t.laser} 320deg, #FFFFFF 345deg, transparent 360deg)`;
+                const rotation = { animationDuration: "5s", animationDelay: `${-i * 1.25}s` };
+                return (
+                  <motion.div key={c.titre} className="relative"
+                    initial={{ opacity: 0, y: 40, scale: 0.92 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    whileHover={{ y: -8, scale: 1.02, transition: { type: "spring", stiffness: 420, damping: 12 } }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ type: "spring", stiffness: 300, damping: 13, delay: i * 0.1 }}>
+                    {/* halo flou derrière la carte */}
+                    <div aria-hidden className="pointer-events-none absolute -inset-[3px] overflow-hidden rounded-[27px] opacity-70 blur-md">
+                      <span className="absolute left-1/2 top-1/2 aspect-square w-[180%] -translate-x-1/2 -translate-y-1/2 motion-safe:animate-spin" style={{ background: laser, ...rotation }} />
+                    </div>
+                    {/* bord lumineux net */}
+                    <div className="relative h-full overflow-hidden rounded-[24px] p-[1.5px]">
+                      <span aria-hidden className="absolute left-1/2 top-1/2 aspect-square w-[180%] -translate-x-1/2 -translate-y-1/2 motion-safe:animate-spin" style={{ background: laser, ...rotation }} />
+                      <div className="relative h-full rounded-[22.5px] p-6 shadow-[0_18px_40px_rgba(15,23,42,0.18)]" style={{ background: t.fond, color: t.texte }}>
+                        <span className="grid h-11 w-11 place-items-center rounded-full" style={{ background: t.pastille, color: t.icone }}><c.icon size={20} /></span>
+                        <h3 className="mt-5 text-lg font-bold" style={DISPLAY}>{c.titre}</h3>
+                        <p className="mt-1.5 text-sm leading-relaxed" style={{ opacity: 0.8 }}>{c.texte}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -388,7 +421,7 @@ export default function Landing() {
         {/* Appel à l'action : retour dans la nuit du globe ; le fil d'approvisionnement vient s'y brancher */}
         {/* section non positionnée (fond en dégradés CSS) : le fil, dessiné dessous, reste visible par-dessus son fond */}
         <section className="text-white" style={{ background: `radial-gradient(ellipse at 75% 50%, rgba(1,127,141,0.32), transparent 55%), radial-gradient(ellipse at 0% 0%, rgba(162,177,83,0.10), transparent 40%), ${C.nuit}` }}>
-          <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-4 py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:py-28">
+          <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-4 pb-6 pt-44 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:pb-4 lg:pt-64">
             <motion.div {...apparition}>
               <h2 className="text-5xl font-bold leading-[0.95] tracking-tight sm:text-7xl" style={DISPLAY}>
                 Une chaîne <span className="block"><It color={C.moutarde}>à surveiller ?</It></span>
