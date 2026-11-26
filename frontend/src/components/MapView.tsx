@@ -11,6 +11,7 @@ import { LEVEL_STYLE, TYPE_LABEL, pct } from "../theme";
 import { FAMILY_STYLE } from "./viz";
 import type { GraphEdge, NodeState } from "../types";
 import { Segmented } from "./ui";
+import { OPTIONS_MONDE, bloquerMonde } from "../carteMonde";
 
 const POSITRON = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";
 // Repli hors ligne : fond uni, la carte reste utilisable (nœuds et liens), sans fond cartographique.
@@ -106,8 +107,9 @@ export default function MapView({ nodes, edges, selected, onSelect, onOpen, onDe
     if (!box.current) return;
     const m = new maplibregl.Map({
       container: box.current, style: POSITRON, center: [40, 30], zoom: 1.4, pitch: 0, bearing: 0,
-      attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false,
+      attributionControl: { compact: true }, dragRotate: false, pitchWithRotate: false, ...OPTIONS_MONDE,
     });
+    bloquerMonde(m);   // un seul exemplaire du monde, même dézoomé au maximum
     map.current = m;
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "bottom-right");
     // Clic sec vs glisser : position mémorisée à l'appui sur le conteneur (souris, stylet, doigt).

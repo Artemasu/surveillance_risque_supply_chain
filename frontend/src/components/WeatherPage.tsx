@@ -12,6 +12,7 @@ import { useStore } from "../store";
 import { frDate } from "../theme";
 import type { WeatherOverview, WxSite } from "../types_data";
 import { Card, Empty } from "./ui";
+import { OPTIONS_MONDE, bloquerMonde } from "../carteMonde";
 import {
   AXIS, AlertPill, ChartTip, GRID, JobButton, Kpi, NotReady, RankGauge, STATUS, num, pct0, rankColor, rankInk, rankText, useAsync,
 } from "./viz";
@@ -39,7 +40,8 @@ function SitesMap({ sites, selected, onSelect }: { sites: WxSite[]; selected: st
 
   useEffect(() => {
     if (!box.current || map.current) return;
-    const m = new maplibregl.Map({ container: box.current, style: POSITRON, center: [30, 30], zoom: 0.9, attributionControl: { compact: true } });
+    const m = new maplibregl.Map({ container: box.current, style: POSITRON, center: [30, 30], zoom: 0.9, attributionControl: { compact: true }, ...OPTIONS_MONDE });
+    bloquerMonde(m);   // un seul exemplaire du monde, même dézoomé au maximum
     m.on("error", () => undefined);
     m.on("load", () => {
       if (sites.length > 1) {
