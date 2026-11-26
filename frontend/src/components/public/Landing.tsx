@@ -6,12 +6,12 @@
 // tout s'arrête si le système demande moins d'animations (MotionConfig reducedMotion="user" et CSS).
 // Les couleurs de fond sont écrites en valeurs directes (bg-[#...]) : la page reste correcte même si la
 // configuration Tailwind n'a pas encore été rechargée.
-import { MotionConfig, motion, useReducedMotion } from "framer-motion";
+import { MotionConfig, motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Banknote, Bell, Briefcase, CloudSun, Cpu, EyeOff, Factory, History, LayoutDashboard,
   Lock, MessageSquareText, Network, Radar, Route, ShieldCheck, type LucideIcon,
 } from "lucide-react";
-import { Suspense, lazy, useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { AgentBadge } from "../ui";
 import type { AgentName } from "../../types";
 import DemoDefilante from "./DemoDefilante";
@@ -97,21 +97,108 @@ function Tampon() {
 }
 
 /** Vrai sur un grand écran (≥ 1024 px) : la démonstration défilante y remplace la frise verticale. */
-function useGrandEcran() {
-  const requete = "(min-width: 1024px)";
+function useGrandEcran(requete = "(min-width: 1024px)") {
   const [grand, setGrand] = useState(() => typeof window !== "undefined" && window.matchMedia(requete).matches);
   useEffect(() => {
     const mq = window.matchMedia(requete);
     const maj = () => setGrand(mq.matches);
     mq.addEventListener("change", maj);
     return () => mq.removeEventListener("change", maj);
-  }, []);
+  }, [requete]);
   return grand;
+}
+
+const CLASSE_FONCTION = "rounded-[24px] border border-[#E2E8F0] bg-white p-7";
+
+function ContenuFonction({ f }: { f: (typeof FONCTIONS)[number] }) {
+  return (
+    <>
+      <span className="grid h-12 w-12 place-items-center rounded-2xl" style={{ background: `${f.couleur}22`, color: f.couleur === C.moutarde ? "#9C7700" : f.couleur }}><f.icon size={21} /></span>
+      <h3 className="mt-5 text-lg font-bold text-[#0F172A]">{f.titre}</h3>
+      <p className="mt-1.5 leading-relaxed text-[#475569]">{f.texte}</p>
+    </>
+  );
+}
+
+/** Carte de fonctionnalité qui sort du fil d'approvisionnement (grand écran) : la rangée du haut glisse
+ *  de la ligne vers le haut, celle du bas de la ligne vers le bas. Les cartes vont par paires (même colonne)
+ *  et les trois paires sortent l'une après l'autre au fil du défilement. */
+function CarteSortante({ f, i, progression }: { f: (typeof FONCTIONS)[number]; i: number; progression: MotionValue<number> }) {
+  const paire = i % 3, enHaut = i < 3;
+  // fenêtres de défilement : 0-0,3 · 0,27-0,57 · 0,54-0,84, puis tout reste affiché jusqu'à la fin du blocage
+  const debut = paire * 0.27;
+  const reste = useTransform(progression, [debut, debut + 0.3], [1, 0], { clamp: true });   // 1 = encore dans la ligne
+  // la carte part de la ligne (décalée de toute sa hauteur) et la partie encore « dans » la ligne est masquée
+  const y = useTransform(reste, (r) => `${(enHaut ? r : -r) * 100}%`);
+  const clipPath = useTransform(reste, (r) => (enHaut ? `inset(0 0 ${r * 100}% 0 round 24px)` : `inset(${r * 100}% 0 0 0 round 24px)`));
+  return (
+    <motion.div style={{ y, clipPath }} className={CLASSE_FONCTION}>
+      <ContenuFonction f={f} />
+    </motion.div>
+  );
+}
+
+/** Ligne du fil qui reste à l'écran avec les cartes pendant que la section est figée. Elle reprend exactement
+ *  le tracé de FilSupplyChain à cet endroit (mêmes bords gauche / droite, mêmes virages arrondis) : elle
+ *  descend de la marge gauche, traverse entre les deux rangées et repart vers le bas à droite. Ses bouts
+ *  verticaux vont jusqu'aux bords de la zone figée et recouvrent le fil, donc rien ne dépasse ni ne se
+ *  dédouble au moment où la section se libère. */
+const RAYON_FIL = 36;
+function LigneFigee({ grille }: { grille: RefObject<HTMLDivElement> }) {
+  const [geo, setGeo] = useState<{ x: number; haut: number; l: number; h: number; y: number } | null>(null);
+  useLayoutEffect(() => {
+    const g = grille.current, boite = g?.parentElement, zone = boite?.parentElement, section = boite?.closest("section");
+    if (!g || !boite || !zone || !section) return;
+    const mesurer = () => {
+      const rb = boite.getBoundingClientRect(), rs = section.getBoundingClientRect(), rz = zone.getBoundingClientRect();
+      const cartes = Array.from(g.children) as HTMLElement[];
+      if (cartes.length < 4) return;
+      const L = rs.width, dx = rb.left - rs.left, gx = g.offsetLeft + dx;
+      const gauche = Math.max(10, gx - Math.min(48, gx / 2));
+      const droite = Math.min(L - 10, gx + g.offsetWidth + Math.min(48, (L - gx - g.offsetWidth) / 2));
+      // les cartes ont pour parent de positionnement le conteneur (comme la ligne) : entre les deux rangées
+      const c0 = cartes[0], c3 = cartes[3];
+      const y = (c0.offsetTop + c0.offsetHeight + c3.offsetTop) / 2;
+      const haut = rz.top - rb.top;                                  // haut de la zone figée, relatif au conteneur
+      setGeo({ x: gauche - dx, haut, l: droite - gauche, h: rz.height, y: y - haut });
+    };
+    mesurer();
+    const obs = new ResizeObserver(mesurer);
+    obs.observe(section);
+    return () => obs.disconnect();
+  }, [grille]);
+  if (!geo) return null;
+  const { l, h, y } = geo, r = RAYON_FIL;
+  const d = `M0,0 L0,${y - r} Q0,${y} ${r},${y} L${l - r},${y} Q${l},${y} ${l},${y + r} L${l},${h}`;
+  return (
+    <svg aria-hidden className="pointer-events-none absolute overflow-visible" style={{ left: geo.x, top: geo.haut, width: l, height: h }}>
+      <defs>
+        <filter id="ligne-figee-halo" x="-50%" y="-200%" width="200%" height="500%">
+          <feGaussianBlur stdDeviation="2.2" result="flou" />
+          <feMerge><feMergeNode in="flou" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
+      <path d={d} fill="none" stroke={C.canard} strokeWidth={2} />
+      <g filter="url(#ligne-figee-halo)">
+        {[C.moutarde, C.olive, C.canard].map((c, k) => (
+          <motion.circle key={k} cy={y} r={3.2} fill={c}
+            initial={{ cx: r }} animate={{ cx: l - r }}
+            transition={{ duration: (l - 2 * r) / 110, ease: "linear", repeat: Infinity, delay: (k * (l - 2 * r)) / 110 / 3 }} />
+        ))}
+      </g>
+    </svg>
+  );
 }
 
 export default function Landing() {
   const reduit = useReducedMotion();
   const defilante = useGrandEcran() && !reduit;
+  // Fonctionnalités figées (comme la démonstration) : la section reste à l'écran et le défilement sert à faire
+  // sortir les cartes du fil ; la page reprend quand les six sont affichées. Écran assez haut seulement.
+  const figee = useGrandEcran("(min-width: 1024px) and (min-height: 760px)") && !reduit;
+  const sectionFonctions = useRef<HTMLElement>(null);
+  const grilleFonctions = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: sortieFonctions } = useScroll({ target: sectionFonctions, offset: ["start 64px", "end end"] });
   return (
     <MotionConfig reducedMotion="user">
       <PublicShell sombre>
@@ -254,20 +341,26 @@ export default function Landing() {
         </section>
 
         {/* Fonctionnalités */}
-        <section id="fonctionnalites" className="scroll-mt-20 bg-white">
-          <div className="relative mx-auto max-w-6xl px-4 py-28 sm:px-6">
+        {/* Grand écran : section figée le temps que les cartes sortent du fil par paires (haut / bas), sur environ
+            1,6 écran de défilement ; ailleurs, simple apparition */}
+        <section id="fonctionnalites" ref={sectionFonctions} data-fil={figee ? "fonctions-figee" : undefined}
+          className={`scroll-mt-20 bg-white ${figee ? "h-[calc(260vh-4rem)]" : ""}`}>
+          <div className={figee ? "sticky top-16 flex h-[calc(100vh-4rem)] items-center" : ""}>
+          <div className={`relative mx-auto w-full max-w-6xl px-4 sm:px-6 ${figee ? "py-6" : "py-28"}`}>
             <Titre sur="Fonctionnalités">Tout ce qu'il faut <It color={C.canard}>pour voir venir.</It></Titre>
-            <div data-fil="fonctions" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {FONCTIONS.map((f, i) => (
+            {figee && <LigneFigee grille={grilleFonctions} />}
+            <div ref={grilleFonctions} data-fil="fonctions" className={`${figee ? "mt-10" : "mt-14"} grid gap-5 sm:grid-cols-2 lg:grid-cols-3`}>
+              {FONCTIONS.map((f, i) => figee ? (
+                <CarteSortante key={f.titre} f={f} i={i} progression={sortieFonctions} />
+              ) : (
                 <motion.div key={f.titre} {...apparition} transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
-                  className="rounded-[24px] border border-[#E2E8F0] bg-white p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl" style={{ background: `${f.couleur}22`, color: f.couleur === C.moutarde ? "#9C7700" : f.couleur }}><f.icon size={21} /></span>
-                  <h3 className="mt-5 text-lg font-bold text-[#0F172A]">{f.titre}</h3>
-                  <p className="mt-1.5 leading-relaxed text-[#475569]">{f.texte}</p>
+                  className={`${CLASSE_FONCTION} transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]`}>
+                  <ContenuFonction f={f} />
                 </motion.div>
               ))}
             </div>
-            <div className="mt-8 flex flex-wrap gap-2"><AgentBadge agent="media" /><AgentBadge agent="weather" /><AgentBadge agent="finance" /></div>
+            <div className={`${figee ? "mt-6" : "mt-8"} flex flex-wrap gap-2`}><AgentBadge agent="media" /><AgentBadge agent="weather" /><AgentBadge agent="finance" /></div>
+          </div>
           </div>
         </section>
 

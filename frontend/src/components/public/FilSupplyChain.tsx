@@ -33,12 +33,13 @@ function chemin(points: Pt[], r = RAYON): string {
   return `${d} L${xn},${yn}`;
 }
 
-interface Noeud { d: string; x: number; y: number; jx: number; jy: number; couleur: string }   // (jx, jy) : jonction sur le fil
+interface Noeud { d: string; x: number; y: number; jx: number; jy: number; couleur: string; sansNoeud?: boolean }   // (jx, jy) : jonction sur le fil
 
 interface Trace {
   l: number; h: number;
   principal: string;
   branches: Noeud[];
+  cache?: { x: number; y: number; l: number; h: number };   // zone où la section figée dessine elle-même le fil
 }
 
 /** « haut » : des mots-clés aux étapes ; « bas » : des profils jusqu'à l'appel à l'action (arrivée). */
@@ -121,12 +122,26 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
         const cartes = (Array.from(fonctions.children) as HTMLElement[]).map(pos);
         const rangees = [...new Set(cartes.map((c) => c.y))].sort((u, v) => u - v);
         const r1 = cartes.find((c) => c.y === rangees[0]);
-        const yRangee = rangees.length > 1 && r1 ? (r1.y + r1.h + rangees[1]) / 2 : f.y + f.h + 32;
+        let yRangee = rangees.length > 1 && r1 ? (r1.y + r1.h + rangees[1]) / 2 : f.y + f.h + 32;
         const yArrivee = a.y + a.h / 2, xArrivee = a.x + a.l + 14;
+        const branches: Noeud[] = [{ d: "", x: xArrivee, y: yArrivee, jx: xArrivee, jy: yArrivee, couleur: "#0F172A" }];   // arrivée : le produit livré
+        // Section des fonctionnalités figée : pendant le blocage, la ligne entre les rangées est dessinée par la
+        // section elle-même (elle reste à l'écran, avec ses virages et des bouts verticaux qui recouvrent le fil).
+        // Ici, le fil longe la marge gauche sur toute la hauteur du blocage et traverse là où la section se libère.
+        let cache: Trace["cache"];
+        const figee = q("fonctions-figee"), colle = figee?.firstElementChild as HTMLElement | null;
+        if (figee && colle) {
+          const debut = figee.offsetTop + (yRangee - pos(colle).y);         // ligne au début du blocage
+          const course = figee.offsetHeight - colle.offsetHeight;           // longueur du blocage
+          yRangee = debut + course;                                         // ligne à la fin du blocage
+          // la section dessine elle-même la traversée et le virage de droite : on masque ici cette portion du fil
+          // pour qu'elle n'apparaisse pas en double sous les cartes avant que la section se libère
+          // (marge gauche comprise : sous le virage, le fil ne doit pas continuer tout droit pendant le blocage)
+          cache = { x: gauche - 4, y: debut - RAYON, l: droite - gauche + 10, h: course + 2 * RAYON + 2 };
+        }
         const pts: Pt[] = [[droite, 0], [droite, yHaut], [xStation, yHaut], [xStation, yBas], [gauche, yBas], [gauche, yRangee],
           [droite, yRangee], [droite, yArrivee], [xArrivee, yArrivee]];
-        const branches = [{ d: "", x: xArrivee, y: yArrivee, jx: xArrivee, jy: yArrivee, couleur: "#0F172A" }];   // arrivée : le produit livré
-        setTrace({ l: L, h: H, principal: chemin(pts), branches });
+        setTrace({ l: L, h: H, principal: chemin(pts), branches, cache });
         return;
       }
       const phrase = q("phrase"), mots = q("mots"), etapes = q("etapes");
@@ -206,16 +221,25 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
               <feGaussianBlur stdDeviation="2.2" result="flou" />
               <feMerge><feMergeNode in="flou" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
+            {trace.cache && (
+              <mask id={`fil-cache-${uid}`} maskUnits="userSpaceOnUse" x={0} y={0} width={trace.l} height={trace.h}>
+                <rect x={0} y={0} width={trace.l} height={trace.h} fill="white" />
+                <rect x={trace.cache.x} y={trace.cache.y} width={trace.cache.l} height={trace.cache.h} fill="black" />
+              </mask>
+            )}
           </defs>
           {/* rail discret, puis fil coloré qui avance avec le défilement */}
+          <g mask={trace.cache ? `url(#fil-cache-${uid})` : undefined}>
           <path d={trace.principal} fill="none" stroke={CANARD} strokeOpacity={0.14} strokeWidth={1.5} />
-          {trace.branches.filter((b) => b.d).map((b, i) => (
+          {trace.branches.map((b, i) => b.d && (
             <path key={`r${i}`} d={b.d} fill="none" stroke={CANARD} strokeOpacity={atteint >= (parts[i] ?? 2) ? 0.55 : 0.14} strokeWidth={1.5} style={{ transition: "stroke-opacity .6s" }} />
           ))}
           <motion.path ref={fil} d={trace.principal} fill="none" stroke={`url(#fil-degrade-${uid})`} strokeWidth={2} strokeLinecap="round" style={{ pathLength: avance }} />
+          </g>
           {/* nœuds : jonctions des fournisseurs, comme les points des sites sur le globe */}
           {trace.branches.map((b, i) => {
             const actif = atteint >= (parts[i] ?? 2);
+            if (b.sansNoeud) return null;
             return (
               <g key={`n${i}`} style={{ transition: "opacity .6s", opacity: actif ? 1 : 0.35 }}>
                 <circle cx={b.x} cy={b.y} r={7} fill={b.couleur} opacity={0.18}>
@@ -225,10 +249,12 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
               </g>
             );
           })}
+          <g mask={trace.cache ? `url(#fil-cache-${uid})` : undefined}>
           <g ref={boules} filter={`url(#fil-halo-${uid})`}>
             {Array.from({ length: NB_BOULES * TRAINEE }, (_, j) => (
               <circle key={j} r={3.2 - (j % TRAINEE) * 0.4} fill={SIGNAUX[Math.floor(j / TRAINEE) % 3]} opacity={0} />
             ))}
+          </g>
           </g>
         </svg>
       )}
