@@ -2,7 +2,12 @@
 // et petits signaux colorés (médias, météo, marchés) qui circulent vers l'usine.
 // Pensé pour rester léger et calme : un seul rendu WebGL, 4 objets dessinés, rotation lente, pause hors écran
 // ou onglet caché, image fixe si l'utilisateur a demandé moins d'animations (prefers-reduced-motion).
-import { useEffect, useRef } from "react";
+// Intro (page d'accueil, première visite) : la page fournit une horloge `intro` (secondes). Le globe s'en sert pour
+// révéler la chaîne vague par vague : les fournisseurs s'allument, les arcs se tracent vers les ports puis les
+// usines, les signaux partent une fois l'arc tracé ; la planète tourne de l'Asie
+// vers l'Europe, tandis que la Terre, d'abord petite, grandit jusqu'à sa taille normale. Sans horloge, tout est
+// affiché d'emblée.
+import { useEffect, useRef, type MutableRefObject } from "react";
 import * as THREE from "three";
 import { TERRE } from "./globeTerre";
 
@@ -22,6 +27,28 @@ const LIENS: [string, string][] = [
   ["kaohsiung", "rotterdam"], ["austin", "savannah"], ["savannah", "rotterdam"], ["rotterdam", "mayence"],
   ["anvers", "tours"], ["anvers", "cork"], ["lehavre", "tours"], ["bergame", "tours"], ["mayence", "tours"], ["lodz", "cork"],
 ];
+
+// ---- chorégraphie de l'intro (secondes) : chaque arc part quand son site de départ est atteint
+const INTRO_DEBUT_ARCS = 1.5, INTRO_VAGUE = 0.95, INTRO_DUREE_ARC = 1.15;
+function calendrier() {
+  const profondeur: Record<string, number> = {};
+  const rang = (id: string, vus = new Set<string>()): number => {
+    if (profondeur[id] !== undefined) return profondeur[id];
+    if (vus.has(id)) return 0;
+    vus.add(id);
+    const amont = LIENS.filter(([, b]) => b === id).map(([a]) => rang(a, vus) + 1);
+    return (profondeur[id] = amont.length ? Math.max(...amont) : 0);
+  };
+  const debut = LIENS.map(([a]) => INTRO_DEBUT_ARCS + rang(a) * INTRO_VAGUE);
+  const fin = debut.map((d) => d + INTRO_DUREE_ARC);
+  const apparition: Record<string, number> = {};
+  LIENS.forEach(([a, b], i) => {
+    apparition[a] = Math.min(apparition[a] ?? 99, debut[i]);
+    apparition[b] = Math.min(apparition[b] ?? 99, fin[i]);
+  });
+  return { debut, fin, apparition };
+}
+const doux = (x: number) => { const t = Math.min(1, Math.max(0, x)); return t * t * (3 - 2 * t); };
 const USINES = new Set(["tours", "cork"]);
 const TOUCHE = "hyderabad";
 // Charte : moutarde (médias), olive (météo), bleu canard éclairci pour rester lisible sur fond sombre (marchés).
@@ -72,8 +99,14 @@ function texturePoint(): THREE.Texture {
   return new THREE.CanvasTexture(c);
 }
 
-export default function Globe({ className = "" }: { className?: string }) {
+export default function Globe({ className = "", intro, onPret }: {
+  className?: string;
+  intro?: MutableRefObject<number>;   // horloge de l'intro en secondes (absente : tout est affiché)
+  onPret?: () => void;                // appelé après la première image dessinée
+}) {
   const boite = useRef<HTMLDivElement>(null);
+  const pret = useRef(onPret);
+  pret.current = onPret;
 
   useEffect(() => {
     const el = boite.current;
@@ -109,9 +142,11 @@ export default function Globe({ className = "" }: { className?: string }) {
     const haloMat = new THREE.ShaderMaterial({
       side: THREE.BackSide, transparent: true, depthWrite: false,
       vertexShader: "varying vec3 vN; void main(){ vN = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
-      fragmentShader: "varying vec3 vN; void main(){ float i = pow(max(0.0, 0.62 - dot(vN, vec3(0.0,0.0,1.0))), 2.6); gl_FragColor = vec4(0.30,0.80,0.84,1.0) * i * 0.8; }",
+      uniforms: { uOpacite: { value: 1 } },
+      fragmentShader: "uniform float uOpacite; varying vec3 vN; void main(){ float i = pow(max(0.0, 0.62 - dot(vN, vec3(0.0,0.0,1.0))), 2.6); gl_FragColor = vec4(0.30,0.80,0.84,1.0) * i * 0.8 * uOpacite; }",
     });
-    scene.add(new THREE.Mesh(haloGeo, haloMat));
+    const halo = new THREE.Mesh(haloGeo, haloMat);
+    scene.add(halo);
     jetables.push(haloGeo, haloMat);
 
     // ciel : quelques centaines d'étoiles fixes, très discrètes
@@ -134,12 +169,28 @@ export default function Globe({ className = "" }: { className?: string }) {
     jetables.push(terreGeo, terreMat);
 
     // arcs
+    // chaque sommet porte l'instant où le tracé l'atteint (aT) : le shader n'affiche que la partie déjà tracée,
+    // avec une tête plus lumineuse qui avance le long de l'arc
+    const cal = calendrier();
     const trajets = LIENS.map(([a, b]) => arc(SITES[a], SITES[b]));
-    const arcsPos: number[] = [];
-    trajets.forEach((t) => t.forEach((p, i) => i > 0 && arcsPos.push(t[i - 1].x, t[i - 1].y, t[i - 1].z, p.x, p.y, p.z)));
+    const arcsPos: number[] = [], arcsT: number[] = [];
+    trajets.forEach((t, k) => t.forEach((p, i) => {
+      if (i === 0) return;
+      arcsPos.push(t[i - 1].x, t[i - 1].y, t[i - 1].z, p.x, p.y, p.z);
+      const seg = t.length - 1;
+      arcsT.push(cal.debut[k] + INTRO_DUREE_ARC * (i - 1) / seg, cal.debut[k] + INTRO_DUREE_ARC * i / seg);
+    }));
     const arcsGeo = new THREE.BufferGeometry();
     arcsGeo.setAttribute("position", new THREE.Float32BufferAttribute(arcsPos, 3));
-    const arcsMat = new THREE.LineBasicMaterial({ color: "#BFE9EC", transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending });
+    arcsGeo.setAttribute("aT", new THREE.Float32BufferAttribute(arcsT, 1));
+    const arcsMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uTemps: { value: 999 }, uCouleur: { value: new THREE.Color("#BFE9EC") }, uOpacite: { value: 0.55 } },
+      vertexShader: "attribute float aT; varying float vT; void main(){ vT = aT; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+      fragmentShader: "uniform float uTemps; uniform vec3 uCouleur; uniform float uOpacite; varying float vT;" +
+        "void main(){ if (vT > uTemps) discard; float tete = 1.0 + 1.8 * smoothstep(0.35, 0.0, uTemps - vT);" +
+        " gl_FragColor = vec4(uCouleur * tete, uOpacite); }",
+    });
     monde.add(new THREE.LineSegments(arcsGeo, arcsMat));
     jetables.push(arcsGeo, arcsMat);
 
@@ -147,8 +198,19 @@ export default function Globe({ className = "" }: { className?: string }) {
     const ids = Object.keys(SITES);
     const sitesGeo = new THREE.BufferGeometry();
     sitesGeo.setAttribute("position", new THREE.Float32BufferAttribute(ids.flatMap((k) => versVecteur(SITES[k][1], SITES[k][2], 1.006).toArray()), 3));
-    sitesGeo.setAttribute("color", new THREE.Float32BufferAttribute(ids.flatMap((k) => new THREE.Color(k === TOUCHE ? "#FB923C" : "#F8FAFC").toArray()), 3));
-    const sitesMat = new THREE.PointsMaterial({ size: 0.065, map: point, vertexColors: true, transparent: true, depthWrite: false });
+    sitesGeo.setAttribute("aCouleur", new THREE.Float32BufferAttribute(ids.flatMap((k) => new THREE.Color(k === TOUCHE ? "#FB923C" : "#F8FAFC").toArray()), 3));
+    sitesGeo.setAttribute("aT", new THREE.Float32BufferAttribute(ids.map((k) => cal.apparition[k] ?? 0), 1));
+    // un site s'allume quand la chaîne l'atteint, avec un bref éclat
+    const sitesMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false,
+      uniforms: { uTemps: { value: 999 }, uTaille: { value: 0.065 }, uEchelle: { value: 300 }, uTex: { value: point } },
+      vertexShader: "attribute float aT; attribute vec3 aCouleur; uniform float uTemps; uniform float uTaille; uniform float uEchelle;" +
+        "varying vec3 vC; varying float vA; void main(){ vC = aCouleur; float d = uTemps - aT; vA = smoothstep(0.0, 0.35, d);" +
+        " float eclat = 1.0 + 1.4 * smoothstep(0.0, 0.12, d) * smoothstep(1.0, 0.12, d);" +
+        " vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = uTaille * eclat * (uEchelle / -mv.z); gl_Position = projectionMatrix * mv; }",
+      fragmentShader: "uniform sampler2D uTex; varying vec3 vC; varying float vA;" +
+        "void main(){ float a = texture2D(uTex, gl_PointCoord).a * vA; if (a < 0.01) discard; gl_FragColor = vec4(vC, a); }",
+    });
     monde.add(new THREE.Points(sitesGeo, sitesMat));
     const usinesGeo = new THREE.BufferGeometry();
     usinesGeo.setAttribute("position", new THREE.Float32BufferAttribute([...USINES].flatMap((k) => versVecteur(SITES[k][1], SITES[k][2], 1.008).toArray()), 3));
@@ -174,10 +236,16 @@ export default function Globe({ className = "" }: { className?: string }) {
     jetables.push(signauxGeo, signauxMat);
     const vitesses = trajets.map((_, i) => 0.07 + 0.04 * ((i * 7) % 5) / 5);
     const phases = trajets.map((_, i) => (i * 0.37) % 1);
+    const usinesApparition = Math.min(...[...USINES].map((k) => cal.apparition[k] ?? 0));
+    const alerteApparition = (cal.apparition[TOUCHE] ?? 0) + 0.4;
 
-    const placerSignaux = (temps: number) => {
+    const placerSignaux = (temps: number, tIntro = 999) => {
       trajets.forEach((t, i) => {
         for (let q = 0; q < TRAINEE; q++) {
+          if (tIntro < cal.fin[i]) {                 // arc pas encore tracé : signal caché au centre de la Terre
+            signauxPos.fill(0, (i * TRAINEE + q) * 3, (i * TRAINEE + q) * 3 + 3);
+            continue;
+          }
           const u = calme ? 0.5 : (((phases[i] + temps * vitesses[i] - q * 0.012) % 1) + 1) % 1;
           const f = u * (t.length - 1);
           const k = Math.floor(f);
@@ -195,30 +263,55 @@ export default function Globe({ className = "" }: { className?: string }) {
       renderer.domElement.style.height = "100%";
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      sitesMat.uniforms.uEchelle.value = (h * renderer.getPixelRatio()) / 2;   // même échelle que PointsMaterial
       if (calme) renderer.render(scene, camera);    // image fixe : on la redessine seulement si la taille change
     };
     taille();
     const obsTaille = new ResizeObserver(taille);
     obsTaille.observe(el);
 
-    let visible = true, image = 0, precedent = performance.now(), temps = 0;
+    // Intro : fondu du ciel et des terres, caméra qui recule, rotation de l'Asie vers l'Europe (décalage qui s'annule)
+    const rotationDepart = monde.rotation.y;
+    let rotation = 0;
+    const appliquerIntro = (t: number) => {
+      arcsMat.uniforms.uTemps.value = t;
+      sitesMat.uniforms.uTemps.value = t;
+      cielMat.opacity = 0.45 * doux(t / 2.2);
+      terreMat.opacity = 0.95 * doux((t - 0.2) / 1.6);
+      haloMat.uniforms.uOpacite.value = doux(t / 2.5);
+      usinesMat.opacity = 0.9 * doux((t - usinesApparition) / 0.5);
+      const avance = doux(t / 7.2);
+      // la Terre naît petite puis grandit jusqu'à sa taille normale (montée lente, arrivée en douceur)
+      const croissance = 1 - Math.pow(1 - Math.min(1, Math.max(0, (t - 0.3) / 6.4)), 3);
+      const k = 0.28 + 0.72 * croissance;
+      monde.scale.setScalar(k);
+      halo.scale.setScalar(k);
+      monde.rotation.y = rotationDepart + rotation - 1.1 * (1 - avance);   // part de l'Asie, rejoint le sens de rotation habituel
+    };
+
+    let visible = true, image = 0, precedent = performance.now(), temps = 0, premiere = false;
     const boucle = (maintenant: number) => {
       image = requestAnimationFrame(boucle);
       const dt = Math.max(0, Math.min(0.05, (maintenant - precedent) / 1000));   // horodatage rAF parfois antérieur
       precedent = maintenant;
       if (!visible || document.hidden) return;
       temps += dt;
-      monde.rotation.y += dt * 0.06;               // un tour en un peu plus d'1 min 40 : perceptible, jamais vertigineux
-      alerteMat.opacity = 0.25 + 0.25 * (1 + Math.sin(temps * 2.2)) / 2;
-      placerSignaux(temps);
+      rotation += dt * 0.06;                        // un tour en un peu plus d'1 min 40 : perceptible, jamais vertigineux
+      const t = intro ? intro.current : 999;        // horloge de l'intro
+      appliquerIntro(t);
+      alerteMat.opacity = (0.25 + 0.25 * (1 + Math.sin(temps * 2.2)) / 2) * doux((t - alerteApparition) / 0.6);
+      placerSignaux(temps, t);
       renderer.render(scene, camera);
+      if (!premiere) { premiere = true; pret.current?.(); }
     };
     const obsVue = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
     obsVue.observe(el);
 
     if (calme) {
+      appliquerIntro(999);
       placerSignaux(0);
       renderer.render(scene, camera);
+      pret.current?.();
     } else {
       image = requestAnimationFrame(boucle);
     }
