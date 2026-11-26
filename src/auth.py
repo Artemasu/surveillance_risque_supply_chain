@@ -43,9 +43,35 @@ def auth_active() -> bool:
     return os.getenv("SC_AUTH", "1").strip().lower() not in {"0", "false", "non", "off"}
 
 
-def acces_dev_actif() -> bool:
-    """Accès « développement » sans mot de passe : uniquement si l'API est lancée avec AEGIS_DEV=1 (jamais en production)."""
-    return os.getenv("AEGIS_DEV", "0").strip().lower() in {"1", "true", "oui", "on"}
+# Fichier .env local à la racine du projet (ignoré par Git) : évite de retaper AEGIS_DEV=1 à chaque lancement.
+FICHIER_ENV = Path(__file__).resolve().parents[1] / ".env"
+
+
+def _valeur_env(nom: str) -> Optional[str]:
+    """Variable d'environnement, sinon ligne « NOM=valeur » du fichier .env local."""
+    if os.getenv(nom) is not None:
+        return os.getenv(nom)
+    try:
+        for ligne in FICHIER_ENV.read_text(encoding="utf-8").splitlines():
+            cle, _, valeur = ligne.partition("=")
+            if cle.strip() == nom:
+                return valeur.split("#")[0].strip().strip('"').strip("'")
+    except OSError:
+        pass
+    return None
+
+
+def acces_dev_actif(hote: Optional[str] = None, via_proxy: bool = False) -> bool:
+    """Accès « développement » sans mot de passe (bouton de la page de connexion en mode `npm run dev`).
+
+    - AEGIS_DEV=1 (environnement ou fichier .env) : toujours ouvert ; AEGIS_DEV=0 : toujours fermé.
+    - Sans réglage : ouvert seulement pour une requête faite depuis la machine elle-même (127.0.0.1 / ::1)
+      et sans en-tête de proxy, c'est-à-dire en développement local. Un serveur en ligne, derrière un proxy
+      ou appelé depuis une autre machine, reste fermé."""
+    valeur = _valeur_env("AEGIS_DEV")
+    if valeur is not None and valeur.strip():
+        return valeur.strip().lower() in {"1", "true", "oui", "on"}
+    return hote in {"127.0.0.1", "::1", "localhost"} and not via_proxy
 
 
 PROFIL_DEV = {"role": "equipe", "email": "dev@aegis.local", "nom": "Mode développement", "topology_ref": None,

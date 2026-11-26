@@ -88,9 +88,22 @@ def test_jeton_expire_ou_modifie(app, monkeypatch):
 
 def test_acces_developpement_seulement_avec_aegis_dev(app, monkeypatch):
     c, _ = app
+    import src.auth as auth
+    monkeypatch.setattr(auth, "FICHIER_ENV", auth.FICHIER_ENV.with_name("absent.env"))   # ignore un .env local
     monkeypatch.delenv("AEGIS_DEV", raising=False)
     assert c.post("/auth/dev").status_code == 404
     monkeypatch.setenv("AEGIS_DEV", "1")
     r = c.post("/auth/dev")
     assert r.status_code == 200 and r.json()["profil"]["role"] == "equipe"
     assert c.get("/database/tables", headers={"Authorization": f"Bearer {r.json()['jeton']}"}).status_code != 401
+
+
+def test_acces_developpement_local_sans_reglage(monkeypatch):
+    import src.auth as auth
+    monkeypatch.setattr(auth, "FICHIER_ENV", auth.FICHIER_ENV.with_name("absent.env"))
+    monkeypatch.delenv("AEGIS_DEV", raising=False)
+    assert auth.acces_dev_actif("127.0.0.1") and auth.acces_dev_actif("::1")
+    assert not auth.acces_dev_actif("127.0.0.1", via_proxy=True)      # derrière un proxy : fermé
+    assert not auth.acces_dev_actif("203.0.113.7")                     # autre machine : fermé
+    monkeypatch.setenv("AEGIS_DEV", "0")
+    assert not auth.acces_dev_actif("127.0.0.1")                       # fermeture explicite

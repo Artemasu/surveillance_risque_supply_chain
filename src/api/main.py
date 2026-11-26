@@ -14,7 +14,7 @@ from src.api.routes_auth import ProtectionMiddleware, router as auth_router
 from src.api.routes_clients import router as clients_router
 from src.api.routes_data import router as data_router
 from src.api.routes_database import router as database_router
-from src.auth import auth_active, scenario_autorise, topologie_autorisee
+from src.auth import acces_dev_actif, auth_active, scenario_autorise, topologie_autorisee
 from src.config import settings
 from src.schemas.events import (Alert, ChatRequest, ChatResponse, GraphState, PipelineRunRequest, PipelineRunResult,
                                 SimulationRequest, SimulationResult)
@@ -50,6 +50,9 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
     # Comptes : toute route non publique exige un jeton (src/auth.py). Ajouté avant CORS pour que les réponses 401
     # portent aussi les en-têtes CORS.
     app.add_middleware(ProtectionMiddleware)
+    print("A.E.G.I.S. : accès développement sans mot de passe "
+          f"{'ACTIF' if acces_dev_actif() else 'ouvert aux requêtes locales uniquement'}"
+          " (AEGIS_DEV=1 : toujours ; AEGIS_DEV=0 : jamais)", flush=True)
     # Front-end React (frontend/, serveur Vite) : seul ajout à l'API, aucune logique métier modifiée.
     app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
                        allow_methods=["*"], allow_headers=["*"])

@@ -31,9 +31,11 @@ def connexion(body: Identifiants, request: Request) -> dict:
 
 @router.post("/dev")
 def connexion_dev(request: Request) -> dict:
-    """Session équipe sans mot de passe, pour le développement. Répond 404 tant que l'API n'est pas lancée avec AEGIS_DEV=1."""
-    if not acces_dev_actif():
-        raise HTTPException(status_code=404, detail="accès développement désactivé : relancez l'API avec AEGIS_DEV=1")
+    """Session équipe sans mot de passe, pour le développement local (voir acces_dev_actif)."""
+    hote = request.client.host if request.client else None
+    via_proxy = any(h in request.headers for h in ("x-forwarded-for", "x-real-ip", "forwarded"))
+    if not acces_dev_actif(hote, via_proxy):
+        raise HTTPException(status_code=404, detail="accès développement réservé à l'API lancée en local (ou AEGIS_DEV=1)")
     profil = dict(PROFIL_DEV)
     return {"jeton": creer_jeton(profil, request.app.state.service.data_dir), "profil": profil}
 

@@ -134,7 +134,8 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
         const figee = q("fonctions-figee"), colle = figee?.firstElementChild as HTMLElement | null;
         if (figee && colle) {
           const debut = figee.offsetTop + (yRangee - pos(colle).y);         // ligne au début du blocage
-          const course = figee.offsetHeight - colle.offsetHeight;           // longueur du blocage
+          const marge = parseFloat(getComputedStyle(figee).paddingBottom) || 0;   // espace sous la section, hors blocage
+          const course = figee.offsetHeight - marge - colle.offsetHeight;   // longueur du blocage
           yRangee = debut + course;                                         // ligne à la fin du blocage
           // la section dessine elle-même la traversée et le virage de droite : on masque ici cette portion du fil
           // pour qu'elle n'apparaisse pas en double sous les cartes avant que la section se libère

@@ -39,7 +39,7 @@ export default function PublicShell({ children, sombre = false }: { children: Re
       </header>
       <main>{children}</main>
       <footer className="bg-[#061417] text-white/70">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 text-sm sm:grid-cols-3 sm:px-6">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-12 pt-4 text-sm sm:grid-cols-3 sm:px-6">
           <div>
             <Logo clair />
             <p className="mt-3 max-w-xs text-xs text-white/50">Surveillance des risques de chaîne d'approvisionnement par l'actualité, la météo, les marchés et les graphes.</p>
@@ -55,12 +55,12 @@ export default function PublicShell({ children, sombre = false }: { children: Re
             <span className="block text-white/40">Aucun cookie publicitaire ni de mesure d'audience</span>
           </div>
         </div>
-        {/* signature géante : les lettres montent une à une quand le bas de page arrive */}
+        {/* signature géante : les lettres montent une à une à chaque arrivée en bas de page (et redescendent en repartant) */}
         <div aria-hidden className="relative overflow-hidden px-2">
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(1,127,141,0.35), transparent 70%)" }} />
           <div className="relative flex select-none justify-center leading-[0.8]" style={{ fontFamily: '"Space Grotesk", "Plus Jakarta Sans", sans-serif' }}>
             {"A.E.G.I.S.".split("").map((c, i) => (
-              <motion.span key={i} initial={{ y: "70%", opacity: 0 }} whileInView={{ y: "0%", opacity: 1 }} viewport={{ once: true, margin: "-40px" }}
+              <motion.span key={i} initial={{ y: "70%", opacity: 0 }} whileInView={{ y: "0%", opacity: 1 }} viewport={{ once: false, margin: "-40px" }}
                 transition={{ duration: 0.9, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
                 className="inline-block text-[clamp(4.5rem,19vw,17rem)] font-bold tracking-[-0.04em]"
                 style={{ backgroundImage: "linear-gradient(180deg, rgba(127,208,214,0.9) 0%, rgba(1,127,141,0.55) 55%, rgba(6,20,23,0) 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
