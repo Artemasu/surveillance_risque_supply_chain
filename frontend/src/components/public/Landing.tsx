@@ -326,9 +326,12 @@ export default function Landing() {
         <section style={{ background: C.creme }}>
           <div className="relative mx-auto grid max-w-6xl gap-14 px-4 py-28 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
             <Titre sur="Pour qui">Une lecture <It color={C.olive}>pour chaque</It> métier.</Titre>
-            <div data-fil="profils" className="divide-y divide-[#0F172A]/10 border-y border-[#0F172A]/10">
-              {PROFILS.map((p) => (
-                <motion.div key={p.titre} {...apparition} className="group flex items-center gap-5 py-7">
+            {/* séparateurs raccourcis : ils commencent après les pastilles, pour ne pas croiser le fil qui les relie */}
+            <div data-fil="profils">
+              {PROFILS.map((p, i) => (
+                <motion.div key={p.titre} {...apparition} className="group relative flex items-center gap-5 py-7">
+                  {i === 0 && <span aria-hidden className="absolute left-[68px] right-0 top-0 h-px bg-[#0F172A]/10" />}
+                  <span aria-hidden className="absolute bottom-0 left-[68px] right-0 h-px bg-[#0F172A]/10" />
                   <span data-fil-station className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#0F172A] text-white transition group-hover:bg-[#017F8D]"><p.icon size={19} /></span>
                   <div>
                     <h3 className="text-xl font-bold text-[#0F172A]" style={DISPLAY}>{p.titre}</h3>
