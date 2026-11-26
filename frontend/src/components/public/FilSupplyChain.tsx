@@ -123,8 +123,10 @@ export default function FilSupplyChain({ children, parcours = "haut" }: { childr
         const rangees = [...new Set(cartes.map((c) => c.y))].sort((u, v) => u - v);
         const r1 = cartes.find((c) => c.y === rangees[0]);
         let yRangee = rangees.length > 1 && r1 ? (r1.y + r1.h + rangees[1]) / 2 : f.y + f.h + 32;
-        const yArrivee = a.y + a.h / 2, xArrivee = a.x + a.l + 14;
-        const branches: Noeud[] = [{ d: "", x: xArrivee, y: yArrivee, jx: xArrivee, jy: yArrivee, couleur: "#0F172A" }];   // arrivée : le produit livré
+        // arrivée : à droite de l'élément, ou à une fraction de sa largeur (data-fil-arrivee-x, ex. le bord du globe)
+        const fraction = Number(arrivee.dataset.filArriveeX);
+        const yArrivee = a.y + a.h / 2, xArrivee = fraction ? a.x + a.l * fraction : a.x + a.l + 14;
+        const branches: Noeud[] = [{ d: "", x: xArrivee, y: yArrivee, jx: xArrivee, jy: yArrivee, couleur: fraction ? "#ECB920" : "#0F172A" }];   // arrivée : le produit livré
         // Section des fonctionnalités figée : pendant le blocage, la ligne entre les rangées est dessinée par la
         // section elle-même (elle reste à l'écran, avec ses virages et des bouts verticaux qui recouvrent le fil).
         // Ici, le fil longe la marge gauche sur toute la hauteur du blocage et traverse là où la section se libère.

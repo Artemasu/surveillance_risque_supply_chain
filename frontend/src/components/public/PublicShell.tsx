@@ -1,6 +1,7 @@
 // Habillage des pages publiques (vitrine, connexion, inscription) : barre supérieure et pied de page.
 // Variante « sombre » pour la page vitrine (fond nuit), claire pour les formulaires.
-import { LogIn } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowUp, LogIn } from "lucide-react";
 import type { ReactNode } from "react";
 
 export const aller = (route: string) => {
@@ -54,7 +55,26 @@ export default function PublicShell({ children, sombre = false }: { children: Re
             <span className="block text-white/40">Aucun cookie publicitaire ni de mesure d'audience</span>
           </div>
         </div>
-        <p className="border-t border-white/10 py-4 text-center text-[11px] text-white/40">© 2026 A.E.G.I.S. · Projet de l'école d'ingénieurs ESME Sudria</p>
+        {/* signature géante : les lettres montent une à une quand le bas de page arrive */}
+        <div aria-hidden className="relative overflow-hidden px-2">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2" style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(1,127,141,0.35), transparent 70%)" }} />
+          <div className="relative flex select-none justify-center leading-[0.8]" style={{ fontFamily: '"Space Grotesk", "Plus Jakarta Sans", sans-serif' }}>
+            {"A.E.G.I.S.".split("").map((c, i) => (
+              <motion.span key={i} initial={{ y: "70%", opacity: 0 }} whileInView={{ y: "0%", opacity: 1 }} viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.9, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-block text-[clamp(4.5rem,19vw,17rem)] font-bold tracking-[-0.04em]"
+                style={{ backgroundImage: "linear-gradient(180deg, rgba(127,208,214,0.9) 0%, rgba(1,127,141,0.55) 55%, rgba(6,20,23,0) 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
+                {c}
+              </motion.span>
+            ))}
+          </div>
+        </div>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 border-t border-white/10 px-4 py-4 text-[11px] text-white/40 sm:px-6">
+          <p>© 2026 A.E.G.I.S. · Projet de l'école d'ingénieurs ESME Sudria</p>
+          <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="inline-flex items-center gap-1.5 hover:text-white">
+            Haut de page <ArrowUp size={12} />
+          </button>
+        </div>
       </footer>
     </div>
   );

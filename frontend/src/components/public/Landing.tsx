@@ -16,6 +16,7 @@ import { AgentBadge } from "../ui";
 import type { AgentName } from "../../types";
 import DemoDefilante from "./DemoDefilante";
 import FilSupplyChain from "./FilSupplyChain";
+import Intro, { introAJouer } from "./Intro";
 import PublicShell, { aller } from "./PublicShell";
 
 const Globe = lazy(() => import("./Globe"));       // three.js chargé à part : le texte s'affiche tout de suite
@@ -82,17 +83,6 @@ function Titre({ sur, children, clair = false }: { sur: string; children: ReactN
       </p>
       <h2 className={`mt-4 text-4xl font-bold leading-[1.02] tracking-tight sm:text-6xl ${clair ? "text-white" : "text-[#0F172A]"}`} style={DISPLAY}>{children}</h2>
     </div>
-  );
-}
-
-/** Badge circulaire qui tourne lentement. */
-function Tampon() {
-  return (
-    <motion.svg viewBox="0 0 120 120" className="h-32 w-32 shrink-0" animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: "linear" }} aria-hidden>
-      <defs><path id="cercle" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" /></defs>
-      <text fontSize="10.5" fontWeight={600} letterSpacing="2.2" fill={C.encre}><textPath href="#cercle">DÉTECTER · COMPRENDRE · ANTICIPER · </textPath></text>
-      <path d="M60 46 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4z" fill={C.encre} />
-    </motion.svg>
   );
 }
 
@@ -199,17 +189,29 @@ export default function Landing() {
   const sectionFonctions = useRef<HTMLElement>(null);
   const grilleFonctions = useRef<HTMLDivElement>(null);
   const { scrollYProgress: sortieFonctions } = useScroll({ target: sectionFonctions, offset: ["start 64px", "end end"] });
+  // Intro (première visite de l'onglet) : écran noir, globe et chaîne qui s'allument, logo, puis glissement en place
+  const [intro, setIntro] = useState(introAJouer);
+  const [introSortie, setIntroSortie] = useState(false);
+  const [globePret, setGlobePret] = useState(false);
+  const horlogeIntro = useRef(0);
+  const introJouee = useRef(intro);
+  const boiteGlobe = useRef<HTMLDivElement>(null);
+  const texteVisible = !intro || introSortie;
   return (
     <MotionConfig reducedMotion="user">
       <PublicShell sombre>
+        {intro && <Intro globe={boiteGlobe} horloge={horlogeIntro} globePret={globePret} onSortie={() => setIntroSortie(true)} onFin={() => setIntro(false)} />}
         {/* Bandeau : nuit, globe 3D, grand titre */}
         <section className="relative overflow-hidden text-white" style={{ background: C.nuit }}>
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(ellipse at 72% 50%, rgba(1,127,141,0.35), transparent 55%), radial-gradient(ellipse at 10% 100%, rgba(236,185,32,0.10), transparent 45%)" }} />
-          <div className="pointer-events-none absolute -right-48 top-1/2 h-[620px] w-[620px] -translate-y-1/2 opacity-50 sm:-right-24 lg:-right-10 lg:h-[760px] lg:w-[760px] lg:opacity-100">
-            <Suspense fallback={null}><Globe className="h-full w-full" /></Suspense>
+          <div ref={boiteGlobe} className="pointer-events-none absolute -right-48 top-1/2 h-[620px] w-[620px] -translate-y-1/2 opacity-50 sm:-right-24 lg:-right-10 lg:h-[760px] lg:w-[760px] lg:opacity-100">
+            <Suspense fallback={null}>
+              <Globe className="h-full w-full" intro={introJouee.current ? horlogeIntro : undefined} onPret={() => setGlobePret(true)} />
+            </Suspense>
           </div>
           <div className="relative mx-auto flex min-h-[min(92vh,860px)] max-w-6xl flex-col justify-center px-4 pb-20 pt-12 sm:px-6">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-2xl">
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={texteVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              transition={{ duration: 0.9, delay: intro ? 0.5 : 0, ease: [0.22, 1, 0.36, 1] }} className="max-w-2xl">
               <p className="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-white/75 backdrop-blur">
                 <span className="flex gap-1.5">{[C.moutarde, C.olive, "#5FC4CF"].map((c) => <span key={c} className="h-1.5 w-1.5 rounded-full" style={{ background: c }} />)}</span>
                 Médias · Météo · Marchés
@@ -383,20 +385,29 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* Appel à l'action : aplat moutarde */}
-        <section style={{ background: C.moutarde }}>
-          <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-10 px-4 py-24 sm:px-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-5xl font-bold leading-[0.95] tracking-tight text-[#0F172A] sm:text-7xl" style={DISPLAY}>Une chaîne <It>à surveiller ?</It></h2>
-              <p className="mt-5 max-w-lg text-lg text-[#0F172A]/75">Créez votre espace en quelques minutes. Vous pourrez exporter ou supprimer vos données à tout moment.</p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button className="group inline-flex items-center gap-2 rounded-full bg-[#0F172A] px-6 py-3.5 text-sm font-bold text-white transition hover:-translate-y-0.5" onClick={() => aller("#/inscription")}>
+        {/* Appel à l'action : retour dans la nuit du globe ; le fil d'approvisionnement vient s'y brancher */}
+        {/* section non positionnée (fond en dégradés CSS) : le fil, dessiné dessous, reste visible par-dessus son fond */}
+        <section className="text-white" style={{ background: `radial-gradient(ellipse at 75% 50%, rgba(1,127,141,0.32), transparent 55%), radial-gradient(ellipse at 0% 0%, rgba(162,177,83,0.10), transparent 40%), ${C.nuit}` }}>
+          <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-4 py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:py-28">
+            <motion.div {...apparition}>
+              <h2 className="text-5xl font-bold leading-[0.95] tracking-tight sm:text-7xl" style={DISPLAY}>
+                Une chaîne <span className="block"><It color={C.moutarde}>à surveiller ?</It></span>
+              </h2>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
+                Créez votre espace en quelques minutes. Vous pourrez exporter ou supprimer vos données à tout moment.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <button className="group inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-[#0F172A] shadow-[0_8px_30px_rgba(236,185,32,0.35)] transition hover:-translate-y-0.5" style={{ background: C.moutarde }} onClick={() => aller("#/inscription")}>
                   Créer un espace <ArrowRight size={16} className="transition group-hover:translate-x-0.5" />
                 </button>
-                <button className="rounded-full border border-[#0F172A]/25 px-6 py-3.5 text-sm font-semibold text-[#0F172A] transition hover:bg-[#0F172A]/5" onClick={() => aller("#/connexion")}>J'ai déjà un compte</button>
+                <button className="rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10" onClick={() => aller("#/connexion")}>J'ai déjà un compte</button>
               </div>
-            </div>
-            <div data-fil="arrivee"><Tampon /></div>
+            </motion.div>
+            {/* le globe revient : le fil s'y branche (data-fil="arrivee", sur le bord droit de la Terre) */}
+            <motion.div initial={{ opacity: 0, scale: 0.85 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              data-fil="arrivee" data-fil-arrivee-x="0.86" className="pointer-events-none relative mx-auto aspect-square w-full max-w-[520px]">
+              <Suspense fallback={null}><Globe className="h-full w-full" /></Suspense>
+            </motion.div>
           </div>
         </section>
         </FilSupplyChain>
