@@ -28,6 +28,14 @@ python -m spacy download xx_ent_wiki_sm      # facultatif : sans lui, l'agent m�
 python -m src.jobs import-notebooks          # base unifiée data/aegis.duckdb depuis les sorties des notebooks Météo et Finance
 uvicorn src.api.main:app --port 8000         # terminal 1 : API, documentation sur http://localhost:8000/docs
 pytest                                       # 168 tests
+
+# Pour lancer l'interface fonctionnelle :
+# Terminal 1
+$env:AEGIS_DEV="1"
+uvicorn src.api.main:app --port 8000 --reload
+
+# Terminal 2
+cd frontend; npm install; npm run dev
 ```
 
 ### Volets Météo et Finance, base unifiée

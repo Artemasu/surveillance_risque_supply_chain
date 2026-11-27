@@ -54,7 +54,9 @@ def create_app(service: Optional[SupplyChainService] = None) -> FastAPI:
           f"{'ACTIF' if acces_dev_actif() else 'ouvert aux requêtes locales uniquement'}"
           " (AEGIS_DEV=1 : toujours ; AEGIS_DEV=0 : jamais)", flush=True)
     # Front-end React (frontend/, serveur Vite) : seul ajout à l'API, aucune logique métier modifiée.
-    app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174"],
                        allow_methods=["*"], allow_headers=["*"])
 
     def svc(request: Request) -> SupplyChainService:
